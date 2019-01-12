@@ -22,5 +22,6 @@ function spam(){
             }
             contador+=3;
         },3000);
+        //intento raro
     }
 spam();
