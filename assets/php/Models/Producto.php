@@ -17,6 +17,7 @@
 		private $valorUtilidad;//es un porcentaje
 		private $activa;
 
+		private $inventario;
 
 		public function __construct(){
 			$params = func_get_args();

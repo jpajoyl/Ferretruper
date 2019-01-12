@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`usuarios` (
   `clasificacion` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_usuario`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 26
+AUTO_INCREMENT = 29
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -129,7 +129,6 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`compras` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -167,7 +166,66 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`credenciales_de_acceso` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `ferretruperbd2`.`informacion_facturas`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`informacion_facturas` (
+  `id_informacion_facturas` INT(11) NOT NULL,
+  `descripcion` VARCHAR(500) NULL DEFAULT NULL,
+  PRIMARY KEY (`id_informacion_facturas`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `ferretruperbd2`.`resoluciones`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`resoluciones` (
+  `id_resolucion` INT(11) NOT NULL,
+  `tipo` VARCHAR(45) NOT NULL,
+  `vigente` TINYINT(1) NOT NULL,
+  `activa` TINYINT(4) NOT NULL,
+  PRIMARY KEY (`id_resolucion`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `ferretruperbd2`.`facturas`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`facturas` (
+  `numero_dian` INT(11) NOT NULL AUTO_INCREMENT,
+  `total` INT(11) NOT NULL,
+  `fecha` DATE NOT NULL,
+  `anulada` TINYINT(1) NULL DEFAULT NULL,
+  `fecha_anulada` DATE NULL DEFAULT NULL,
+  `informacion_facturas_id_informacion_facturas` INT(11) NOT NULL,
+  `resoluciones_id_resolucion` INT(11) NOT NULL,
+  `ventas_id_venta` INT(11) NOT NULL,
+  PRIMARY KEY (`numero_dian`),
+  INDEX `fk_facturas_informacion_facturas1_idx` (`informacion_facturas_id_informacion_facturas` ASC),
+  INDEX `fk_facturas_resoluciones1_idx` (`resoluciones_id_resolucion` ASC),
+  INDEX `fk_facturas_ventas1_idx` (`ventas_id_venta` ASC),
+  CONSTRAINT `fk_facturas_informacion_facturas1`
+    FOREIGN KEY (`informacion_facturas_id_informacion_facturas`)
+    REFERENCES `ferretruperbd2`.`informacion_facturas` (`id_informacion_facturas`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_facturas_resoluciones1`
+    FOREIGN KEY (`resoluciones_id_resolucion`)
+    REFERENCES `ferretruperbd2`.`resoluciones` (`id_resolucion`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_facturas_ventas1`
+    FOREIGN KEY (`ventas_id_venta`)
+    REFERENCES `ferretruperbd2`.`ventas` (`id_venta`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -224,15 +282,16 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`inventario` (
   `precio` INT(11) NOT NULL,
   `unidades` INT(11) NOT NULL,
   `unidades_defectuosas` INT(11) NOT NULL,
-  `PRODUCTOS_id_producto` INT(11) NOT NULL,
+  `productos_id_producto` INT(11) NOT NULL,
   PRIMARY KEY (`id_inventario`),
-  INDEX `fk_INVENTARIO_PRODUCTOS1_idx` (`PRODUCTOS_id_producto` ASC),
-  CONSTRAINT `fk_INVENTARIO_PRODUCTOS1`
-    FOREIGN KEY (`PRODUCTOS_id_producto`)
+  INDEX `fk_inventario_productos1_idx` (`productos_id_producto` ASC),
+  CONSTRAINT `fk_inventario_productos1`
+    FOREIGN KEY (`productos_id_producto`)
     REFERENCES `ferretruperbd2`.`productos` (`id_producto`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -264,6 +323,30 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
+-- Table `ferretruperbd2`.`productoxproveedor`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`productoxproveedor` (
+  `idProductoxproveedor` INT(11) NOT NULL,
+  `usuarios_id_usuario` INT(11) NOT NULL,
+  `productos_id_producto` INT(11) NOT NULL,
+  PRIMARY KEY (`idProductoxproveedor`),
+  INDEX `fk_Productoxproveedor_usuarios1_idx` (`usuarios_id_usuario` ASC),
+  INDEX `fk_Productoxproveedor_productos1_idx` (`productos_id_producto` ASC),
+  CONSTRAINT `fk_Productoxproveedor_productos1`
+    FOREIGN KEY (`productos_id_producto`)
+    REFERENCES `ferretruperbd2`.`productos` (`id_producto`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Productoxproveedor_usuarios1`
+    FOREIGN KEY (`usuarios_id_usuario`)
+    REFERENCES `ferretruperbd2`.`usuarios` (`id_usuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
 -- Table `ferretruperbd2`.`productoxventa`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`productoxventa` (
@@ -287,86 +370,6 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`productoxventa` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `ferretruperbd2`.`resoluciones`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`resoluciones` (
-  `id_resolucion` INT(11) NOT NULL,
-  `tipo` VARCHAR(45) NOT NULL,
-  `vigente` TINYINT(1) NOT NULL,
-  `activa` TINYINT(4) NOT NULL,
-  PRIMARY KEY (`id_resolucion`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `ferretruperbd2`.`informacion_facturas`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`informacion_facturas` (
-  `id_informacion_facturas` INT NOT NULL,
-  `descripcion` VARCHAR(500) NULL,
-  PRIMARY KEY (`id_informacion_facturas`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `ferretruperbd2`.`facturas`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`facturas` (
-  `numero_dian` INT NOT NULL,
-  `total` INT NOT NULL,
-  `fecha` DATE NOT NULL,
-  `anulada` TINYINT(1) NULL,
-  `fecha_anulada` DATE NULL,
-  `informacion_facturas_id_informacion_facturas` INT NOT NULL AUTO_INCREMENT,
-  `resoluciones_id_resolucion` INT(11) NOT NULL,
-  `ventas_id_venta` INT(11) NOT NULL,
-  INDEX `fk_facturas_informacion_facturas1_idx` (`informacion_facturas_id_informacion_facturas` ASC),
-  INDEX `fk_facturas_resoluciones1_idx` (`resoluciones_id_resolucion` ASC),
-  INDEX `fk_facturas_ventas1_idx` (`ventas_id_venta` ASC),
-  PRIMARY KEY (`numero_dian`),
-  CONSTRAINT `fk_facturas_informacion_facturas1`
-    FOREIGN KEY (`informacion_facturas_id_informacion_facturas`)
-    REFERENCES `ferretruperbd2`.`informacion_facturas` (`id_informacion_facturas`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_facturas_resoluciones1`
-    FOREIGN KEY (`resoluciones_id_resolucion`)
-    REFERENCES `ferretruperbd2`.`resoluciones` (`id_resolucion`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_facturas_ventas1`
-    FOREIGN KEY (`ventas_id_venta`)
-    REFERENCES `ferretruperbd2`.`ventas` (`id_venta`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `ferretruperbd2`.`Productoxproveedor`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`Productoxproveedor` (
-  `idProductoxproveedor` INT NOT NULL,
-  `usuarios_id_usuario` INT(11) NOT NULL,
-  `productos_id_producto` INT(11) NOT NULL,
-  PRIMARY KEY (`idProductoxproveedor`),
-  INDEX `fk_Productoxproveedor_usuarios1_idx` (`usuarios_id_usuario` ASC),
-  INDEX `fk_Productoxproveedor_productos1_idx` (`productos_id_producto` ASC),
-  CONSTRAINT `fk_Productoxproveedor_usuarios1`
-    FOREIGN KEY (`usuarios_id_usuario`)
-    REFERENCES `ferretruperbd2`.`usuarios` (`id_usuario`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Productoxproveedor_productos1`
-    FOREIGN KEY (`productos_id_producto`)
-    REFERENCES `ferretruperbd2`.`productos` (`id_producto`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

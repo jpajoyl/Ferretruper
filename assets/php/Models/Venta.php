@@ -206,7 +206,7 @@
 				$conexion = Conexion::conectar();
 				$statement = $conexion->prepare("UPDATE `inventario` SET `unidades` = $unidadesResultantes WHERE `inventario`.`id_inventario` = $idInventario");
 				$statement->execute();
-				return SUCCESS;
+				return $productoxventa;
 			} else{
 				return ERROR;
 			}

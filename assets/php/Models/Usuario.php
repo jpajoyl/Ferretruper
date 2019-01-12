@@ -19,16 +19,18 @@ class Usuario{
 
 	public function getDigitoDeVerificacion()
 	{
-	    return $this->digitoDeVerificacion;
+		return $this->digitoDeVerificacion;
 	}
 	
 	public function setDigitoDeVerificacion($digitoDeVerificacion, $statement=NULL)
 	{
-		if($statement!=NULL){
-			$statement->bindParam(':digitoDeVerificacion',$digitoDeVerificacion,PDO::PARAM_INT);
+		if ($digitoDeVerificacion>=0) {
+			if($statement!=NULL){
+				$statement->bindParam(':digitoDeVerificacion',$digitoDeVerificacion,PDO::PARAM_INT);
+			}
+			$this->digitoDeVerificacion = $digitoDeVerificacion;
+			return $this;
 		}
-		$this->digitoDeVerificacion = $digitoDeVerificacion;
-		return $this;
 	}
 	public function getIdUsuario(){
 		return $this->idUsuario;
@@ -55,7 +57,7 @@ class Usuario{
 	}
 	public function getTipoDeIdentificacion()
 	{
-	    return $this->tipoDeIdentificacion;
+		return $this->tipoDeIdentificacion;
 	}
 	
 	public function setTipoDeIdentificacion($tipoDeIdentificacion, $statement=NULL)
@@ -166,26 +168,26 @@ class Usuario{
 
 	public function actualizarUsuario($idUsuario, $nombre, $direccion, $ciudad, $telefono, $clasificacion, $digitoDeVerificacion, $email, $celular) {
 		$conexion = Conexion::conectar();
-	   	$statement = $conexion->prepare("UPDATE `usuarios` SET `digito_de_verificacion` = :digitoDeVerificacion, `nombre` = :nombre, `direccion` = :direccion, `email` = :email, `ciudad` = :ciudad, `celular` = :celular, `telefono` = :telefono, `clasificacion` = :clasificacion WHERE `usuarios`.`id_usuario` = :idUsuario");
+		$statement = $conexion->prepare("UPDATE `usuarios` SET `digito_de_verificacion` = :digitoDeVerificacion, `nombre` = :nombre, `direccion` = :direccion, `email` = :email, `ciudad` = :ciudad, `celular` = :celular, `telefono` = :telefono, `clasificacion` = :clasificacion WHERE `usuarios`.`id_usuario` = :idUsuario");
 
-        $this->setDigitoDeVerificacion($digitoDeVerificacion,$statement);
-    	$this->setNombre($nombre,$statement);
-    	$this->setDireccion($direccion,$statement);
-    	$this->setCiudad($ciudad,$statement);
-    	$this->setEmail($email,$statement);
-    	$this->setCelular($celular,$statement);
-    	$this->setTelefono($telefono,$statement);
-    	$this->setClasificacion($clasificacion,$statement);
-    	$this->setIdUsuario($idUsuario,$statement);
-    	$statement->execute();
-	   	$conexion=null;
-	   	if($statement){
-	   		$statement=null;
-	   		return SUCCESS;
-	   	}else{
-	   		$statement=null;
-	   		return ERROR;
-	   	}
+		$this->setDigitoDeVerificacion($digitoDeVerificacion,$statement);
+		$this->setNombre($nombre,$statement);
+		$this->setDireccion($direccion,$statement);
+		$this->setCiudad($ciudad,$statement);
+		$this->setEmail($email,$statement);
+		$this->setCelular($celular,$statement);
+		$this->setTelefono($telefono,$statement);
+		$this->setClasificacion($clasificacion,$statement);
+		$this->setIdUsuario($idUsuario,$statement);
+		$statement->execute();
+		$conexion=null;
+		if($statement){
+			$statement=null;
+			return SUCCESS;
+		}else{
+			$statement=null;
+			return ERROR;
+		}
 	}
 
 	public function desactivarUsuario(){
@@ -205,21 +207,21 @@ class Usuario{
 	}
 
 	public static function buscarDatosUsuario($numeroDeConsulta,$modo = true){  //numero_identificacion->True, id Usuario->False
-    	$resultado = array();
-    	$conexion = Conexion::conectar();
-    	if($modo){
-    	$statement = $conexion->prepare("SELECT * FROM `usuarios` WHERE  numero_identificacion = :numeroDeConsulta");
-    	}else{
-    	$statement = $conexion->prepare("SELECT * FROM `usuarios` WHERE  `id_usuario` = :numeroDeConsulta");
-    	}
-    	$statement->bindValue(":numeroDeConsulta", $numeroDeConsulta);
-    	$statement->execute();
-    	$resultado = $statement->fetch(PDO::FETCH_ASSOC);
-    	$conexion = null;
-    	$statement = null;
-    	return $resultado;
+		$resultado = array();
+		$conexion = Conexion::conectar();
+		if($modo){
+			$statement = $conexion->prepare("SELECT * FROM `usuarios` WHERE  numero_identificacion = :numeroDeConsulta");
+		}else{
+			$statement = $conexion->prepare("SELECT * FROM `usuarios` WHERE  `id_usuario` = :numeroDeConsulta");
+		}
+		$statement->bindValue(":numeroDeConsulta", $numeroDeConsulta);
+		$statement->execute();
+		$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+		$conexion = null;
+		$statement = null;
+		return $resultado;
 
-    }
+	}
 
 
 }
@@ -232,4 +234,4 @@ class Usuario{
 
 
 
- ?>
+?>

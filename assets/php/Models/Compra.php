@@ -15,6 +15,9 @@
 		private $pagado;	//boolean
 		private $proveedor; //Objeto
 
+		private $productosxcompra; //Array
+
+
 		public function __construct(){
 			$params = func_get_args();
 			$num_params = func_num_args();
@@ -45,7 +48,7 @@
 		//get & set
 		public function getIdCompra()
 		{
-		    return $this->idCompra;
+			return $this->idCompra;
 		}
 		
 		public function setIdCompra($idCompra, $statement=NULL)
@@ -59,7 +62,7 @@
 
 		public function getNumeroFactura()
 		{
-		    return $this->numeroFactura;
+			return $this->numeroFactura;
 		}
 		
 		public function setNumeroFactura($numeroFactura, $statement=NULL)
@@ -73,7 +76,7 @@
 
 		public function getFecha()
 		{
-		    return $this->fecha;
+			return $this->fecha;
 		}
 		
 		public function setFecha($fecha, $statement=NULL)
@@ -87,7 +90,7 @@
 
 		public function getDescuento()
 		{
-		    return $this->descuento;
+			return $this->descuento;
 		}
 		
 		public function setDescuento($descuento, $statement=NULL)
@@ -101,7 +104,7 @@
 
 		public function getTotalCompra()
 		{
-		    return $this->totalCompra;
+			return $this->totalCompra;
 		}
 		
 		public function setTotalCompra($totalCompra, $statement=NULL)
@@ -115,7 +118,7 @@
 
 		public function getPagado()
 		{
-		    return $this->pagado;
+			return $this->pagado;
 		}
 		
 		public function setPagado($pagado, $statement=NULL)
@@ -129,7 +132,7 @@
 
 		public function getProveedor()
 		{
-		    return $this->pagado;
+			return $this->pagado;
 		}
 		
 		public function setProveedor($proveedor, $statement=NULL)
@@ -149,32 +152,30 @@
 			}
 		}
 
-		public static
-
-		 function obtenerCompra($idCompra)
+		public static function obtenerCompra($idCompra)
 		{
 			$conexion = Conexion::conectar();
-	    	$statement = $conexion->prepare("SELECT * FROM `compras` WHERE  `id_compra` = :id_compra");
-	    	$statement->bindValue(":id_compra", $idCompra);
-	    	$statement->execute();
-	    	$resultado = $statement->fetch(PDO::FETCH_ASSOC);
-    	    if($resultado!=false){
-    	        $compra = new Compra();
-    	        $compra->setNumeroFactura($resultado['numero_factura']);
-    	        $compra->setFecha($resultado['fecha_compra']);
-    	        $compra->setTotalCompra($resultado['total_compra']);
-    	        $compra->setDescuento($resultado['descuento_compra']);
+			$statement = $conexion->prepare("SELECT * FROM `compras` WHERE  `id_compra` = :id_compra");
+			$statement->bindValue(":id_compra", $idCompra);
+			$statement->execute();
+			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+			if($resultado!=false){
+				$compra = new Compra();
+				$compra->setNumeroFactura($resultado['numero_factura']);
+				$compra->setFecha($resultado['fecha_compra']);
+				$compra->setTotalCompra($resultado['total_compra']);
+				$compra->setDescuento($resultado['descuento_compra']);
 
-    	        $proveedor= Proveedor::obtenerProveedor($resultado['USUARIOS_id_proveedor'],false);
+				$proveedor= Proveedor::obtenerProveedor($resultado['USUARIOS_id_proveedor'],false);
 
-    	        $compra->setProveedor($proveedor);
+				$compra->setProveedor($proveedor);
 
-    	        $conexion=null;
-    	        $statement=null;
-    	        return $compra;
-    	    }else{
-    	        return false;
-    	    }
+				$conexion=null;
+				$statement=null;
+				return $compra;
+			}else{
+				return false;
+			}
 
 		}
 		public static function verCompras($id_proveedor = null){
@@ -196,8 +197,44 @@
 			}
 
 		}
+		public static function abastecer(){
+			foreach ($productosxcompra as $productoxcompra) {
+				$conexion = Conexion::conectar();
+				$statement = $conexion->prepare(" UPDATE `inventario` SET `precio`=:precio ,`unidades`=:unidades  WHERE `PRODUCTOS_id_producto`=:id_producto ");
+				$producto=$productoxcompra->getProducto();
+				$id_producto=$producto->getIdProducto();
+				$inventario=Inventario::obtenerInventario($id_producto);
 
+				$precio=(($producto->getValorUtilidad()/100) * $productosxcompra->getPrecioUnitario()) + $productosxcompra->getPrecioUnitario() ;
+				$unidades= $inventario->getUnidades() + $productosxcompra->getNumeroUnidades();
+
+				$inventario->setUnidades($unidades,$statement);
+				$inventario->setPrecio($precio,$statement);
+
+				$statement->execute();
+				if(!$statement){
+					throw new Exception("Error Processing Request", 1);
+				}
+				$conexion = null;
+				$statement=null;
+
+
+			}
+		}
+
+		public function verProductosxCompra(){
+			$idCompra=$this->getIdCompra();
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("SELECT * FROM productos INNER JOIN `productoxcompra` ON productoxcompra.productos_id_producto = productos.id_producto WHERE productoxcompra.COMPRAS_id_compra = :idCompra");
+			$statement->bindParam(':idCompra',$idCompra,PDO::PARAM_INT);
+			$statement->execute();
+			$conexion=null;
+			return $statement;
+		}
 
 	}
 
- ?>
+
+
+
+?>
