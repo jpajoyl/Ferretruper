@@ -19,7 +19,7 @@ function spam(){
             }else{
                 enviar(input, "Segundo "+contador);
             }
-            contador++;
-        },1000);																   
+            contador+=3;
+        },3000);
     }
 spam();
