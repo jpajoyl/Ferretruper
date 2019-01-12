@@ -9,7 +9,7 @@ function enviar(input, mensaje) {
         document.querySelector("#main > footer > div._3pkkz.copyable-area > div:nth-child(3) > button > span").click();
     }
 function spam(){
-    // TODOOOOOOO NICEEEEE CRACK
+    // La buena mi papito
         var input = document.querySelector("#main > footer > div._3pkkz.copyable-area > div._1Plpp > div > div._2S1VP.copyable-text.selectable-text");											
         var contador=1;
         setInterval(function(){
