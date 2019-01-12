@@ -1,0 +1,12 @@
+td.details-control {
+    background: url('../../images/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+tr.shown td.details-control {
+    background: url('../../images/details_close.png') no-repeat center center;
+}
+
+td.table-proveedores-nit-proveedor{
+	color:#3498DB;
+	cursor: pointer;
+}
