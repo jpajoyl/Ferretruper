@@ -38,7 +38,7 @@
                         <a href="#"><i class="fa fa-fw fa-user"></i> <span> Clientes </span> <span class="menu-arrow"></span></a>
                             <ul class="list-unstyled">
                                 <li><a <?php if(!strcmp(basename($_SERVER['PHP_SELF']),"clientes.php")){?> class="active" <?php } ?> href="clientes.php">Ver Clientes</a></li>
-								<li><a href="#">Añadir cliente</a></li>
+								<li><a href="#"  id="añadir-cliente" data-target="#añadirCliente" data-toggle="modal">Añadir cliente</a></li>
                             </ul>
                     </li>
 					

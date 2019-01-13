@@ -19,6 +19,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 		<link rel="shortcut icon" href="../assets/images/favicon.ico">
 
 		<!-- Switchery css -->
+		<link rel="stylesheet" href="../assets/css/sweetalert2.min.css">
 		<link href="../assets/plugins/switchery/switchery.min.css" rel="stylesheet" />
 		 
 		<!-- Bootstrap CSS -->
@@ -74,8 +75,9 @@ include_once '../assets/php/Controllers/GetSession.php';
 
 							
 							<div class="row">
-									<div class="col-xl-12">		
-
+									<div class="col-xl-12">	
+										<!-- MODALS -->
+									  	 <?php include 'includes/modalAddCliente.php';?>
 									</div>
 							</div>
 
@@ -95,6 +97,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 </div>
 <!-- END main -->
 
+<script src="../assets/js/sweetalert2.min.js"></script>
 <script src="../assets/js/modernizr.min.js"></script>
 <script src="../assets/js/jquery.min.js"></script>
 <script src="../assets/js/moment.min.js"></script>
@@ -113,7 +116,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 <script src="../assets/js/pikeadmin.js"></script>
 
 <!-- BEGIN Java Script for this page -->
-
+<script src="../assets/js/addCliente.js"></script>
 <!-- END Java Script for this page -->
 
 </body>

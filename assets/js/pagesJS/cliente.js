@@ -157,15 +157,15 @@ $(document).ready(function() {
         event.preventDefault();
         var data;
             data = {
-                "id" : $("#input-id").val(),
-                "digitoDeVerificacion" : $("#input-digito-de-verificacion").val(),
-                "nombre" : $("#input-nombre").val(),
-                "direccion" : $("#input-direccion").val(),
-                "ciudad" : $("#input-ciudad").val(),
-                "email" : $("#input-email").val(),
-                "telefono" : $("#input-telefono").val(),
-                "celular" : $("#input-celular").val(),
-                "clasificacion" : $("#input-clasificacion").val()
+                "id" : $("#input-id-cliente").val(),
+                "digitoDeVerificacion" : $("#input-digito-de-verificacion-cliente").val(),
+                "nombre" : $("#input-nombre-cliente").val(),
+                "direccion" : $("#input-direccion-cliente").val(),
+                "ciudad" : $("#input-ciudad-cliente").val(),
+                "email" : $("#input-email-cliente").val(),
+                "telefono" : $("#input-telefono-cliente").val(),
+                "celular" : $("#input-celular-cliente").val(),
+                "clasificacion" : $("#input-clasificacion-cliente").val()
             }
             $.ajax({
                 url: '../assets/php/Controllers/CCliente.php?method=registrarCliente',
