@@ -381,4 +381,6 @@ $(document).ready(function() {
         document.getElementById("form-añadirProveedor").reset();
     });
 
+    
+
 }); 

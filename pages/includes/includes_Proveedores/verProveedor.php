@@ -75,23 +75,86 @@ $proveedor=$servletRequest->getAtribute("proveedor");
 			</div>
 			<div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
 			  <div class="card-body">
-			  	<a role="button" href="#" id="añadir-proveedor" class="btn btn-success float-right" data-target="#añadirProveedor" data-toggle="modal">Añadir proveedor<span class="btn-label btn-label-right"><i class="fa fa-user-plus"></i></span></a>
-						<table id="table-productos-proveedor" class="table table-bordered table-striped table-responsive-xl table-hover display">
-							<thead class="cf">
-								<tr>
-									<th></th>
-									<th>No. producto</th>
-									<th>Nombre</th>
-									<th>Ref. Fabrica</th>
-									<th>C. Tributaria</th>
-									<th>% Utilidad</th>
-									<th></th>
-								</tr>
-							</thead>
-							<tbody id="body-table-productos-proveedor">
+			  	<a role="button" href="#" id="añadir-producto" class="btn btn-success float-right" data-target="#añadirProducto" data-toggle="modal">Añadir producto<span class="btn-label btn-label-right"><i class="fa fa-product-hunt"></i></span></a>
+			  	<div class="modal fade custom-modal" id="añadirProducto" tabindex="-1" role="dialog" aria-labelledby="customModal" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="titleAñadirProducto">Añadir producto a <?php echo $proveedor->getNombre(); ?></h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<form autocomplete="off" action="#" id="form-añadirProducto">
+									<div class="form-row">
+										<div class="form-group col-md-6">
+											<label>Identificacion <span class="text-danger">*</span></label>
+											<input type="text" class="form-control" id="input-id-producto" placeholder="Identificacion" autocomplete="off" required>
+										</div>
+										<div class="form-group col-md-6">
+											<label>Nombre<span class="text-danger">*</span></label>
+											<input type="text" class="form-control" id="input-nombre-producto" placeholder="Nombre del producto" autocomplete="off" required>
+										</div>
+									</div>
+									<div class="form-group">
+										<label>Descripcion del producto<span class="text-danger">*</span></label>
+										<textarea required class="form-control" id="input-descripcion-producto"></textarea>
+									</div>
+									<div class="form-group">
+										<label>Referencia de fabrica<span class="text-danger">*</span></label>
+										<input type="text" class="form-control" id="input-referencia-fabrica" placeholder="Referencia de fabrica" required autocomplete="off">
+									</div>
+									<div class="form-group">
+										<label>Clasificacion Tributaria<span class="text-danger">*</span></label>
+										<input type="text" class="form-control" id="input-clasificacion-tributaria" placeholder="Clasificacion Tributaria" required value="GRAVADO" autocomplete="off">
+									</div>
+									<div class="form-row">
+										<div class="form-group col-md-6">
+											<label>Valor de utilidad <span class="text-danger">*</span></label>
+											<input type="number" class="form-control" id="input-valor-utilidad" placeholder="Valor Utilidad" value="30" required>
+										</div>
+										<div class="form-group col-md-6">
+											<label>Tiene IVA? <span class="text-danger">*</span></label>
+											<div class="form-check">
+											  <label class="form-check-label">
+												<input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
+												SI
+											  </label>
+											</div>
+											<div class="form-check">
+											  <label class="form-check-label">
+												<input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+												NO
+											  </label>
+											</div>
+										</div>
+									</div>	
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelar-añadirProveedor">Cancelar</button>
+									<button type="submit" class="btn btn-success">Registrar</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<table id="table-productos-proveedor" class="table table-bordered table-striped table-responsive-xl table-hover display">
+					<thead class="cf">
+						<tr>
+							<th></th>
+							<th>No. producto</th>
+							<th>Nombre</th>
+							<th>Ref. Fabrica</th>
+							<th>C. Tributaria</th>
+							<th>% Utilidad</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody id="body-table-productos-proveedor">
 
-							</tbody>
-						</table>
+					</tbody>
+				</table>
 			  </div>
 			</div>
 		  </div>
