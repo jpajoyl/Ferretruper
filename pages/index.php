@@ -20,6 +20,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 		<link rel="shortcut icon" href="../assets/images/favicon.ico">
 
 		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="../assets/css/sweetalert2.min.css">
 		<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 		
 		<!-- Font Awesome CSS -->
@@ -279,7 +280,9 @@ include_once '../assets/php/Controllers/GetSession.php';
 											</div>														
 										</div><!-- end card-->					
 									</div>
-							</div>			
+							</div>
+								<!-- MODALS -->
+							  	 <?php include 'includes/modalAddCliente.php';?>			
             </div>
 			<!-- END container-fluid -->
 
@@ -294,6 +297,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 </div>
 <!-- END main -->
 
+<script src="../assets/js/sweetalert2.min.js"></script>
 <script src="../assets/js/modernizr.min.js"></script>
 <script src="../assets/js/jquery.min.js"></script>
 <script src="../assets/js/moment.min.js"></script>
@@ -310,6 +314,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 <script src="../assets/js/pikeadmin.js"></script>
 
 <!-- BEGIN Java Script for this page -->
+<script src="../assets/js/addCliente.js"></script>	
 	<script src="../assets/js/Chart.min.js"></script>
 	<script src="../assets/js/jquery.dataTables.min.js"></script>
 	<script src="../assets/js/dataTables.bootstrap4.min.js"></script>

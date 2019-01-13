@@ -13,7 +13,7 @@ include_once '../assets/php/Controllers/HttpServletRequest.php';
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		
-		<title>Proveedores</title>
+		<title>Proveedores | Ferretruper</title>
 		<meta name="description" content="Free Bootstrap 4 Admin Theme | Pike Admin">
 		<meta name="author" content="Pike Web Development - https://www.pikephp.com">
 
@@ -101,6 +101,8 @@ include_once '../assets/php/Controllers/HttpServletRequest.php';
 					  			}
 					  		}
 					  	 ?>
+					  	 	<!-- MODALS -->
+					  	   	 <?php include 'includes/modalAddCliente.php';?>
 					</div>
 				</div>
 
@@ -137,6 +139,7 @@ include_once '../assets/php/Controllers/HttpServletRequest.php';
 <script src="../assets/js/pikeadmin.js"></script>
 
 <!-- BEGIN Java Script for this page -->
+<script src="../assets/js/addCliente.js"></script>
 <script src="../assets/js/Chart.min.js"></script>
 <script src="../assets/js/jquery.dataTables.min.js"></script>
 <script src="../assets/js/dataTables.buttons.min.js"></script>
