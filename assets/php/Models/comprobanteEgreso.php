@@ -9,7 +9,7 @@
 		//atributos
 		private $numeroConsecutivo;
 		private $fechaPago;
-		private $compra;
+		private $compra;//objeto compra
 
 
 		public function __construct(){
@@ -77,8 +77,37 @@
 			return $this;
 		}
 
+		public static function obtenerComprovanteEgreso($numeroDeConsulta, $modo=true){
+			//idComprovanteEgreso->True, idCompra->False
+			$conexion = Conexion::conectar();
+			if ($modo) {
+				$statement = $conexion->prepare("SELECT * FROM `comprobantes_egreso` WHERE  `id_comprobante_egreso` = :numeroDeConsulta");
+			}else{
+				$statement = $conexion->prepare("SELECT * FROM `comprobantes_egreso` WHERE  `COMPRAS_id_compra` = :numeroDeConsulta");
+			}
+			
+			$statement->bindValue(":numeroDeConsulta", $numeroDeConsulta);
+			$statement->execute();
+			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+			if($resultado!=false){
+				$comprovanteEgreso = new comprobanteEgreso();
+				$comprovanteEgreso->setNumeroConsecutivo($resultado['id_comprobante_egreso']);
+				$comprovanteEgreso->setFechaPago($resultado['fecha_pago']);
+				$compra = Compra::obtenerCompra($resultado['COMPRAS_id_compra']);
+				$comprovanteEgreso->setCompra($compra);
+				$conexion=null;
+				$statement=null;
+				return $comprovanteEgreso;
+			}else{
+				$conexion=null;
+				$statement=null;
+				return false;
+			}
+		}
+
 
 		public function imprimirComprobante(){
+
 
 
 		}

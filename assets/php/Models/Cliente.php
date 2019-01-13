@@ -40,9 +40,9 @@ class Cliente extends Usuario {
     	$statement = $conexion->prepare("SELECT * FROM `usuarios` WHERE tipo_usuario = 'cliente' ");
 
     	$statement->execute();
+        $conexion=null;
         return $statement;
-    	$conexion=null;
-    	$statement=null;
+    	
     }
         
     public static function obtenerCliente($numeroConsulta,$modo=true) {
