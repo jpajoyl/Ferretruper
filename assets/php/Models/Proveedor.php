@@ -81,6 +81,21 @@
 			return $statement;
 		}
 
+		public function añadirProductoxproveedor($idProducto){
+
+			$idProveedor = $this->getIdUsuario();
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("INSERT INTO `productoxproveedor` (`idProductoxproveedor`, `usuarios_id_usuario`, `productos_id_producto`) VALUES (NULL, :idProveedor, :idProducto)");
+			$statement->bindParam(':idProveedor',$idProveedor,PDO::PARAM_INT);
+			$statement->bindParam(':idProducto',$idProducto,PDO::PARAM_INT);
+			$statement->execute();
+			if(!$statement){
+				throw new Exception("Error Processing Request", 1);
+			}
+			$conexion = null;
+			$statement = null;
+		}
+
 
 	}
 
