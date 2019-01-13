@@ -13,8 +13,8 @@
 					<li class="submenu">
                         <a href="#"><i class="fa fa-fw fa-file"></i> <span> Inventario </span> <span class="menu-arrow"></span></a>
 							<ul class="list-unstyled">
-								<li><a href="#">Ver inventario</a></li>
-								<li><a href="#">Abastecer</a></li>
+								<li><a <?php if(!strcmp(basename($_SERVER['PHP_SELF']),"inventario.php")){?> class="active" <?php } ?> href="inventario.php">Ver inventario</a></li>
+								<li><a <?php if(!strcmp(basename($_SERVER['PHP_SELF']),"inventario.php")){?> class="active" <?php } ?> href="#">Abastecer</a></li>
 							</ul>
                     </li>
 
@@ -37,7 +37,7 @@
 					<li class="submenu">
                         <a href="#"><i class="fa fa-fw fa-user"></i> <span> Clientes </span> <span class="menu-arrow"></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="#">Ver Clientes</a></li>
+                                <li><a <?php if(!strcmp(basename($_SERVER['PHP_SELF']),"clientes.php")){?> class="active" <?php } ?> href="clientes.php">Ver Clientes</a></li>
 								<li><a href="#">Añadir cliente</a></li>
                             </ul>
                     </li>
