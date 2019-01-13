@@ -11,7 +11,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		
-		<title>Inventario | Ferretruper</title>
+		<title>Abastecer | Feretruper</title>
 		<meta name="description" content="Free Bootstrap 4 Admin Theme | Pike Admin">
 		<meta name="author" content="Pike Web Development - https://www.pikephp.com">
 
@@ -62,10 +62,10 @@ include_once '../assets/php/Controllers/GetSession.php';
 							<div class="row">
 									<div class="col-xl-12">
 											<div class="breadcrumb-holder">
-													<h1 class="main-title float-left">Inventario</h1>
+													<h1 class="main-title float-left">Blank Page</h1>
 													<ol class="breadcrumb float-right">
-														<li class="breadcrumb-item">Pages</li>
-														<li class="breadcrumb-item active">inventario</li>
+														<li class="breadcrumb-item">Home</li>
+														<li class="breadcrumb-item active">Blank Page</li>
 													</ol>
 													<div class="clearfix"></div>
 											</div>
@@ -75,9 +75,9 @@ include_once '../assets/php/Controllers/GetSession.php';
 
 							
 							<div class="row">
-									<div class="col-xl-12">	
-										<!-- MODALS -->
-									  	 <?php include 'includes/modalAddCliente.php';?>
+									<div class="col-xl-12">									
+									  	 	<!-- MODALS -->
+									  	   	 <?php include 'includes/modalAddCliente.php';?>
 									</div>
 							</div>
 

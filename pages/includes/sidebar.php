@@ -14,7 +14,7 @@
                         <a href="#"><i class="fa fa-fw fa-file"></i> <span> Inventario </span> <span class="menu-arrow"></span></a>
 							<ul class="list-unstyled">
 								<li><a <?php if(!strcmp(basename($_SERVER['PHP_SELF']),"inventario.php")){?> class="active" <?php } ?> href="inventario.php">Ver inventario</a></li>
-								<li><a <?php if(!strcmp(basename($_SERVER['PHP_SELF']),"inventario.php")){?> class="active" <?php } ?> href="#">Abastecer</a></li>
+								<li><a <?php if(!strcmp(basename($_SERVER['PHP_SELF']),"abastecer.php")){?> class="active" <?php } ?> href="abastecer.php">Abastecer</a></li>
 							</ul>
                     </li>
 

@@ -1,6 +1,7 @@
 <?php
 include_once '../assets/php/Conexion.php';
 include_once '../assets/php/Controllers/SesionEmpleado.php';
+include_once "../assets/php/Models/Usuario.php";
 include_once "../assets/php/Models/Empleado.php";
 include_once '../assets/php/Controllers/GetSession.php';
  ?>

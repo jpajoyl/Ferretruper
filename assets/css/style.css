@@ -260,8 +260,8 @@ a {
     z-index: 1; }
    
 .headerbar .headerbar-left .logo img {
-    max-width: 100px;
-    max-height: 30px;
+    max-width: 200px;
+    max-height: 42px;
     width: auto;
     height: auto;
 }
@@ -340,7 +340,7 @@ body.adminbody .main-sidebar.left {
 	vertical-align: middle;
 	z-index: 1;  }
   .button-menu-mobile:hover {
-    color: #a2cff7; }
+    color: black; }
 
 .sidebar-inner {
   height: 100%;  
@@ -549,9 +549,9 @@ body.adminbody .main-sidebar.left {
 #main.enlarged .content-page {
   margin-left: 70px; }
 #main.enlarged .navbar-custom {
-  margin-left: 70px; }
+  margin-left: 160px; }
 #main.enlarged .headerbar .headerbar-left {
-  width: 70px !important; }
+  width: 160px !important; }
   #main.enlarged .headerbar .headerbar-left .logo span {
     display: none;
     opacity: 0; }
