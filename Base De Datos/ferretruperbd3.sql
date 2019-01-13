@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`usuarios` (
   `clasificacion` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_usuario`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 29
+AUTO_INCREMENT = 30
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`ventas` (
   `fecha_anulada` DATE NULL DEFAULT NULL,
   PRIMARY KEY (`id_venta`))
 ENGINE = InnoDB
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -166,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`credenciales_de_acceso` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 4
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -186,9 +187,11 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`resoluciones` (
   `id_resolucion` INT(11) NOT NULL,
+  `descripcion` VARCHAR(500) NOT NULL,
   `tipo` VARCHAR(45) NOT NULL,
   `vigente` TINYINT(1) NOT NULL,
   `activa` TINYINT(4) NOT NULL,
+  `numero_dian` INT(11) NOT NULL,
   PRIMARY KEY (`id_resolucion`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
@@ -198,15 +201,16 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `ferretruperbd2`.`facturas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`facturas` (
-  `numero_dian` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_factura` INT(11) NOT NULL AUTO_INCREMENT,
   `total` INT(11) NOT NULL,
   `fecha` DATE NOT NULL,
   `anulada` TINYINT(1) NULL DEFAULT NULL,
   `fecha_anulada` DATE NULL DEFAULT NULL,
+  `numero_dian` INT(11) NOT NULL,
   `informacion_facturas_id_informacion_facturas` INT(11) NOT NULL,
   `resoluciones_id_resolucion` INT(11) NOT NULL,
   `ventas_id_venta` INT(11) NOT NULL,
-  PRIMARY KEY (`numero_dian`),
+  PRIMARY KEY (`id_factura`),
   INDEX `fk_facturas_informacion_facturas1_idx` (`informacion_facturas_id_informacion_facturas` ASC),
   INDEX `fk_facturas_resoluciones1_idx` (`resoluciones_id_resolucion` ASC),
   INDEX `fk_facturas_ventas1_idx` (`ventas_id_venta` ASC),
@@ -226,6 +230,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`facturas` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
+AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -291,7 +296,6 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`inventario` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
 
 
