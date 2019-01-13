@@ -7,12 +7,6 @@ $(document).ready(function() {
             }catch(err){
                 console.log(err);
             }
-        }else{
-            try{
-                loadDataProveedor();
-            }catch(err){
-                console.log(err);
-            }
         }
     });
 
@@ -47,12 +41,12 @@ $(document).ready(function() {
                     "method":"POST",
                     "url":"../assets/php/Controllers/CProveedor.php?method=verProveedores"
                 },
-                "dataSrc": function(data){
-                    if(data == 3){
+                "dataSrc": function(dataReturn){
+                    if(dataReturn == 3){
                         return [];
                     }
                     else {
-                        return data.data;
+                        return dataReturn.data;
                     }
                 },
                 "autoWidth": false,
@@ -128,18 +122,21 @@ $(document).ready(function() {
     }
 
     function loadDataProveedor(){
+        var idProveedor=$("#card-verProveedor").attr("id-proveedor");
         window.table=$('#table-productos-proveedor').DataTable({
                 "ajax":{
                     "method":"POST",
-                    "data":{"idProveedor":$("#card-verProveedor").attr("id-proveedor")},
+                    "data": {
+                            "idProveedor": idProveedor
+                        },
                     "url":"../assets/php/Controllers/CProveedor.php?method=productosProveedor"
                 },
-                "dataSrc": function(data){
-                    if(data == 3){
+                "dataSrc": function(dataReturn){
+                    if(dataReturn == 3){
                         return [];
                     }
                     else {
-                        return data.data;
+                        return dataReturn.data;
                     }
                 },
                 "autoWidth": false,
@@ -381,6 +378,69 @@ $(document).ready(function() {
         document.getElementById("form-añadirProveedor").reset();
     });
 
-    
+    $(".productos-suministrados").click(function(){
+        setTimeout(function(){
+            loadDataProveedor();
+        },50);
+    });
+
+    $("#form-añadirProducto").submit(function(event){
+        event.preventDefault();
+        var data;
+            data = {
+                "idProducto" : $("#input-id-producto").val(),
+                "nombre" : $("#input-nombre-producto").val(),
+                "descripcion" : $("#input-descripcion-producto").val(),
+                "referenciaFabrica" : $("#input-referencia-fabrica").val(),
+                "clasificacionTributaria" : $("#input-clasificacion-tributaria").val(),
+                "utilidad" : $("#input-valor-utilidad").val(),
+                "iva" : $('input:radio[name=IVA]:checked').val(),
+                "CodigoDeBarras" : $("#input-codigo-barras").val()
+            }            
+            $.ajax({
+                url: '../assets/php/Controllers/CProducto.php?method=registrarProducto',
+                type: 'POST',
+                data: data,
+                success:function(data){  
+                  console.log(data);
+                  if(data!=""){
+                    if(data==1){
+                        $("#añadirProducto").modal("hide");
+                        setTimeout(function(){
+                            Swal(
+                              'Satisfactorio!',
+                              'Se ha registrado correctamente el producto',
+                              'success'
+                            );
+                            document.getElementById("form-añadirProducto").reset();
+                            loadDataProveedor(); 
+                        },500); 
+                    }else if(data==0){
+                        $("#añadirProducto").modal("hide");
+                        setTimeout(function(){
+                            Swal(
+                              'Error!',
+                              'Ha ocurrido un error, vuelva a intentar',
+                              'error'
+                            );
+                            document.getElementById("form-añadirProducto").reset();
+                            loadDataProveedor();  
+                        },500);
+                    }else if(data==2){
+                        setTimeout(function(){
+                            Swal(
+                              'Error!',
+                              'Al parecer este numero de identificacion ya esta registrado',
+                              'error'
+                            );
+                        },500);
+                    }
+                  }
+                }   
+            });
+
+    });
+
+
 
 }); 

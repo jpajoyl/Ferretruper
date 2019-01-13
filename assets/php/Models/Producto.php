@@ -169,7 +169,7 @@
 
 		public static function obtenerProducto($idProducto){
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("SELECT * FROM `productos` WHERE  `idProducto` = :idProducto");
+			$statement = $conexion->prepare("SELECT * FROM `productos` WHERE  `id_producto` = :idProducto");
 			$statement->bindValue(":idProducto", $idProducto);
 			$statement->execute();
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);

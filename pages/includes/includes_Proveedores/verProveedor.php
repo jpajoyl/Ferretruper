@@ -66,7 +66,7 @@ $proveedor=$servletRequest->getAtribute("proveedor");
 			</div>
 		  </div>
 		  <div class="card">
-			<div class="card-header" role="tab" id="headingTwo">
+			<div class="card-header productos-suministrados" role="tab" id="headingTwo">
 			  <h5 class="mb-0">
 				<a class="collapsed" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
 				  Productos suministrados
@@ -118,21 +118,25 @@ $proveedor=$servletRequest->getAtribute("proveedor");
 											<label>Tiene IVA? <span class="text-danger">*</span></label>
 											<div class="form-check">
 											  <label class="form-check-label">
-												<input class="form-check-input" type="radio" name="IVA" id="ivaSi" value="SI" checked>
+												<input class="form-check-input" type="radio" name="IVA" id="ivaSi" value="1" checked>
 												SI
 											  </label>
 											</div>
 											<div class="form-check">
 											  <label class="form-check-label">
-												<input class="form-check-input" type="radio" name="IVA" id="ivaNo" value="NO">
+												<input class="form-check-input" type="radio" name="IVA" id="ivaNo" value="0">
 												NO
 											  </label>
 											</div>
 										</div>
+										<div class="form-group">
+											<label>Codigo de barras<span class="text-danger">*</span></label>
+											<input type="text" class="form-control" id="input-codigo-barras" placeholder="Codigo de barras" required autocomplete="off">
+										</div>
 									</div>	
 								</div>
 								<div class="modal-footer">
-									<button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelar-añadirProveedor">Cancelar</button>
+									<button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelar-añadirProducto">Cancelar</button>
 									<button type="submit" class="btn btn-success">Registrar</button>
 								</form>
 							</div>

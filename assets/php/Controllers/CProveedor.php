@@ -33,14 +33,9 @@
 			if(Proveedor::obtenerProveedor($nit)==false){
 				try{
 					$proveedor = new Proveedor("nit", $nit, $nombre, $direccion, $ciudad, $telefono, $clasificacion, $digitoDeVerificacion, $email, $celular);
-
-					$conexion=null;
-					$statement=null;
 					echo SUCCESS;
 				}catch(Exception $e){
 					echo ERROR;
-					$conexion=null;
-					$statement=null;
 				}
 			}else{
 				echo ALREADY_EXIST;
