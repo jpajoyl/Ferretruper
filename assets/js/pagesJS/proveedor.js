@@ -123,7 +123,7 @@ $(document).ready(function() {
 
     function loadDataProveedor(){
         var idProveedor=$("#card-verProveedor").attr("id-proveedor");
-        window.table=$('#table-productos-proveedor').DataTable({
+        window.tableProductos=$('#table-productos-proveedor').DataTable({
                 "ajax":{
                     "method":"POST",
                     "data": {
@@ -148,12 +148,13 @@ $(document).ready(function() {
                         "defaultContent": ''
                     },
                     {"data":"id_producto"},
+                    {"data":"codigo_barras"},
                     {"data":"nombre"},
                     {"data":"referencia_fabrica"},
                     {"data":"clasificacion_tributaria"},
                     {"data":"valor_utilidad"},
-                    {"defaultContent":"<button class='btn btn-primary btn-xs editar-proveedor'><i class='fa fa-pencil'></i></button>\
-                    </button><button class='btn btn-danger btn-xs eliminar-proveedor'><i class='fa fa-trash-o'></i></button>"}
+                    {"defaultContent":"<button class='btn btn-primary btn-xs editar-producto'><i class='fa fa-pencil'></i></button>\
+                    </button><button class='btn btn-danger btn-xs eliminar-producto'><i class='fa fa-trash-o'></i></button>"}
                 ],
                 "destroy":true,
                 "responsive":true,
@@ -166,6 +167,8 @@ $(document).ready(function() {
                 "infoFiltered": "(registros disponibles _MAX_)"
                 }
             });
+        getDataEditProducto("#table-productos-proveedor tbody",tableProductos);
+        desactivarProducto("#table-productos-proveedor tbody",tableProductos);
     }
 
     $('#table-productos-proveedor tbody').on('click', 'td.details-control', function () {
@@ -251,7 +254,7 @@ $(document).ready(function() {
     $("#cancelar-editarProveedor").click(function(){
         $("#nit-proveedor").html("");
         $("#digitoDeVerificacion").html("");
-        document.getElementById("form-añadirProveedor").reset();
+        document.getElementById("form-editarProveedor").reset();
     });
         
     $("#form-añadirProveedor").submit(function(event){
@@ -329,8 +332,7 @@ $(document).ready(function() {
                 url: '../assets/php/Controllers/CProveedor.php?method=editarProveedor',
                 type: 'POST',
                 data: data,
-                success:function(data){
-                console.log(data); 
+                success:function(data){ 
                   if(data!=""){
                     if(data==1){
                         $("#modal-editar-proveedor").modal("hide");
@@ -342,7 +344,7 @@ $(document).ready(function() {
                             );
                             $("#nit-proveedor").html("");
                             $("#digitoDeVerificacion").html("");
-                            document.getElementById("form-añadirProveedor").reset();
+                            document.getElementById("form-editarProveedor").reset();
                         },500); 
                     }else if(data==0){
                         $("#modal-editar-proveedor").modal("hide");
@@ -354,7 +356,7 @@ $(document).ready(function() {
                             );
                             $("#nit-proveedor").html("");
                             $("#digitoDeVerificacion").html("");
-                            document.getElementById("form-añadirProveedor").reset();
+                            document.getElementById("form-editarProveedor").reset();
                         },500);
                     }else if(data==3){
                         $("#modal-editar-proveedor").modal("hide");
@@ -384,6 +386,75 @@ $(document).ready(function() {
         },50);
     });
 
+    function getDataEditProducto(tbody,table){
+        $(tbody).on("click", ".editar-producto", function(){
+            var data=table.row($(this).parents("tr")).data();
+            $("#nombre-producto").html(data.nombre);
+            $("#input-id-producto-editar").val(data.id_producto);
+            $("#input-nombre-producto-editar").val(data.nombre);
+            $("#input-descripcion-producto-editar").val(data.descripcion);
+            $("#input-referencia-fabrica-editar").val(data.referencia_fabrica);
+            $("#input-clasificacion-tributaria-editar").val(data.clasificacion_tributaria);
+            $("#input-valor-utilidad-editar").val(data.valor_utilidad);
+            $('input:radio[name=IVA]:checked').val(data.tiene_iva);
+            $("#input-codigo-barras-editar").val(data.codigo_barras);         
+            $("#modal-editar-producto").modal("show");
+        });
+    }
+
+    function desactivarProducto(tbody,table){
+        $(tbody).on("click", ".eliminar-producto", function(){
+            var data=table.row($(this).parents("tr")).data();
+            Swal({
+              title: 'Estas seguro?',
+              text: "Se eliminara el producto "+data.nombre+"!",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Si, Eliminarlo!',
+              cancelButtonText: "Cancelar"
+            }).then((result) => {
+              if (result.value) {
+                $.ajax({
+                    url: '../assets/php/Controllers/CProducto.php?method=desactivarProducto',
+                    type: 'POST',
+                    data: {"nit":data.id_producto},
+                    success:function(data){  
+                      if(data!=""){
+                        if(data==1){
+                            loadDataProveedor();
+                            setTimeout(function(){
+                                Swal(
+                                  'Satisfactorio!',
+                                  'Se ha eliminado correctamente el producto',
+                                  'success'
+                                );
+                            },500); 
+                            
+                        }else if(data==0 || data==3){
+                            loadDataProveedor();  
+                            setTimeout(function(){
+                                Swal(
+                                  'Error!',
+                                  'Ha ocurrido un error, vuelva a intentar',
+                                  'error'
+                                );
+                            },500);        
+                        }
+                      }
+                    }   
+                });
+              }
+            });
+        });
+    }
+
+    $("#cancelar-editarProducto").click(function(){
+        $("#nombre-producto").html("");
+        document.getElementById("form-editarProducto").reset();
+    });
+
     $("#form-añadirProducto").submit(function(event){
         event.preventDefault();
         var data;
@@ -402,7 +473,6 @@ $(document).ready(function() {
                 type: 'POST',
                 data: data,
                 success:function(data){  
-                  console.log(data);
                   if(data!=""){
                     if(data==1){
                         $("#añadirProducto").modal("hide");
@@ -438,6 +508,65 @@ $(document).ready(function() {
                   }
                 }   
             });
+
+    });
+
+    $("#form-editarProducto").submit(function(event){
+        event.preventDefault();
+        var data;
+            data = {
+                "idProducto" : $("#input-id-producto-editar").val(),
+                "nombre" : $("#input-nombre-producto-editar").val(),
+                "descripcion" : $("#input-descripcion-producto-editar").val(),
+                "referenciaFabrica" : $("#input-referencia-fabrica-editar").val(),
+                "clasificacionTributaria" : $("#input-clasificacion-tributaria-editar").val(),
+                "utilidad" : $("#input-valor-utilidad-editar").val(),
+                "iva" : $('input:radio[name=IVA-editar]:checked').val(),
+                "CodigoDeBarras" : $("#input-codigo-barras-editar").val()
+            } 
+            $.ajax({
+                url: '../assets/php/Controllers/CProducto.php?method=editarProducto',
+                type: 'POST',
+                data: data,
+                success:function(data){
+                  if(data!=""){
+                    if(data==1){
+                        $("#modal-editar-producto").modal("hide");
+                        setTimeout(function(){
+                            Swal(
+                              'Satisfactorio!',
+                              'Se ha editado correctamente el producto',
+                              'success'
+                            );
+                            $("#nombre-producto").html("");
+                            document.getElementById("form-editarProducto").reset();
+                        },500); 
+                    }else if(data==0){
+                        $("#modal-editar-producto").modal("hide");
+                        setTimeout(function(){
+                            Swal(
+                              'Error!',
+                              'Ha ocurrido un error, vuelva a intentar',
+                              'error'
+                            );
+                            $("#nombre-producto").html("");
+                            document.getElementById("form-editarProducto").reset();
+                        },500);
+                    }else if(data==3){
+                        $("#modal-editar-producto").modal("hide");
+                        setTimeout(function(){
+                            Swal(
+                              'Error!',
+                              'Opps, no se ha encontrado el proveedor para editar',
+                              'error'
+                            );
+                        },500);
+                    }
+                  }
+                }   
+            }).always(function(){
+                        loadDataProveedor();                        
+                            });
 
     });
 

@@ -31,6 +31,41 @@
 			}else{
 				echo ALREADY_EXIST;
 			}
+		}else if(!strcmp($method,"editarProducto")){
+			$idProducto=$_POST['idProducto'];
+			$nombre=$_POST['nombre'];
+			$descripcion=$_POST['descripcion'];
+			$referenciaFabrica=$_POST['referenciaFabrica'];
+			$clasificacionTributaria=$_POST['clasificacionTributaria'];
+			$utilidad=$_POST['utilidad'];
+			$iva=$_POST['iva'];
+			$CodigoDeBarras=$_POST['CodigoDeBarras'];
+
+			$producto=Producto::obtenerProducto($idProducto);
+			if($producto!=false){
+				// $producto->actualizarProducto($id_usuario, $nombre, $direccion, $ciudad, $telefono, $clasificacion, $digitoDeVerificacion, $email, $celular);
+				if($producto){
+					echo SUCCESS;
+				}else{
+					echo ERROR;
+				}
+			}else{
+				echo NOT_FOUND;
+			}
+			
+		}else if(!strcmp($method,"desactivarProducto")){
+			$idProducto=$_POST['idProducto'];
+			$producto=Producto::obtenerProducto($idProducto);
+			if($producto!=false){
+				//$producto->desactivarUsuario();
+				if($producto){
+					echo SUCCESS;
+				}else{
+					echo ERROR;
+				}
+			}else{
+				echo NOT_FOUND;
+			}
 		}
 	}
  ?>
