@@ -118,13 +118,13 @@ $proveedor=$servletRequest->getAtribute("proveedor");
 											<label>Tiene IVA? <span class="text-danger">*</span></label>
 											<div class="form-check">
 											  <label class="form-check-label">
-												<input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
+												<input class="form-check-input" type="radio" name="IVA" id="ivaSi" value="SI" checked>
 												SI
 											  </label>
 											</div>
 											<div class="form-check">
 											  <label class="form-check-label">
-												<input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+												<input class="form-check-input" type="radio" name="IVA" id="ivaNo" value="NO">
 												NO
 											  </label>
 											</div>
