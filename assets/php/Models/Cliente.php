@@ -37,7 +37,7 @@ class Cliente extends Usuario {
 
     public static function verClientes(){
     	$conexion = Conexion::conectar();
-    	$statement = $conexion->prepare("SELECT * FROM `usuarios` WHERE tipo_usuario = 'cliente' ");
+    	$statement = $conexion->prepare("SELECT * FROM `usuarios` WHERE tipo_usuario = 'cliente' and activa = 1");
 
     	$statement->execute();
         return $statement;
