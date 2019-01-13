@@ -173,7 +173,7 @@ $(document).ready(function() {
 
     $('#table-productos-proveedor tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
-        var row = table.row( tr );
+        var row = tableProductos.row( tr );
  
         if ( row.child.isShown() ) {
             row.child.hide();
