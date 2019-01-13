@@ -16,7 +16,7 @@
 			}
 		}
 
-		public function __construct0($valor, $fecha, $id_Venta){
+		public function __construct0($valor, $fecha, $id_Venta){  //Id_venta es el id de la VENTAAAAAAAAAAAAAAAAAAAAAAA
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("INSERT INTO `abonos`(`id_abono`, `valor`, `fecha`, `TIPO_VENTA_id_tipo_venta`) VALUES (null,:valor,:fecha,:id_Venta)");
 			$this->setNumeroDeIdentificacion($numeroDeIdentificacion,$statement);
