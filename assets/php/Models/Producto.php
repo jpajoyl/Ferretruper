@@ -27,7 +27,7 @@
 			}
 		}
 
-		public function __construct0($idProducto, $nombre, $descripcion, $referenciaFabrica, $tieneIva, $clasificacionTributaria, $valorUtilidad, $activa, $codigoBarras = NULL){
+		public function __construct0($idProducto, $nombre, $descripcion, $referenciaFabrica, $tieneIva, $clasificacionTributaria, $valorUtilidad, $activa = 1, $codigoBarras = NULL){
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("INSERT INTO `productos` (`id_producto`, `codigo_barras`, `nombre`, `descripcion`, `referencia_fabrica`, `tiene_iva`, `clasificacion_tributaria`, `valor_utilidad`, `activa`) VALUES (:idProducto, :codigoBarras, :nombre, :descripcion, :referenciaFabrica, :tieneIva, :clasificacionTributaria, :valorUtilidad, :activa)");
 
@@ -192,7 +192,39 @@
 			}
 
 		}
+		public function editarProducto($codigoBarras, $nombre, $descripcion, $referenciaFabrica, $tieneIva, $clasificacionTributaria, $valorUtilidad){
 
+			$idProducto=$this->getIdProducto();
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("UPDATE `productos` SET `codigo_barras` = :codigoBarras, `nombre` = :nombre, `descripcion` = :descripcion, `referencia_fabrica` = :referenciaFabrica, `tiene_iva` = :tieneIva, `clasificacion_tributaria` = :clasificacionTributaria, `valor_utilidad` = :valorUtilidad WHERE `productos`.`id_producto` = :idProducto");
+			$statement->bindValue(":idProducto", $idProducto);
+			$this->setCodigoBarras($codigoBarras,$statement);
+			$this->setNombre($nombre,$statement);
+			$this->setDescripcion($descripcion,$statement);
+			$this->setReferenciaFabrica($referenciaFabrica,$statement);
+			$this->setTieneIva($tieneIva,$statement);
+			$this->setClasificacionTributaria($clasificacionTributaria,$statement);
+			$this->setValorUtilidad($valorUtilidad,$statement);
+			$statement->execute();
+			if(!$statement){
+				throw new Exception("Error Processing Request", 1);
+			}
+			$conexion = NULL;
+			$statement = NULL;
+
+		}
+
+		public function desactivarProducto(){
+			$idProducto=$this->getIdProducto();
+			$statement = $conexion->prepare("UPDATE `productos` SET `activa` = '0' WHERE `productos`.`id_producto` = :idProducto");
+			$statement->bindValue(":idProducto", $idProducto);
+			$statement->execute();
+			if(!$statement){
+				throw new Exception("Error Processing Request", 1);
+			}
+			$conexion = NULL;
+			$statement = NULL;
+		}
 
 
 
