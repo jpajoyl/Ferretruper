@@ -75,6 +75,7 @@ $proveedor=$servletRequest->getAtribute("proveedor");
 			</div>
 			<div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
 			  <div class="card-body">
+			  	<a role="button" href="#" id="añadir-proveedor" class="btn btn-success float-right" data-target="#añadirProveedor" data-toggle="modal">Añadir proveedor<span class="btn-label btn-label-right"><i class="fa fa-user-plus"></i></span></a>
 						<table id="table-productos-proveedor" class="table table-bordered table-striped table-responsive-xl table-hover display">
 							<thead class="cf">
 								<tr>
