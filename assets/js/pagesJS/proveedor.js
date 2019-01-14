@@ -459,6 +459,7 @@ $(document).ready(function() {
         event.preventDefault();
         var data;
             data = {
+                "idProveedor": $("#card-verProveedor").attr("id-proveedor"),
                 "idProducto" : $("#input-id-producto").val(),
                 "nombre" : $("#input-nombre-producto").val(),
                 "descripcion" : $("#input-descripcion-producto").val(),
@@ -467,12 +468,12 @@ $(document).ready(function() {
                 "utilidad" : $("#input-valor-utilidad").val(),
                 "iva" : $('input:radio[name=IVA]:checked').val(),
                 "CodigoDeBarras" : $("#input-codigo-barras").val()
-            }            
+            }
             $.ajax({
                 url: '../assets/php/Controllers/CProducto.php?method=registrarProducto',
                 type: 'POST',
                 data: data,
-                success:function(data){  
+                success:function(data){ 
                   if(data!=""){
                     if(data==1){
                         $("#añadirProducto").modal("hide");
@@ -501,6 +502,14 @@ $(document).ready(function() {
                             Swal(
                               'Error!',
                               'Al parecer este numero de identificacion ya esta registrado',
+                              'error'
+                            );
+                        },500);
+                    }else if(data==3){
+                        setTimeout(function(){
+                            Swal(
+                              'Error!',
+                              'No se ha encontrado el proveedor, recargue la pagina y vuelva a intentarlo',
                               'error'
                             );
                         },500);

@@ -2,6 +2,8 @@
 	if(!isset($include)){
 		include_once '../Conexion.php';
 		include_once 'SesionEmpleado.php';
+		include_once '../Models/Usuario.php';
+		include_once '../Models/Proveedor.php';
 		include_once '../Models/Producto.php';
 		$objectSession =new SesionEmpleado();
 		$method = isset($_GET['method'])?$_GET['method']:"";
@@ -9,6 +11,7 @@
 	include_once 'Response.php';
 	if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		if(!strcmp($method,"registrarProducto")){
+			$idProveedor=$_POST['idProveedor'];
 			$idProducto=$_POST['idProducto'];
 			$nombre=$_POST['nombre'];
 			$descripcion=$_POST['descripcion'];
@@ -18,18 +21,23 @@
 			$iva=$_POST['iva'];
 			$CodigoDeBarras=$_POST['CodigoDeBarras'];
 
-			if(Producto::obtenerProducto($idProducto)==false){
-				try {
-					$producto = new Producto($idProducto, $nombre, $descripcion, $referenciaFabrica, $iva, $clasificacionTributaria, $utilidad, "1", $CodigoDeBarras);
-					// productoxproveedor = new ProductoXProveedor(params);
-					echo SUCCESS;
-				} catch (Exception $e) {
-					echo ERROR;
-					$conexion=null;
-					$statement=null;
+			$proveedor=Proveedor::obtenerProveedor($idProveedor,false);
+			if($proveedor!=false){
+				if(Producto::obtenerProducto($idProducto)==false){
+					try {
+						$producto = new Producto($idProducto, $nombre, $descripcion, $referenciaFabrica, $iva, $clasificacionTributaria, $utilidad, "1", $CodigoDeBarras);
+						$productoxproveedor=$proveedor->añadirProductoxproveedor($idProducto);
+						echo SUCCESS;
+					} catch (Exception $e) {
+						echo ERROR;
+						$conexion=null;
+						$statement=null;
+					}
+				}else{
+					echo ALREADY_EXIST;
 				}
 			}else{
-				echo ALREADY_EXIST;
+				echo NOT_FOUND;
 			}
 		}else if(!strcmp($method,"editarProducto")){
 			$idProducto=$_POST['idProducto'];
