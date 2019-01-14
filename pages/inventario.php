@@ -75,7 +75,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 					<div class="row">
 						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">									
 							<?php 
-							include '../assets/php/Controllers/CInventario.php'
+							include_once'../assets/php/Controllers/CInventario.php';
 							?>
 							<!-- MODALS -->
 							<?php include 'includes/modalAddCliente.php';?>
@@ -110,11 +110,15 @@ include_once '../assets/php/Controllers/GetSession.php';
 	<script src="../assets/js/jquery.nicescroll.js"></script>
 	<script src="../assets/js/jquery.scrollTo.min.js"></script>
 	<script src="../assets/plugins/switchery/switchery.min.js"></script>
+	<script src="../assets/js/pagesJS/inventario.js"></script>
 
 	<!-- App js -->
 	<script src="../assets/js/pikeadmin.js"></script>
 
 	<!-- BEGIN Java Script for this page -->
+	<script src="../assets/js/jquery.dataTables.min.js"></script>
+	<script src="../assets/js/dataTables.buttons.min.js"></script>
+	<script src="../assets/js/dataTables.bootstrap4.min.js"></script>
 	<script src="../assets/js/addCliente.js"></script>
 	<!-- END Java Script for this page -->
 
