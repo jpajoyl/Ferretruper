@@ -374,6 +374,19 @@ $(document).ready(function() {
     }).always(function(){
         loadData();                        
     });
+<<<<<<< HEAD
+
+    });
+
+    $("#cancelar-añadirProveedor").click(function(){
+        document.getElementById("form-añadirProveedor").reset();
+    });
+
+    $(".productos-suministrados").click(function(){
+        setTimeout(function(){
+            loadDataProveedor();
+        },50);
+=======
 
     });
 
@@ -386,6 +399,13 @@ $(document).ready(function() {
             loadDataProveedor();
         },50);
     });
+
+
+    $("#cancelar-añadirProducto").click(function(){
+        document.getElementById("form-añadirProducto").reset();
+
+    });
+
 
     function getDataEditProducto(tbody,table){
         $(tbody).on("click", ".editar-producto", function(){
@@ -402,6 +422,11 @@ $(document).ready(function() {
             $("#modal-editar-producto").modal("show");
         });
     }
+
+$("#cancelar-añadirProveedor").click(function(){
+    document.getElementById("form-añadirProveedor").reset();
+});
+
 
     function desactivarProducto(tbody,table){
         $(tbody).on("click", ".eliminar-producto", function(){
