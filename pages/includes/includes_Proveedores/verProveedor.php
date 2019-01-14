@@ -94,7 +94,7 @@ $proveedor=$servletRequest->getAtribute("proveedor");
 										</div>
 										<div class="form-group col-md-6">
 											<label>Nombre<span class="text-danger">*</span></label>
-											<input type="text" class="form-control" id="input-nombre-producto" placeholder="Nombre del producto" autocomplete="off" required>
+											<input type="text" class="form-control" id="input-nombre-producto" placeholder="Nombre del producto" required>
 										</div>
 									</div>
 									<div class="form-group">

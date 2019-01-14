@@ -74,6 +74,22 @@
 			}else{
 				echo NOT_FOUND;
 			}
+		}else if(!strcmp($method,"buscarNombre")){
+			$nombre=$_POST['nombre'];
+			$productos=Producto::buscarPorNombre($nombre);
+			if($productos!=false){
+				$data=array();
+				while ($producto = $productos->fetch(PDO::FETCH_ASSOC)){
+					$data['info'][]=$producto;
+				}
+				echo json_encode($data);
+			}
+		}else if(!strcmp($method,"buscarProducto")){
+			$idProducto=$_POST['idProducto'];
+			$producto=Producto::obtenerProducto($idProducto,true);
+			if($producto!=false){
+				echo json_encode($producto);
+			}
 		}
 	}
  ?>
