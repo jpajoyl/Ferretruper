@@ -74,7 +74,7 @@
 		public function verProductoPorProveedor(){
 			$idProveedor=$this->getIdUsuario();
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("SELECT * FROM productos INNER JOIN productoxproveedor ON productoxproveedor.productos_id_producto = productos.id_producto WHERE productoxproveedor.usuarios_id_usuario = :idProveedor");
+			$statement = $conexion->prepare("SELECT * FROM productos INNER JOIN productoxproveedor ON productoxproveedor.productos_id_producto = productos.id_producto WHERE productoxproveedor.usuarios_id_usuario = :idProveedor and productos.activa = 1");
 			$statement->bindParam(':idProveedor',$idProveedor,PDO::PARAM_INT);
 			$statement->execute();
 			$conexion=null;

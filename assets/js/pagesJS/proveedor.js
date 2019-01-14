@@ -419,9 +419,10 @@ $(document).ready(function() {
                 $.ajax({
                     url: '../assets/php/Controllers/CProducto.php?method=desactivarProducto',
                     type: 'POST',
-                    data: {"nit":data.id_producto},
+                    data: {"idProducto":data.id_producto},
                     success:function(data){  
                       if(data!=""){
+                        console.log(data);
                         if(data==1){
                             loadDataProveedor();
                             setTimeout(function(){

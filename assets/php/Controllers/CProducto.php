@@ -51,10 +51,10 @@
 
 			$producto=Producto::obtenerProducto($idProducto);
 			if($producto!=false){
-				// $producto->actualizarProducto($id_usuario, $nombre, $direccion, $ciudad, $telefono, $clasificacion, $digitoDeVerificacion, $email, $celular);
-				if($producto){
+				try {
+					$producto->editarProducto($CodigoDeBarras, $nombre, $descripcion, $referenciaFabrica, $iva, $clasificacionTributaria, $utilidad);
 					echo SUCCESS;
-				}else{
+				} catch (Exception $e) {
 					echo ERROR;
 				}
 			}else{
@@ -65,10 +65,10 @@
 			$idProducto=$_POST['idProducto'];
 			$producto=Producto::obtenerProducto($idProducto);
 			if($producto!=false){
-				//$producto->desactivarUsuario();
-				if($producto){
+				try {
+					$producto->desactivarProducto();
 					echo SUCCESS;
-				}else{
+				} catch (Exception $e) {
 					echo ERROR;
 				}
 			}else{

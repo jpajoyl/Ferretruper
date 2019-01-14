@@ -161,7 +161,7 @@
 		//retorna un statement con todos los datos del inventario
 		public static function verProductos(){
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("SELECT * FROM `productos`");
+			$statement = $conexion->prepare("SELECT * FROM `productos` and activa = 1");
 			$statement->execute();
 			$conexion=null;
 			return $statement;
@@ -215,6 +215,7 @@
 		}
 
 		public function desactivarProducto(){
+			$conexion = Conexion::conectar();
 			$idProducto=$this->getIdProducto();
 			$statement = $conexion->prepare("UPDATE `productos` SET `activa` = '0' WHERE `productos`.`id_producto` = :idProducto");
 			$statement->bindValue(":idProducto", $idProducto);
