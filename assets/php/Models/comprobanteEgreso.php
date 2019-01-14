@@ -170,7 +170,18 @@
 
 
 
-			$pdf->Output("I", $archivo_de_salida, true);
+			$pdf->Output('F',$archivo_de_salida,true);
+			header("Content-type:application/pdf");
+			//Creacion de las cabeceras que generarán el archivo pdf
+			header ("Content-Type: application/download");
+			header ("Content-Disposition: attachment; filename=$archivo");
+			header("Content-Length: " . filesize("$archivo"));
+			$fp = fopen($archivo, "r");
+			fpassthru($fp);
+			fclose($fp);
+
+			//Eliminación del archivo en el servidor
+			unlink($archivo);
 		}
 
 
