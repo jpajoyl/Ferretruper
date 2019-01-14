@@ -387,6 +387,10 @@ $(document).ready(function() {
         },50);
     });
 
+    $("#cancelar-añadirProducto").click(function(){
+        document.getElementById("form-añadirProducto").reset();
+    });
+
     function getDataEditProducto(tbody,table){
         $(tbody).on("click", ".editar-producto", function(){
             var data=table.row($(this).parents("tr")).data();
