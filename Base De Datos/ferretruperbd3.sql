@@ -330,7 +330,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `ferretruperbd2`.`productoxproveedor`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`productoxproveedor` (
-  `idProductoxproveedor` INT(11) NOT NULL,
+  `idProductoxproveedor` INT(11) NOT NULL AUTO_INCREMENT,
   `usuarios_id_usuario` INT(11) NOT NULL,
   `productos_id_producto` INT(11) NOT NULL,
   PRIMARY KEY (`idProductoxproveedor`),

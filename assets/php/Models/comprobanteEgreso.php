@@ -111,6 +111,26 @@
 			$pdf=new FPDF();  //crea el objeto
 			$pdf->AddPage();  //añadimos una página. Origen coordenadas, esquina superior izquierda, posición por defeto a 1 cm de los bordes.
 			$pdf->Image('../../images/LOGO FERRETRUPER.jpg' , 7 , 7 , 40 , 10,'JPG');
+			$idComprobanteEgreso = "1";//$this->getNumeroConsecutivo();
+			$archivo="comprobanteEgreso-$idComprobanteEgreso.pdf";
+			$archivo_de_salida=$archivo;
+			$pdf->SetFont('Arial','',10);
+			$pdf->Cell(190,5,'régimen común',0,1,'C', false);
+			$pdf->SetFont('Arial','B',10);
+			$pdf->Cell(190,5, "Comprobante de egreso No. $idComprobanteEgreso",0,1,'C',false);
+			$pdf->Ln(2);
+
+
+
+
+
+
+
+
+
+
+
+
 			$pdf->Output();
 		}
 
