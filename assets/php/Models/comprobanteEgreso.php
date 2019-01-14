@@ -77,8 +77,8 @@
 			return $this;
 		}
 
-		public static function obtenerComprovanteEgreso($numeroDeConsulta, $modo=true){
-			//idComprovanteEgreso->True, idCompra->False
+		public static function obtenerComprobanteEgreso($numeroDeConsulta, $modo=true){
+			//idcomprobanteEgreso->True, idCompra->False
 			$conexion = Conexion::conectar();
 			if ($modo) {
 				$statement = $conexion->prepare("SELECT * FROM `comprobantes_egreso` WHERE  `id_comprobante_egreso` = :numeroDeConsulta");
@@ -90,14 +90,14 @@
 			$statement->execute();
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			if($resultado!=false){
-				$comprovanteEgreso = new comprobanteEgreso();
-				$comprovanteEgreso->setNumeroConsecutivo($resultado['id_comprobante_egreso']);
-				$comprovanteEgreso->setFechaPago($resultado['fecha_pago']);
+				$comprobanteEgreso = new comprobanteEgreso();
+				$comprobanteEgreso->setNumeroConsecutivo($resultado['id_comprobante_egreso']);
+				$comprobanteEgreso->setFechaPago($resultado['fecha_pago']);
 				$compra = Compra::obtenerCompra($resultado['COMPRAS_id_compra']);
-				$comprovanteEgreso->setCompra($compra);
+				$comprobanteEgreso->setCompra($compra);
 				$conexion=null;
 				$statement=null;
-				return $comprovanteEgreso;
+				return $comprobanteEgreso;
 			}else{
 				$conexion=null;
 				$statement=null;
@@ -107,14 +107,37 @@
 
 
 		public function imprimirComprobante(){
+			require('../fpdf/fpdf.php');
+			$pdf=new FPDF();  //crea el objeto
+			$pdf->AddPage();  //añadimos una página. Origen coordenadas, esquina superior izquierda, posición por defeto a 1 cm de los bordes.
+			$pdf->Image('../../images/LOGO FERRETRUPER.jpg' , 7 , 7 , 40 , 10,'JPG');
+			$idComprobanteEgreso = "1";//$this->getNumeroConsecutivo();
+			$archivo="comprobanteEgreso-$idComprobanteEgreso.pdf";
+			$archivo_de_salida=$archivo;
+			$pdf->SetFont('Arial','',10);
+			$pdf->Cell(190,5,'régimen común',0,1,'C', false);
+			$pdf->SetFont('Arial','B',10);
+			$pdf->Cell(190,5, "Comprobante de egreso No. $idComprobanteEgreso",0,1,'C',false);
+			$pdf->Ln(2);
 
 
 
+
+
+
+
+
+
+
+
+
+			$pdf->Output();
 		}
 
 
 
 	}
 
-
+$ce = new comprobanteEgreso();
+$ce->imprimirComprobante();
  ?>
