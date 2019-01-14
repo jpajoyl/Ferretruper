@@ -34,7 +34,15 @@
 						$statement=null;
 					}
 				}else{
-					echo ALREADY_EXIST;
+					if($proveedor->buscarProductoxproveedor($idProducto)!=false){
+						echo ALREADY_EXIST;
+					}else{
+						//VERIFICAR QUE SI SEA EL ID DEL PRODUCTO QUE QUIERE AGREGAR
+						$productoxproveedor=$proveedor->añadirProductoxproveedor($idProducto);
+						echo SUCCESS;
+						//NO FUNCIONAAA!
+					}
+					
 				}
 			}else{
 				echo NOT_FOUND;

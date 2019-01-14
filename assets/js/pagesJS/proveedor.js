@@ -374,6 +374,7 @@ $(document).ready(function() {
     }).always(function(){
         loadData();                        
     });
+<<<<<<< HEAD
 
     });
 
@@ -385,12 +386,33 @@ $(document).ready(function() {
         setTimeout(function(){
             loadDataProveedor();
         },50);
+=======
+
     });
 
+<<<<<<< HEAD
+=======
+    $("#cancelar-añadirProveedor").click(function(){
+        document.getElementById("form-añadirProveedor").reset();
+    });
+
+    $(".productos-suministrados").click(function(){
+        setTimeout(function(){
+            loadDataProveedor();
+        },50);
+    });
+
+
+>>>>>>> 837efb72efe68a977fc7bfff16218301458e5fc9
     $("#cancelar-añadirProducto").click(function(){
         document.getElementById("form-añadirProducto").reset();
+
     });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 837efb72efe68a977fc7bfff16218301458e5fc9
     function getDataEditProducto(tbody,table){
         $(tbody).on("click", ".editar-producto", function(){
             var data=table.row($(this).parents("tr")).data();
@@ -406,9 +428,17 @@ $(document).ready(function() {
             $("#modal-editar-producto").modal("show");
         });
     }
+<<<<<<< HEAD
 $("#cancelar-añadirProveedor").click(function(){
     document.getElementById("form-añadirProveedor").reset();
 });
+=======
+
+$("#cancelar-añadirProveedor").click(function(){
+    document.getElementById("form-añadirProveedor").reset();
+});
+
+>>>>>>> 837efb72efe68a977fc7bfff16218301458e5fc9
 
     function desactivarProducto(tbody,table){
         $(tbody).on("click", ".eliminar-producto", function(){

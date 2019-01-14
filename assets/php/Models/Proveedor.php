@@ -96,6 +96,20 @@
 			$statement = null;
 		}
 
+		public function buscarProductoxproveedor($idProducto){
+			$idProveedor = $this->getIdUsuario();
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("SELECT * FROM `productoxproveedor` WHERE `usuarios_id_usuario`=:idProveedor and `productos_id_producto`=:idProducto");
+			$statement->bindParam(':idProveedor',$idProveedor,PDO::PARAM_INT);
+			$statement->bindParam(':idProducto',$idProducto,PDO::PARAM_INT);
+			$statement->execute();
+			if(!$statement){
+				return false;
+			}else{
+				return $statement;
+			}
+		}
+
 
 	}
 
