@@ -1,14 +1,16 @@
 <?php 
 
+
 	/**
 	 * 
 	 */
-	class comprobanteEgreso {
+	class ComprobanteEgreso {
 		
 
 		//atributos
 		private $numeroConsecutivo;
 		private $fechaPago;
+		private $descripcion;
 		private $compra;//objeto compra
 
 
@@ -20,12 +22,13 @@
 			}
 		}
 
-		public function __construct0($fechaPago, $compra ){ //compra es un objeto de ese tipo
+		public function __construct0($fechaPago, $compra, $descripcion){ //compra es un objeto de ese tipo
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("INSERT INTO `comprobantes_egreso`(`id_comprobante_egreso`, `fecha_pago`, `COMPRAS_id_compra`) VALUES (NULL,:fechaPago,:id_compra)");
+			$statement = $conexion->prepare("INSERT INTO `comprobantes_egreso`(`id_comprobante_egreso`, `fecha_pago`, `descripcion`, `COMPRAS_id_compra`) VALUES (NULL,:fechaPago,:descripcion,:compra)");
 
 			$this->setFechaPago($fechaPago,$statement);
 			$this->setCompra($compra,$statement);
+			$this->setDescripcion($descripcion,$statement);
 			$statement->execute();
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
@@ -35,6 +38,19 @@
 		}
 
 		//get & set
+		public function getDescripcion()
+		{
+		    return $this->descripcion;
+		}
+		
+		public function setDescripcion($descripcion, $statement=NULL)
+		{
+			if($statement!=NULL){
+				$statement->bindParam(':descripcion',$descripcion,PDO::PARAM_STR, 500);
+			}
+			$this->descripcion = $descripcion;
+			return $this;
+		}
 		public function getNumeroConsecutivo()
 		{
 		    return $this->numeroConsecutivo;
@@ -93,6 +109,7 @@
 				$comprobanteEgreso = new comprobanteEgreso();
 				$comprobanteEgreso->setNumeroConsecutivo($resultado['id_comprobante_egreso']);
 				$comprobanteEgreso->setFechaPago($resultado['fecha_pago']);
+				$comprobanteEgreso->setDescripcion($resultado['descripcion']);
 				$compra = Compra::obtenerCompra($resultado['COMPRAS_id_compra']);
 				$comprobanteEgreso->setCompra($compra);
 				$conexion=null;
@@ -107,37 +124,57 @@
 
 
 		public function imprimirComprobante(){
+			include_once '../Controllers/CifrasEnLetras.php';
 			require('../fpdf/fpdf.php');
 			$pdf=new FPDF();  //crea el objeto
 			$pdf->AddPage();  //añadimos una página. Origen coordenadas, esquina superior izquierda, posición por defeto a 1 cm de los bordes.
 			$pdf->Image('../../images/LOGO FERRETRUPER.jpg' , 7 , 7 , 40 , 10,'JPG');
-			$idComprobanteEgreso = "1";//$this->getNumeroConsecutivo();
+			$idComprobanteEgreso = $this->getNumeroConsecutivo();
 			$archivo="comprobanteEgreso-$idComprobanteEgreso.pdf";
 			$archivo_de_salida=$archivo;
 			$pdf->SetFont('Arial','',10);
-			$pdf->Cell(190,5,'régimen común',0,1,'C', false);
+			$pdf->Cell(190,5,utf8_decode('régimen común'),0,1,'C', false);
 			$pdf->SetFont('Arial','B',10);
 			$pdf->Cell(190,5, "Comprobante de egreso No. $idComprobanteEgreso",0,1,'C',false);
-			$pdf->Ln(2);
+			$pdf->Cell(190,5,"Fecha: ".$this->getFechaPago(),0,1,'R',false);
+			$pdf->SetFont('Arial','',10);
+			$pdf->MultiCell(190,4,"NIT: 900 307 086 - 7"."\n"."DIRECCION: Carrera 51 Bolivar No.40-74"."\n"."TELEFAX: 2327201 / 2328306",0,"L",false);
+			$pdf->ln(2);
+			$pdf->SetFont('Arial','U',11);
+			$pdf->Cell(190,5, "PAGADO A:",0,1,'J',false);
+			$pdf->SetFont('Arial','',11);
+			$compra=$this->getCompra();
+			$proveedor = $compra->getProveedor();
+			$nombreProveedor = $proveedor->getNombre();
+			$nitProveedor = $proveedor->getNumeroDeIdentificacion()." - ".$proveedor->getDigitoDeVerificacion();
+			$pdf->Cell(190,5, $nombreProveedor."     nit: ".$nitProveedor,0,1,'J',false);//HHHHHHHHHHHHHHHHHHH
+			$pdf->SetFont('Arial','U',11);
+			$pdf->Cell(190,5, "LA SUMA DE:",0,1,'J',false);
+			$pdf->SetFont('Arial','',11);
+			$totalCompra = $compra->getTotalCompra();
+			$pdf->Cell(190,5,CifrasEnLetras::convertirNumeroEnLetras($totalCompra)." pesos" ,0,1,'J',false);//HHHHHHHHHHHHHHHHHHH
+			$pdf->SetFont('Arial','U',11);
+			$pdf->Cell(190,5, "POR CONCEPTO:",0,1,'J',false);
+			$pdf->SetFont('Arial','',11);
+			$descripcion = $this->getDescripcion();
+			$pdf->Cell(190,5, $descripcion,0,1,'J',false);//HHHHHHHHHHHHHHHHHHH
+			$pdf->ln(2);
+
+			$pdf->SetXY(10, 70);
+			$pdf->SetFont('Arial','',10);
+			$pdf->Cell(70,10, "$                ".strval(number_format($totalCompra)),1,0,'L',false);//HHHHHHHHHHHHHHHHHHHHHHHH
+			$pdf->Cell(30,10, "Efectivo: si | no",1,1,'C',false);//HHHHHHHHHHHHHHHHHHH
+			$pdf->Cell(100,20, "Cheque No.",1,0,'L',false);
+			$pdf->Cell(90,20, "Firma y Sello Beneficiario:",1,1,'L',false);
 
 
 
 
-
-
-
-
-
-
-
-
-			$pdf->Output();
+			$pdf->Output("I", $archivo_de_salida, true);
 		}
 
 
 
 	}
 
-$ce = new comprobanteEgreso();
-$ce->imprimirComprobante();
  ?>

@@ -36,7 +36,6 @@
 			$this->setDescuento($descuento,$statement);
 			$this->setPagado($pagado,$statement);
 			$this->setProveedor($proveedor,$statement);
-			;
 			$statement->execute();
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
@@ -132,7 +131,7 @@
 
 		public function getProveedor()
 		{
-			return $this->pagado;
+			return $this->proveedor;
 		}
 		
 		public function setProveedor($proveedor, $statement=NULL)
