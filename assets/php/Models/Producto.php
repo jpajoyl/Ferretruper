@@ -167,26 +167,31 @@
 			return $statement;
 		}
 
-		public static function obtenerProducto($idProducto){
+		public static function obtenerProducto($idProducto,$returnStatement=false){
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("SELECT * FROM `productos` WHERE  `id_producto` = :idProducto");
 			$statement->bindValue(":idProducto", $idProducto);
 			$statement->execute();
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			if($resultado!=false){
-				$producto = new Producto();
-				$producto->setIdProducto($resultado['id_producto']);
-				$producto->setCodigoBarras($resultado['codigo_barras']);
-				$producto->setNombre($resultado['nombre']);
-				$producto->setDescripcion($resultado['descripcion']);
-				$producto->setReferenciaFabrica($resultado['referencia_fabrica']);
-				$producto->setTieneIva($resultado['tiene_iva']);
-				$producto->setClasificacionTributaria($resultado['clasificacion_tributaria']);
-				$producto->setValorUtilidad($resultado['valor_utilidad']);
-				$producto->setActiva($resultado['activa']);
-				$conexion=null;
-				$statement=null;
-				return $producto;
+				if($returnStatement==false){
+					$producto = new Producto();
+					$producto->setIdProducto($resultado['id_producto']);
+					$producto->setCodigoBarras($resultado['codigo_barras']);
+					$producto->setNombre($resultado['nombre']);
+					$producto->setDescripcion($resultado['descripcion']);
+					$producto->setReferenciaFabrica($resultado['referencia_fabrica']);
+					$producto->setTieneIva($resultado['tiene_iva']);
+					$producto->setClasificacionTributaria($resultado['clasificacion_tributaria']);
+					$producto->setValorUtilidad($resultado['valor_utilidad']);
+					$producto->setActiva($resultado['activa']);
+					$conexion=null;
+					$statement=null;
+					return $producto;
+				}else{
+					return $resultado;
+				}
+				
 			}else{
 				return false;
 			}
@@ -225,6 +230,19 @@
 			}
 			$conexion = NULL;
 			$statement = NULL;
+		}
+
+		public static function buscarPorNombre($nombre){
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("SELECT * FROM `productos` WHERE  `nombre` LIKE ?");
+			$statement->bindValue(1, "%$nombre%", PDO::PARAM_STR);
+			$statement->execute();
+			if($statement->rowCount()>0){
+				return $statement;
+			}else{
+				return false;
+			}
+			
 		}
 
 

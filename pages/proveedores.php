@@ -18,11 +18,13 @@ include_once '../assets/php/Controllers/HttpServletRequest.php';
 		<meta name="author" content="Pike Web Development - https://www.pikephp.com">
 
 		<!-- Favicon -->
+   
 		<link rel="shortcut icon" href="../assets/images/favicon.ico">
 
 		<!-- Switchery css -->
 		<link href="../assets/plugins/switchery/switchery.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="../assets/css/sweetalert2.min.css">
+		<link rel="stylesheet" href="../assets/css/jquery-ui.css">
 		
 		<!-- Bootstrap CSS -->
 		<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -78,7 +80,8 @@ include_once '../assets/php/Controllers/HttpServletRequest.php';
 
 				
 				<div class="row">
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">									
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">	
+											
 					  	<?php 
 					  		$page=isset($_GET['p'])?$_GET['p']:"";
 					  		if($page==""){
@@ -130,6 +133,7 @@ include_once '../assets/php/Controllers/HttpServletRequest.php';
 
 <script src="../assets/js/detect.js"></script>
 <script src="../assets/js/fastclick.js"></script>
+<script src="../assets/js/jquery-ui.js"></script>
 <script src="../assets/js/jquery.blockUI.js"></script>
 <script src="../assets/js/jquery.nicescroll.js"></script>
 <script src="../assets/js/jquery.scrollTo.min.js"></script>
@@ -146,6 +150,7 @@ include_once '../assets/php/Controllers/HttpServletRequest.php';
 <script src="../assets/js/dataTables.bootstrap4.min.js"></script>
 <script src="../assets/js/pagesJS/proveedor.js"></script>
 <!-- END Java Script for this page -->
+
 
 </body>
 </html>

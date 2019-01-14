@@ -1,6 +1,7 @@
 @charset "UTF-8";
 @import url("https://fonts.googleapis.com/css?family=Roboto:400,500,700,300");
 
+.ui-autocomplete { z-index:2147483647; }
 html {
   position: relative;
   min-height: 100%; 
