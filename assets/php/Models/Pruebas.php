@@ -6,7 +6,7 @@ include 'Usuario.php';
 include 'Proveedor.php';
 include 'ComprobanteEgreso.php';
 
-$ce = ComprobanteEgreso::obtenerComprobanteEgreso(2);
+$ce = ComprobanteEgreso::obtenerComprobanteEgreso(3);
 $ce->imprimirComprobante();
 
 
