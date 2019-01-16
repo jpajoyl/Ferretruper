@@ -4,16 +4,8 @@
  * 
  */
 class Empleado extends Usuario {
-
-    //atributos
-     //private $cedula;
-     //private $nombre;
-     //private $email;
     private $usuario;
     private $password;
-    //idk
-     //private $telefono1;
-     //private $telefono2;
     public function __construct(){
         $params = func_get_args();
         $num_params = func_num_args();
