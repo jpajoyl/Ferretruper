@@ -81,7 +81,7 @@
 			return $statement;
 		}
 
-		public function añadirProductoxproveedor($idProducto){
+/*		public function añadirProductoxproveedor($idProducto){
 
 			$idProveedor = $this->getIdUsuario();
 			$conexion = Conexion::conectar();
@@ -94,9 +94,9 @@
 			}
 			$conexion = null;
 			$statement = null;
-		}
+		}*/
 
-		public function buscarProductoxproveedor($idProducto){
+/*		public function buscarProductoxproveedor($idProducto){
 			$idProveedor = $this->getIdUsuario();
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("SELECT * FROM `productoxproveedor` WHERE `usuarios_id_usuario`=:idProveedor and `productos_id_producto`=:idProducto");
@@ -108,7 +108,7 @@
 			}else{
 				return $statement;
 			}
-		}
+		}*/
 
 
 	}

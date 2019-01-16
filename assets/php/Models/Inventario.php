@@ -18,14 +18,15 @@ class Inventario {
 		}
 	}
 
-	public function __construct0($precio, $unidades, $unidadesDefectuosas, $producto){
+	public function __construct0($precio, $unidades, $unidadesDefectuosas, $producto, $proveedor){
 		$conexion = Conexion::conectar();
-		$statement = $conexion->prepare("INSERT INTO `inventario` (`id_inventario`, `precio`, `unidades`, `unidades_defectuosas`, `productos_id_producto`, `usuarios_id_usuario`) VALUES (NULL, '', '', '', '', '')");
+		$statement = $conexion->prepare("INSERT INTO `inventario` (`id_inventario`, `precio`, `unidades`, `unidades_defectuosas`, `productos_id_producto`, `usuarios_id_usuario`) VALUES (NULL, :precio, :unidades, :unidadesDefectuosas, :producto, :proveedor)");
 
 		$this->setPrecio($precio,$statement);
 		$this->setUnidades($unidades,$statement);
 		$this->setUnidadesDefectuosas($unidadesDefectuosas,$statement);
 		$this->setProducto($producto,$statement);
+		$this->setProveedor($proveedor,$statement);
 		$statement->execute();
 		if(!$statement){
 			throw new Exception("Error Processing Request", 1);
@@ -35,6 +36,19 @@ class Inventario {
 	}
 
 // get && set
+	public function getProveedor()
+	{
+	    return $this->proveedor;
+	}
+	
+	public function setProveedor($proveedor, $statement=NULL)
+	{
+		if($statement!=NULL){
+			$statement->bindParam(':proveedor',$proveedor,PDO::PARAM_INT);
+		}
+		$this->proveedor = $proveedor;
+		return $this;
+	}
 	public function getIdInventario(){
 		return $this->idInventario;
 	}
@@ -122,6 +136,18 @@ class Inventario {
 			return false;
 		}
 
+	}
+	public static function obtenerInventarios($numeroDeConsulta, $modo=true)
+	{//true->>busca por idProducto     //false busca por idProveedor
+		$conexion = Conexion::conectar();
+		if ($modo) {
+			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE productos_id_producto = $numeroDeConsulta");
+		}else{
+			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE usuarios_id_usuario = $numeroDeConsulta");
+		}
+		$statement->execute();
+		$conexion=null;
+		return $statement;
 	}
 
 

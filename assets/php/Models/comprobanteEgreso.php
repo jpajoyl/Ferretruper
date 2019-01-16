@@ -22,12 +22,11 @@
 			}
 		}
 
-		public function __construct0($fechaPago, $compra, $descripcion){ //compra es un objeto de ese tipo
+		public function __construct0($fechaPago, $descripcion){ //compra es un objeto de ese tipo
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("INSERT INTO `comprobantes_egreso`(`id_comprobante_egreso`, `fecha_pago`, `descripcion`, `COMPRAS_id_compra`) VALUES (NULL,:fechaPago,:descripcion,:compra)");
 
 			$this->setFechaPago($fechaPago,$statement);
-			$this->setCompra($compra,$statement);
 			$this->setDescripcion($descripcion,$statement);
 			$statement->execute();
 			if(!$statement){
@@ -79,28 +78,10 @@
 			return $this;
 		}
 
-		public function getCompra()
-		{
-		    return $this->compra;
-		}
-		
-		public function setCompra($compra, $statement=NULL)
-		{
-			if($statement!=NULL){
-				$statement->bindParam(':id_compra',$compra->getIdCompra(),PDO::PARAM_STR, 45);
-			}
-			$this->compra = $compra;
-			return $this;
-		}
-
-		public static function obtenerComprobanteEgreso($numeroDeConsulta, $modo=true){
-			//idcomprobanteEgreso->True, idCompra->False
+		public static function obtenerComprobanteEgreso($numeroDeConsulta){
+			//idcomprobanteEgreso
 			$conexion = Conexion::conectar();
-			if ($modo) {
 				$statement = $conexion->prepare("SELECT * FROM `comprobantes_egreso` WHERE  `id_comprobante_egreso` = :numeroDeConsulta");
-			}else{
-				$statement = $conexion->prepare("SELECT * FROM `comprobantes_egreso` WHERE  `COMPRAS_id_compra` = :numeroDeConsulta");
-			}
 			
 			$statement->bindValue(":numeroDeConsulta", $numeroDeConsulta);
 			$statement->execute();
@@ -110,8 +91,6 @@
 				$comprobanteEgreso->setNumeroConsecutivo($resultado['id_comprobante_egreso']);
 				$comprobanteEgreso->setFechaPago($resultado['fecha_pago']);
 				$comprobanteEgreso->setDescripcion($resultado['descripcion']);
-				$compra = Compra::obtenerCompra($resultado['COMPRAS_id_compra']);
-				$comprobanteEgreso->setCompra($compra);
 				$conexion=null;
 				$statement=null;
 				return $comprobanteEgreso;
