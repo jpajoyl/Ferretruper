@@ -9,6 +9,7 @@ class Inventario {
 	private $precio;
 	private $unidades;
 	private $unidadesDefectuosas;
+	private $proveedor;
 
 	public function __construct(){
 		$params = func_get_args();
