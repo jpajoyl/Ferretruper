@@ -109,6 +109,14 @@
 			$pdf->AddPage();  //añadimos una página. Origen coordenadas, esquina superior izquierda, posición por defeto a 1 cm de los bordes.
 			$pdf->Image('../../images/LOGO FERRETRUPER.jpg' , 7 , 7 , 40 , 10,'JPG');
 			$idComprobanteEgreso = $this->getNumeroConsecutivo();
+			$facturasComprobante = FacturaCompra::facturaCompraPorComprobanteEgreso($idComprobanteEgreso);
+			if($facturasComprobante->rowCount()>0){
+				while ($facturaCompra = $facturasComprobante->fetch(PDO::FETCH_ASSOC)) {
+					$array['data'][]=$facturaCompra;
+				}
+			}
+			$idFacturaCompra = $array['data']['compras_id_compra'];
+			$proveedor = FacturaCompra::obtenerProveedorPorFacturaCompra($idFacturaCompra);
 			$archivo="comprobanteEgreso-$idComprobanteEgreso.pdf";
 			$archivo_de_salida=$archivo;
 			$pdf->SetFont('Arial','',10);
