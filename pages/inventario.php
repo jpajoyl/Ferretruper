@@ -75,6 +75,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 					<div class="row">
 						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">									
 							<?php 
+							include 'includes/includes_Inventario/main_inventario.php';
 							include_once'../assets/php/Controllers/CInventario.php';
 							?>
 							<!-- MODALS -->
