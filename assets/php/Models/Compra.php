@@ -214,7 +214,7 @@
 				$id_proveedor=$proveedor->getIdUsuario();
 				$id_producto=$producto->getIdProducto();
 
-				$inventario=Inventario::obtenerInventario($id_producto,true,$id_proveedor);
+				$inventario=Inventario::obtenerInventario($id_producto,$id_proveedor,true);
 
 				$precio=(($producto->getValorUtilidad()/100) * $productosxcompra->getPrecioUnitario()) + $productosxcompra->getPrecioUnitario() ;
 				$unidades= $inventario->getUnidades() + $productosxcompra->getNumeroUnidades();

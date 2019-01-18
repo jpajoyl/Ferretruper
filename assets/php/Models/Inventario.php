@@ -111,7 +111,7 @@ class Inventario {
 		return $this;
 	}
 
-	public static function obtenerInventario($numeroDeConsulta, $modo=false, $id_usuario=-1){
+	public static function obtenerInventario($numeroDeConsulta, $id_usuario=-1, $modo=false){
 		//idProducto->True, idInventario->False
 		$conexion = Conexion::conectar();
 		if ($modo) {
