@@ -397,16 +397,6 @@ $(".productos-suministrados").click(function(){
     },50);
 });
 
-
-
-$("#cancelar-añadirProducto").click(function(){
-    document.getElementById("form-añadirProducto").reset();
-
-});
-
-
-
-
 function getDataEditProducto(tbody,table){
     $(tbody).on("click", ".editar-producto", function(){
         var data=table.row($(this).parents("tr")).data();
@@ -488,71 +478,6 @@ $("#cancelar-editarProducto").click(function(){
     document.getElementById("form-editarProducto").reset();
 });
 
-$("#form-añadirProducto").submit(function(event){
-    event.preventDefault();
-    var data;
-    data = {
-        "idProveedor": $("#card-verProveedor").attr("id-proveedor"),
-        "idProducto" : $("#input-id-producto").val(),
-        "nombre" : $("#input-nombre-producto").val(),
-        "descripcion" : $("#input-descripcion-producto").val(),
-        "referenciaFabrica" : $("#input-referencia-fabrica").val(),
-        "clasificacionTributaria" : $("#input-clasificacion-tributaria").val(),
-        "utilidad" : $("#input-valor-utilidad").val(),
-        "iva" : $('input:radio[name=IVA]:checked').val(),
-        "CodigoDeBarras" : $("#input-codigo-barras").val()
-    }
-    $.ajax({
-        url: '../assets/php/Controllers/CProducto.php?method=registrarProducto',
-        type: 'POST',
-        data: data,
-        success:function(data){ 
-          if(data!=""){
-            if(data==1){
-                $("#añadirProducto").modal("hide");
-                setTimeout(function(){
-                    Swal(
-                      'Satisfactorio!',
-                      'Se ha registrado correctamente el producto',
-                      'success'
-                      );
-                    document.getElementById("form-añadirProducto").reset();
-                    loadDataProveedor(); 
-                },500); 
-            }else if(data==0){
-                $("#añadirProducto").modal("hide");
-                setTimeout(function(){
-                    Swal(
-                      'Error!',
-                      'Ha ocurrido un error, vuelva a intentar',
-                      'error'
-                      );
-                    document.getElementById("form-añadirProducto").reset();
-                    loadDataProveedor();  
-                },500);
-            }else if(data==2){
-                setTimeout(function(){
-                    Swal(
-                      'Error!',
-                      'Al parecer este numero de identificacion ya esta registrado',
-                      'error'
-                      );
-                },500);
-            }else if(data==3){
-                setTimeout(function(){
-                    Swal(
-                      'Error!',
-                      'No se ha encontrado el proveedor, recargue la pagina y vuelva a intentarlo',
-                      'error'
-                      );
-                },500);
-            }
-        }
-    }   
-});
-
-});
-
 $("#form-editarProducto").submit(function(event){
     event.preventDefault();
     var data;
@@ -606,58 +531,11 @@ $("#form-editarProducto").submit(function(event){
             }
         }
     }   
-}).always(function(){
-    loadDataProveedor();                        
-});
-
-});
-
-
-$("#input-nombre-producto").autocomplete({
-    source: function(request,response){
-        $.ajax({
-            url: '../assets/php/Controllers/CProducto.php?method=buscarNombre',
-            type: 'POST',
-            data: {"nombre":request.term},
-            success:function(data){
-                if(data!=""){
-                    var array = data.error ? [] : $.map($.parseJSON(data).info, function(m) {
-                        return {
-                            label: m.nombre,
-                            id: m.id_producto
-                        };
-                    });
-                    response(array);
-                }  
-            }
-        });
-    },select: function (event, ui) {
-        setTimeout(function(){
-            buscarProductoAñadir(ui.item.id);
-        },100);      
-    }
-
-});
-
-function buscarProductoAñadir(idProducto){
-    $.ajax({
-        url: '../assets/php/Controllers/CProducto.php?method=buscarProducto',
-        type: 'POST',
-        data: {"idProducto":idProducto},
-        success:function(data){
-            if(data!=""){
-                var producto=$.parseJSON(data);
-                $("#input-id-producto").val(producto.id_producto);
-                $("#input-descripcion-producto").val(producto.descripcion);
-                $("#input-referencia-fabrica").val(producto.referencia_fabrica);
-                $("#input-clasificacion-tributaria").val(producto.clasificacion_tributaria);
-                $("#input-valor-utilidad").val(producto.valor_utilidad);
-                $('input:radio[name=IVA]:checked').val(producto.tiene_iva);
-                $("#input-codigo-barras").val(producto.codigo_barras); 
-            }  
-        }
+    }).always(function(){
+        loadDataProveedor();                        
     });
-}
+
+});
 
 }); 
 

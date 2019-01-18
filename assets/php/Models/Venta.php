@@ -195,13 +195,12 @@
 
 		}
 
-		public function seleccionarProducto($idProducto, $numeroUnidades){
+		public function seleccionarProducto($idInventario, $numeroUnidades){
 
 			$idVenta=$this->getIdVenta();
-			$inventarioProducto = Inventario::obtenerInventario($idProducto);
-			$idInventario = $inventarioProducto->getIdInventario();
+			$inventarioProducto = Inventario::obtenerInventario($idInventario);
 			if ($inventarioProducto->getUnidades()>=$numeroUnidades) {
-				$productoxventa = new ProductoXVenta($inventarioProducto->getPrecio(), $numeroUnidades, $inventarioProducto->getProducto(), $this->getIdVenta());
+				$productoxventa = new ProductoXVenta($inventarioProducto->getPrecio(), $numeroUnidades, ($inventarioProducto->getProducto())->getIdProducto(), $this->getIdVenta());
 				$unidadesResultantes = $inventarioProducto->getUnidades() - $numeroUnidades;
 				$conexion = Conexion::conectar();
 				$statement = $conexion->prepare("UPDATE `inventario` SET `unidades` = $unidadesResultantes WHERE `inventario`.`id_inventario` = $idInventario");
@@ -211,11 +210,12 @@
 				return ERROR;
 			}
 
+		}
+
+		public function efectuarCompra(){ //Factura
 
 
 		}
-
-
 
 	}
 

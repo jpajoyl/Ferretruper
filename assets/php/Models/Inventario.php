@@ -111,11 +111,12 @@ class Inventario {
 		return $this;
 	}
 
-	public static function obtenerInventario($numeroDeConsulta, $modo=true){
+	public static function obtenerInventario($numeroDeConsulta, $id_usuario=-1, $modo=false){
 		//idProducto->True, idInventario->False
 		$conexion = Conexion::conectar();
 		if ($modo) {
-			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE  `PRODUCTOS_id_producto` = :numeroDeConsulta");
+			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE  `PRODUCTOS_id_producto` = :numeroDeConsulta and `usuarios_id_usuario` = :id_usuario");
+			$statement->bindValue(":id_usuario", $id_usuario);
 		}else{
 			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE  `id_inventario` = :numeroDeConsulta");
 		}
