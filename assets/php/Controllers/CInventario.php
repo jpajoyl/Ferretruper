@@ -21,6 +21,10 @@ if(!isset($include)){
 				}else{
 					echo NOT_FOUND;
 				}
+			}else if(!strcmp($method,"iniciarCompra")){
+				$numeroFactura=$_POST['numeroFactura'];
+				$idProveedor=$_POST['idProveedor'];
+				
 			}
 		}
 	}

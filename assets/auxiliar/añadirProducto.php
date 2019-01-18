@@ -1,4 +1,5 @@
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> HTML <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+<link rel="stylesheet" href="../assets/css/jquery-ui.css">
   	<a role="button" href="#" id="añadir-producto" class="btn btn-success float-right" data-target="#añadirProducto" data-toggle="modal">Añadir producto<span class="btn-label btn-label-right"><i class="fa fa-product-hunt"></i></span></a>
   	<div class="modal fade custom-modal" id="añadirProducto" tabindex="-1" role="dialog" aria-labelledby="customModal" aria-hidden="true">
 		<div class="modal-dialog" role="document">
@@ -67,6 +68,7 @@
 			</div>
 		</div>
 	</div>
+<script src="../assets/js/jquery-ui.js"></script>
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> JAVASCRIPT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 $("#cancelar-añadirProducto").click(function(){
     document.getElementById("form-añadirProducto").reset();

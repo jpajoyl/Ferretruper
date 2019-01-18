@@ -16,6 +16,18 @@ a {
     color: #0ca4ca;
     text-decoration: none; }
 
+.width-100{
+  width: 100%;
+}
+
+.mt{
+  margin-top: 5px !important;
+}
+
+.mr{
+  margin-right: 5px !important;
+}
+
 .small {
 	font-size: 0.7rem;
 }

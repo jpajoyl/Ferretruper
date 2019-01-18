@@ -71,6 +71,19 @@
 			}
 		}
 
+		public static function buscarProveedorXNombreONit($valor){
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("SELECT * FROM `usuarios` WHERE  ( `nombre` LIKE :nombre OR `numero_identificacion` LIKE :nit ) and `tipo_usuario` = 'proveedor'");
+			$statement->bindValue(":nombre","%$valor%",PDO::PARAM_STR);
+			$statement->bindValue(":nit","%$valor%",PDO::PARAM_STR);
+			$statement->execute();
+			if($statement->rowCount()>0){
+				return $statement;
+			}else{
+				return false;
+			}
+		}
+
 		public function verProductoPorProveedor(){
 			$idProveedor=$this->getIdUsuario();
 			$conexion = Conexion::conectar();
