@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`usuarios` (
   `clasificacion` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_usuario`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 33
+AUTO_INCREMENT = 38
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -55,7 +55,6 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`ventas` (
   `fecha_anulada` DATE NULL DEFAULT NULL,
   PRIMARY KEY (`id_venta`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -130,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`compras` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
+AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -143,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`comprobantes_egreso` (
   `descripcion` VARCHAR(500) NOT NULL,
   PRIMARY KEY (`id_comprobante_egreso`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -163,7 +162,32 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`credenciales_de_acceso` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
+AUTO_INCREMENT = 3
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `ferretruperbd2`.`factura_compra`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`factura_compra` (
+  `idfactura_compra` INT(11) NOT NULL AUTO_INCREMENT,
+  `compras_id_compra` INT(11) NOT NULL,
+  `comprobantes_egreso_id_comprobante_egreso` INT(11) NULL,
+  PRIMARY KEY (`idfactura_compra`),
+  INDEX `fk_factura_compra_compras1_idx` (`compras_id_compra` ASC),
+  INDEX `fk_factura_compra_comprobantes_egreso1_idx` (`comprobantes_egreso_id_comprobante_egreso` ASC),
+  CONSTRAINT `fk_factura_compra_compras1`
+    FOREIGN KEY (`compras_id_compra`)
+    REFERENCES `ferretruperbd2`.`compras` (`id_compra`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_factura_compra_comprobantes_egreso1`
+    FOREIGN KEY (`comprobantes_egreso_id_comprobante_egreso`)
+    REFERENCES `ferretruperbd2`.`comprobantes_egreso` (`id_comprobante_egreso`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -226,7 +250,6 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`facturas` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -241,7 +264,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`productos` (
   `referencia_fabrica` VARCHAR(45) NOT NULL,
   `tiene_iva` TINYINT(1) NOT NULL,
   `clasificacion_tributaria` VARCHAR(45) NOT NULL,
-  `valor_utilidad` INT(11) NOT NULL,
+  `unidades_totales` INT NOT NULL,
   `activa` TINYINT(4) NOT NULL,
   PRIMARY KEY (`id_producto`))
 ENGINE = InnoDB
@@ -283,6 +306,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`inventario` (
   `precio` INT(11) NOT NULL,
   `unidades` INT(11) NOT NULL,
   `unidades_defectuosas` INT(11) NOT NULL,
+  `valor_utilidad` INT NOT NULL,
   `productos_id_producto` INT(11) NOT NULL,
   `usuarios_id_usuario` INT(11) NOT NULL,
   PRIMARY KEY (`id_inventario`),
@@ -299,6 +323,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`inventario` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -353,29 +378,6 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`productoxventa` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `ferretruperbd2`.`factura_compra`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`factura_compra` (
-  `idfactura_compra` INT NOT NULL AUTO_INCREMENT,
-  `compras_id_compra` INT(11) NOT NULL,
-  `comprobantes_egreso_id_comprobante_egreso` INT(11) NOT NULL,
-  PRIMARY KEY (`idfactura_compra`),
-  INDEX `fk_factura_compra_compras1_idx` (`compras_id_compra` ASC),
-  INDEX `fk_factura_compra_comprobantes_egreso1_idx` (`comprobantes_egreso_id_comprobante_egreso` ASC),
-  CONSTRAINT `fk_factura_compra_compras1`
-    FOREIGN KEY (`compras_id_compra`)
-    REFERENCES `ferretruperbd2`.`compras` (`id_compra`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_factura_compra_comprobantes_egreso1`
-    FOREIGN KEY (`comprobantes_egreso_id_comprobante_egreso`)
-    REFERENCES `ferretruperbd2`.`comprobantes_egreso` (`id_comprobante_egreso`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
