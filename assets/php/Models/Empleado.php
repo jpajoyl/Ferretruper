@@ -121,7 +121,7 @@ class Empleado extends Usuario {
             $consulta2= $conexion->prepare("SELECT usuario FROM `credenciales_de_acceso` WHERE USUARIOS_id_usuario=:id_usuario");
             $consulta2->execute(['id_usuario' => $resultado['id_usuario']]);
             $resultado2=$consulta2->fetch(PDO::FETCH_ASSOC);
-            //$empleado = new Empleado();
+            $empleado = new Empleado();
             if($resultado){
                 $empleado = new Empleado();
                 $empleado->setIdUsuario($resultado['id_usuario']);

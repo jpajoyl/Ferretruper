@@ -214,7 +214,7 @@ class Usuario{
 		}else{
 			$statement = $conexion->prepare("SELECT * FROM `usuarios` WHERE  `id_usuario` = :numeroDeConsulta");
 		}
-		$statement->bindValue(":numeroDeConsulta", $numeroDeConsulta);
+		$statement->bindParam(":numeroDeConsulta", $numeroDeConsulta);
 		$statement->execute();
 		$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 		$conexion = null;
