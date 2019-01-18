@@ -132,14 +132,13 @@
 		$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 		if($resultado!=false){
 			$productoxcompra = new ProductoXCompra();
-			$productoxcompra->setNumeroFactura($resultado['numero_factura']);
-			$productoxcompra->setFecha($resultado['fecha_compra']);
-			$productoxcompra->setTotalCompra($resultado['total_compra']);
-			$productoxcompra->setDescuento($resultado['descuento_compra']);
+			$productoxcompra->setIdProductoxCompra($resultado['id_productoxcompra']);
+			$productoxcompra->setPrecioUnitario($resultado['precio_unitario']);
+			$productoxcompra->setNumeroUnidades($resultado['unidades']);
+			$productoxcompra->setDescuentoProducto($resultado['descuento']);
 
-			$proveedor= Proveedor::obtenerProveedor($resultado['USUARIOS_id_proveedor'],false);
-
-			$productoxcompra->setProveedor($proveedor);
+			$productoxcompra->setProducto(Producto::obtenerProducto($resultado['PRODUCTOS_id_producto']));
+			$productoxcompra->setCompra(Compra::obtenerCompra($resultado['COMPRAS_id_compra']));
 
 			$conexion=null;
 			$statement=null;

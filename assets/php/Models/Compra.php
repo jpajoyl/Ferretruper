@@ -199,31 +199,44 @@
 		public static function abastecer(){
 			$productosxcompra=array();
 			$conexion = Conexion::conectar();
-			$statement= $this->verProductosxCompra
-			$resultado = $statement->fetch(PDO::FETCH_ASSOC)
+			$statement= $this->verProductosxCompra;
+			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			while($resultado){
-				$productosxcompra= 
+				$productoxcompra= ProductoXCompra::obtenerProductoXCompra($resultado["id_productoxcompra"]);
+				$productosxcompra[]= $productoxcompra;
+				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			}
 			foreach ($productosxcompra as $productoxcompra) {
 				$conexion = Conexion::conectar();
-				$statement = $conexion->prepare(" UPDATE `inventario` SET `precio`=:precio ,`unidades`=:unidades  WHERE `PRODUCTOS_id_producto`=:id_producto ");
+				$statement = $conexion->prepare(" UPDATE `inventario` SET `precio`=:precio ,`unidades`=:unidades  WHERE `productos_id_producto`=:id_producto and `usuarios_id_usuario` = :id_usuario ");
+				$proveedor= $productoxcompra->getProveedor();
 				$producto=$productoxcompra->getProducto();
+				$id_proveedor=$proveedor->getIdUsuario();
 				$id_producto=$producto->getIdProducto();
-				$inventario=Inventario::obtenerInventario($id_producto);
+
+				$inventario=Inventario::obtenerInventario($id_producto,true,$id_proveedor);
 
 				$precio=(($producto->getValorUtilidad()/100) * $productosxcompra->getPrecioUnitario()) + $productosxcompra->getPrecioUnitario() ;
 				$unidades= $inventario->getUnidades() + $productosxcompra->getNumeroUnidades();
 
+				if(!$inventario){
+					$inventario= new Inventario($precio,$unidades,0,$id_producto,$id_proveedor);
+
+				}
+
 				$inventario->setUnidades($unidades,$statement);
 				$inventario->setPrecio($precio,$statement);
+				$statement->bindValue(":id_producto", $id_producto);
+				$statement->bindValue(":id_usuario", $id_proveedor);
 
 				$statement->execute();
 				if(!$statement){
 					throw new Exception("Error Processing Request", 1);
+					return ERROR;
 				}
 				$conexion = null;
 				$statement=null;
-
+				return SUCCESS;
 
 			}
 		}
