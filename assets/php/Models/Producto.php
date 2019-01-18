@@ -14,8 +14,8 @@
 		private $referenciaFabrica;
 		private $tieneIva;//tinyInt
 		private $clasificacionTributaria;
-		private $valorUtilidad;//es un porcentaje
 		private $activa;
+		private $unidadesTotales;
 		
 
 		private $inventario;
@@ -28,9 +28,9 @@
 			}
 		}
 
-		public function __construct0($idProducto, $nombre, $descripcion, $referenciaFabrica, $tieneIva, $clasificacionTributaria, $valorUtilidad, $activa = 1, $codigoBarras = NULL){
+		public function __construct0($idProducto, $nombre, $descripcion, $referenciaFabrica, $tieneIva, $clasificacionTributaria, $activa = 1, $codigoBarras = NULL){
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("INSERT INTO `productos` (`id_producto`, `codigo_barras`, `nombre`, `descripcion`, `referencia_fabrica`, `tiene_iva`, `clasificacion_tributaria`, `valor_utilidad`, `activa`) VALUES (:idProducto, :codigoBarras, :nombre, :descripcion, :referenciaFabrica, :tieneIva, :clasificacionTributaria, :valorUtilidad, :activa)");
+			$statement = $conexion->prepare("INSERT INTO `productos` (`id_producto`, `codigo_barras`, `nombre`, `descripcion`, `referencia_fabrica`, `tiene_iva`, `unidades_totales`, `clasificacion_tributaria`, `activa`) VALUES (:idProducto, :codigoBarras, :nombre, :descripcion, :referenciaFabrica, :tieneIva,:unidadesTotales, :clasificacionTributaria, :activa)");
 
 			$this->setIdProducto($idProducto,$statement);
 			$this->setCodigoBarras($codigoBarras,$statement);
@@ -41,6 +41,7 @@
 			$this->setClasificacionTributaria($clasificacionTributaria,$statement);
 			$this->setValorUtilidad($valorUtilidad,$statement);
 			$this->setActiva($activa,$statement);
+			$this->setUnidadesTotales(0,$statement);
 			$statement->execute();
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
@@ -134,18 +135,6 @@
 			return $this;
 		}
 
-		public function getValorUtilidad(){
-			return $this->valorUtilidad;
-		}
-
-		public function setValorUtilidad($valorUtilidad, $statement=NULL){
-			if($statement!=NULL){
-				$statement->bindParam(':valorUtilidad',$valorUtilidad,PDO::PARAM_INT);
-			}
-			$this->valorUtilidad = $valorUtilidad;
-			return $this;
-		}
-
 		public function getActiva(){
 			return $this->activa;
 		}
@@ -155,6 +144,18 @@
 				$statement->bindParam(':activa',$activa,PDO::PARAM_INT);
 			}
 			$this->activa = $activa;
+			return $this;
+		}
+
+		public function getUnidadesTotales(){
+			return $this->unidadesTotales;
+		}
+
+		public function setUnidadesTotales($unidadesTotales, $statement=NULL){
+			if($statement!=NULL){
+				$statement->bindParam(':unidadesTotales',$unidadesTotales,PDO::PARAM_INT);
+			}
+			$this->unidadesTotales = $unidadesTotales;
 			return $this;
 		}
 		//metodos
@@ -168,6 +169,26 @@
 			return $statement;
 		}
 
+		public function calcularUnidades{
+			$unidadesTotalesContador=0
+			$conexion = Conexion::conectar();
+			$statement = Inventario::obtenerInventarios($this->getIdProducto());
+			$statement->execute();
+			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+			while($resultado){
+				$unidadesTotalesContador+=$resultado['unidades']
+				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+			}
+			$conexion=null;
+			return $unidadesTotalesContador;
+
+
+		}
+		public function cambiarUnidadesTotales´{
+
+
+			
+		}
 		public static function obtenerProducto($idProducto,$returnStatement=false){
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("SELECT * FROM `productos` WHERE  `id_producto` = :idProducto");
@@ -184,8 +205,8 @@
 					$producto->setReferenciaFabrica($resultado['referencia_fabrica']);
 					$producto->setTieneIva($resultado['tiene_iva']);
 					$producto->setClasificacionTributaria($resultado['clasificacion_tributaria']);
-					$producto->setValorUtilidad($resultado['valor_utilidad']);
 					$producto->setActiva($resultado['activa']);
+					$producto->setUnidadesTotales($producto->calcularUnidades());
 					$conexion=null;
 					$statement=null;
 					return $producto;
@@ -202,7 +223,7 @@
 
 			$idProducto=$this->getIdProducto();
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("UPDATE `productos` SET `codigo_barras` = :codigoBarras, `nombre` = :nombre, `descripcion` = :descripcion, `referencia_fabrica` = :referenciaFabrica, `tiene_iva` = :tieneIva, `clasificacion_tributaria` = :clasificacionTributaria, `valor_utilidad` = :valorUtilidad WHERE `productos`.`id_producto` = :idProducto");
+			$statement = $conexion->prepare("UPDATE `productos` SET `codigo_barras` = :codigoBarras, `nombre` = :nombre, `descripcion` = :descripcion, `referencia_fabrica` = :referenciaFabrica, `tiene_iva` = :tieneIva, `clasificacion_tributaria` = :clasificacionTributaria, `unidades_totales` = :unidadesTotales  WHERE `productos`.`id_producto` = :idProducto");
 			$statement->bindValue(":idProducto", $idProducto);
 			$this->setCodigoBarras($codigoBarras,$statement);
 			$this->setNombre($nombre,$statement);
@@ -210,7 +231,7 @@
 			$this->setReferenciaFabrica($referenciaFabrica,$statement);
 			$this->setTieneIva($tieneIva,$statement);
 			$this->setClasificacionTributaria($clasificacionTributaria,$statement);
-			$this->setValorUtilidad($valorUtilidad,$statement);
+			$this->setUnidadesTotales($producto->calcularUnidades());
 			$statement->execute();
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);

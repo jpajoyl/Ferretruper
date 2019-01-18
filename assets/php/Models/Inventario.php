@@ -9,6 +9,7 @@ class Inventario {
 	private $precio;
 	private $unidades;
 	private $unidadesDefectuosas;
+	private $valorUtilitad;
 	private $proveedor;
 
 	public function __construct(){
@@ -19,15 +20,16 @@ class Inventario {
 		}
 	}
 
-	public function __construct0($precio, $unidades, $unidadesDefectuosas, $producto, $proveedor){
+	public function __construct0($precio, $unidades, $unidadesDefectuosas, $producto, $proveedor,$valorUtilidad){
 		$conexion = Conexion::conectar();
-		$statement = $conexion->prepare("INSERT INTO `inventario` (`id_inventario`, `precio`, `unidades`, `unidades_defectuosas`, `productos_id_producto`, `usuarios_id_usuario`) VALUES (NULL, :precio, :unidades, :unidadesDefectuosas, :producto, :proveedor)");
+		$statement = $conexion->prepare("INSERT INTO `inventario` (`id_inventario`, `precio`, `unidades`, `unidades_defectuosas`, `valor_utilidad`, `productos_id_producto`, `usuarios_id_usuario`) VALUES (NULL, :precio, :unidades, :unidadesDefectuosas,:valorUtilidad, :producto, :proveedor)");
 
 		$this->setPrecio($precio,$statement);
 		$this->setUnidades($unidades,$statement);
 		$this->setUnidadesDefectuosas($unidadesDefectuosas,$statement);
 		$this->setProducto($producto,$statement);
 		$this->setProveedor($proveedor,$statement);
+		$this->setValorUtilidad($valorUtilidad,$statement)
 		$statement->execute();
 		if(!$statement){
 			throw new Exception("Error Processing Request", 1);
@@ -111,6 +113,18 @@ class Inventario {
 		return $this;
 	}
 
+	public function getValorUtilidad(){
+		return $this->valorUtilitad;
+	}
+
+	public function setValorUtilidad($valorUtilitad, $statement=NULL){
+		if($statement!=NULL){
+			$statement->bindParam(':valorUtilitad',$valorUtilitad,PDO::PARAM_INT);
+		}
+		$this->valorUtilitad = $valorUtilitad;
+		return $this;
+	}
+
 	public static function obtenerInventario($numeroDeConsulta, $id_usuario=-1, $modo=false){
 		//idProducto->True, idInventario->False
 		$conexion = Conexion::conectar();
@@ -131,6 +145,7 @@ class Inventario {
 			$inventario->setPrecio($resultado['precio']);
 			$inventario->setUnidades($resultado['unidades']);
 			$inventario->setUnidadesDefectuosas($resultado['unidades_defectuosas']);
+			$inventario->setValorUtilidad($resultado['valor_utilidad'])
 			$conexion=null;
 			$statement=null;
 			return $inventario;
