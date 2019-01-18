@@ -124,8 +124,33 @@
 		return ($precioTotal)-(($precioTotal*$this->getDescuentoProducto())/100)
 	}
 
+	public static function obtenerProductoXCompra($id_productoxcompra){
+		$conexion = Conexion::conectar();
+		$statement = $conexion->prepare("SELECT * FROM `productoxcompra` WHERE `id_productoxcompra` = :id_productoxcompra");
+		$statement->bindValue(":id_productoxcompra", $id_productoxcompra);
+		$statement->execute();
+		$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+		if($resultado!=false){
+			$productoxcompra = new ProductoXCompra();
+			$productoxcompra->setNumeroFactura($resultado['numero_factura']);
+			$productoxcompra->setFecha($resultado['fecha_compra']);
+			$productoxcompra->setTotalCompra($resultado['total_compra']);
+			$productoxcompra->setDescuento($resultado['descuento_compra']);
 
-	//Ver todos productos por compra jajjajajajajja jueputa 
+			$proveedor= Proveedor::obtenerProveedor($resultado['USUARIOS_id_proveedor'],false);
+
+			$productoxcompra->setProveedor($proveedor);
+
+			$conexion=null;
+			$statement=null;
+			return $productoxcompra;
+		}else{
+			return false;
+		}
+
+
+
+	}
 
 
  ?>

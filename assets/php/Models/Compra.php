@@ -197,6 +197,13 @@
 
 		}
 		public static function abastecer(){
+			$productosxcompra=array();
+			$conexion = Conexion::conectar();
+			$statement= $this->verProductosxCompra
+			$resultado = $statement->fetch(PDO::FETCH_ASSOC)
+			while($resultado){
+				$productosxcompra= 
+			}
 			foreach ($productosxcompra as $productoxcompra) {
 				$conexion = Conexion::conectar();
 				$statement = $conexion->prepare(" UPDATE `inventario` SET `precio`=:precio ,`unidades`=:unidades  WHERE `PRODUCTOS_id_producto`=:id_producto ");
