@@ -101,6 +101,18 @@
 			}else{
 				echo NOT_FOUND;
 			}
+		}else if(!strcmp($method,"buscarNombreONit")){
+			$valor=$_POST['valor'];
+			$statement=Proveedor::buscarProveedorXNombreONit($valor);
+			if($statement!=false){
+				$data=array();
+				while ($proveedor = $statement->fetch(PDO::FETCH_ASSOC)){
+					$data['info'][]=$proveedor;
+				}	
+				echo json_encode($data);
+			}else{
+				echo NOT_FOUND;
+			}
 		}
 
 	}

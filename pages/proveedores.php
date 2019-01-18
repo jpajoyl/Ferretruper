@@ -24,7 +24,6 @@ include_once '../assets/php/Controllers/HttpServletRequest.php';
 		<!-- Switchery css -->
 		<link href="../assets/plugins/switchery/switchery.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="../assets/css/sweetalert2.min.css">
-		<link rel="stylesheet" href="../assets/css/jquery-ui.css">
 		
 		<!-- Bootstrap CSS -->
 		<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -133,7 +132,6 @@ include_once '../assets/php/Controllers/HttpServletRequest.php';
 
 <script src="../assets/js/detect.js"></script>
 <script src="../assets/js/fastclick.js"></script>
-<script src="../assets/js/jquery-ui.js"></script>
 <script src="../assets/js/jquery.blockUI.js"></script>
 <script src="../assets/js/jquery.nicescroll.js"></script>
 <script src="../assets/js/jquery.scrollTo.min.js"></script>

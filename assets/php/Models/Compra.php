@@ -196,7 +196,7 @@
 			}
 
 		}
-		public static function abastecer(){
+		public function abastecer(){
 			$productosxcompra=array();
 			$conexion = Conexion::conectar();
 			$statement= $this->verProductosxCompra;
