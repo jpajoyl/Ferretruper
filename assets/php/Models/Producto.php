@@ -16,6 +16,7 @@
 		private $clasificacionTributaria;
 		private $valorUtilidad;//es un porcentaje
 		private $activa;
+		
 
 		private $inventario;
 
