@@ -93,6 +93,8 @@ class FacturaCompra {
 		$numeroProveedor = $resultado2['USUARIOS_id_proveedor'];
 		return Proveedor::obtenerProveedor($numeroProveedor, false);
 	}
+
+	
 }
 
 

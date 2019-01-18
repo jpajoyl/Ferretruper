@@ -102,7 +102,7 @@
 		}
 
 
-		public function imprimirComprobante(){
+		public function imprimirComprobante($manual){//manual es bool, true->si decripcion manual, false->si descripcion automatica
 			include_once '../Controllers/CifrasEnLetras.php';
 			require('../fpdf/fpdf.php');
 			$pdf=new FPDF();  //crea el objeto
@@ -110,12 +110,16 @@
 			$pdf->Image('../../images/LOGO FERRETRUPER.jpg' , 7 , 7 , 40 , 10,'JPG');
 			$idComprobanteEgreso = $this->getNumeroConsecutivo();
 			$facturasComprobante = FacturaCompra::facturaCompraPorComprobanteEgreso($idComprobanteEgreso);
+			$arrayCompra = array();
+			$totalCompra=0;
 			if($facturasComprobante->rowCount()>0){
 				while ($facturaCompra = $facturasComprobante->fetch(PDO::FETCH_ASSOC)) {
-					$array['data'][]=$facturaCompra;
+					$idFacturaCompra=$facturaCompra['idfactura_compra'];
+					$compra = Compra::obtenerCompra($facturaCompra['compras_id_compra']);
+					$arrayCompra[] = $compra;
+					$totalCompra=$totalCompra+$compra->getTotalCompra();
 				}
 			}
-			$idFacturaCompra = $array['data']['compras_id_compra'];
 			$proveedor = FacturaCompra::obtenerProveedorPorFacturaCompra($idFacturaCompra);
 			$archivo="comprobanteEgreso-$idComprobanteEgreso.pdf";
 			$archivo_de_salida=$archivo;
@@ -130,24 +134,33 @@
 			$pdf->SetFont('Arial','U',11);
 			$pdf->Cell(190,5, "PAGADO A:",0,1,'J',false);
 			$pdf->SetFont('Arial','',11);
-			$compra=$this->getCompra();
-			$proveedor = $compra->getProveedor();
-			$nombreProveedor = $proveedor->getNombre();
+			$nombreProveedor = utf8_decode($proveedor->getNombre());
 			$nitProveedor = $proveedor->getNumeroDeIdentificacion()." - ".$proveedor->getDigitoDeVerificacion();
 			$pdf->Cell(190,5, $nombreProveedor."     nit: ".$nitProveedor,0,1,'J',false);//HHHHHHHHHHHHHHHHHHH
 			$pdf->SetFont('Arial','U',11);
 			$pdf->Cell(190,5, "LA SUMA DE:",0,1,'J',false);
 			$pdf->SetFont('Arial','',11);
-			$totalCompra = $compra->getTotalCompra();
 			$pdf->Cell(190,5,CifrasEnLetras::convertirNumeroEnLetras($totalCompra)." pesos" ,0,1,'J',false);//HHHHHHHHHHHHHHHHHHH
 			$pdf->SetFont('Arial','U',11);
-			$pdf->Cell(190,5, "POR CONCEPTO:",0,1,'J',false);
+			$pdf->Cell(140,5, "CONCEPTO:",0,0,'J',false);
+			$pdf->Cell(190,5, "VALOR:",0,1,'J',false);
 			$pdf->SetFont('Arial','',11);
-			$descripcion = $this->getDescripcion();
-			$pdf->Cell(190,5, $descripcion,0,1,'J',false);//HHHHHHHHHHHHHHHHHHH
-			$pdf->ln(2);
+			if ($manual) {
+				$descripcion = $this->getDescripcion();
+				$pdf->Cell(190,5, $descripcion,0,1,'J',false);//HHHHHHHHHHHHHHHHHHH
+			}else{
+				foreach ($arrayCompra as $compra) {
+					$descripcion ="Cancelacion Factura #". $compra->getNumeroFactura();
+					$pdf->Cell(140,5, $descripcion,0,0,'J',false);//HHHHHHHHHHHHHHHHHHH
+					$pdf->Cell(190,5, number_format($compra->getTotalCompra()),0,1,'L',false);
+					$pdf->ln(0.7);
+				}
+			}
+			$pdf->Rect(10, 59, 190, count($arrayCompra)*9);
 
-			$pdf->SetXY(10, 70);
+			$pdf->ln();
+
+			// $pdf->SetXY(10, 70);
 			$pdf->SetFont('Arial','',10);
 			$pdf->Cell(70,10, "$                ".strval(number_format($totalCompra)),1,0,'L',false);//HHHHHHHHHHHHHHHHHHHHHHHH
 			$pdf->Cell(30,10, "Efectivo: si | no",1,1,'C',false);//HHHHHHHHHHHHHHHHHHH
