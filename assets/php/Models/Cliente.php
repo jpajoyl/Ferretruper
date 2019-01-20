@@ -30,7 +30,7 @@ class Cliente extends Usuario {
     	if(!$statement){
     		throw new Exception("Error Processing Request", 1);
     	}
-
+        $this->setIdUsuario($conexion->lastInsertId());
         $conexion = null;
         $statement=null;
     }

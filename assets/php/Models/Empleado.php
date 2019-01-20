@@ -28,6 +28,7 @@ class Empleado extends Usuario {
         $this->setTelefono($telefono,$statement);
         $this->setClasificacion($clasificacion,$statement);
         $statement->execute();
+        $this->setIdUsuario($conexion->lastInsertId());
         if(!$statement){
             throw new Exception("Error Processing Request", 1);
         }

@@ -33,6 +33,7 @@
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
 			}
+			$this->setIdAbono($conexion->lastInsertId());
 			$conexion = null;
 	    	$statement=null;
 		}
