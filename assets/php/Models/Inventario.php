@@ -21,16 +21,17 @@ class Inventario {
 		}
 	}
 
-	public function __construct0($precio, $unidades, $unidadesDefectuosas, $producto, $proveedor,$valorUtilidad){
+	public function __construct0($precioInventario, $precioCompra, $unidades, $unidadesDefectuosas, $id_producto, $id_proveedor,$valorUtilidad){
 		$conexion = Conexion::conectar();
-		$statement = $conexion->prepare("INSERT INTO `inventario` (`id_inventario`, `precio_inventario`, `precio_compra`, `unidades`, `unidades_defectuosas`, `valor_utilidad`, `productos_id_producto`, `usuarios_id_usuario`) VALUES (NULL, :precio, :precio_compra,:unidades, :unidadesDefectuosas,:valorUtilidad, :producto, :proveedor)");
+		$statement = $conexion->prepare("INSERT INTO `inventario` (`id_inventario`, `precio_inventario`, `precio_compra`, `unidades`, `unidades_defectuosas`, `valor_utilidad`, `productos_id_producto`, `usuarios_id_usuario`) VALUES (NULL, :precioInventario, :precioCompra,:unidades, :unidadesDefectuosas,:valorUtilidad, :id_producto, :id_proveedor)");
 
-		$this->setPrecio($precio,$statement);
+		$this->setPrecioInventario($precioInventario,$statement);
 		$this->setUnidades($unidades,$statement);
 		$this->setUnidadesDefectuosas($unidadesDefectuosas,$statement);
 		$this->setProducto($producto,$statement);
 		$this->setProveedor($proveedor,$statement);
-		$this->setValorUtilidad($valorUtilidad,$statement)
+		$this->setValorUtilidad($valorUtilidad,$statement);
+		$this->setPrecioCompra($precioCompra,$statement);
 		$statement->execute();
 		if(!$statement){
 			throw new Exception("Error Processing Request", 1);
@@ -45,12 +46,12 @@ class Inventario {
 	    return $this->proveedor;
 	}
 	
-	public function setProveedor($proveedor, $statement=NULL)
+	public function setProveedor($id_proveedor, $statement=NULL)
 	{
 		if($statement!=NULL){
-			$statement->bindParam(':proveedor',$proveedor,PDO::PARAM_INT);
+			$statement->bindParam(':id_proveedor',$id_proveedor,PDO::PARAM_INT);
 		}
-		$this->proveedor = $proveedor;
+		$this->proveedor = Proveedor::obtenerProveedor($id_proveedor,false);
 		return $this;
 	}
 	public function getIdInventario(){
@@ -69,23 +70,35 @@ class Inventario {
 		return $this->producto;
 	}
 
-	public function setProducto($producto, $statement=NULL){
+	public function setProducto($id_producto, $statement=NULL){
 		if($statement!=NULL){
-			$statement->bindParam(':producto',$producto,PDO::PARAM_INT);
+			$statement->bindParam(':id_producto',$id_producto,PDO::PARAM_INT);
 		}
-		$this->producto = $producto;
+		$this->producto = Producto::obtenerProducto($id_producto);
 		return $this;
 	}
 
-	public function getPrecio(){
-		return $this->precio;
+	public function getPrecioInventario(){
+		return $this->precioInventario;
 	}
 
-	public function setPrecio($precio, $statement=NULL){
+	public function setPrecioInventario($precioInventario, $statement=NULL){
 		if($statement!=NULL){
-			$statement->bindParam(':precio',$precio,PDO::PARAM_INT);
+			$statement->bindParam(':precioInventario',$precioInventario,PDO::PARAM_INT);
 		}
-		$this->precio = $precio;
+		$this->precioInventario = $precioInventario;
+		return $this;
+	}
+
+	public function getPrecioCompra(){
+		return $this->precioCompra;
+	}
+
+	public function setPrecioCompra($precioCompra, $statement=NULL){
+		if($statement!=NULL){
+			$statement->bindParam(':precioCompra',$precioCompra,PDO::PARAM_INT);
+		}
+		$this->precioCompra = $precioCompra;
 		return $this;
 	}
 
@@ -143,10 +156,12 @@ class Inventario {
 			$inventario = new Inventario();
 			$inventario->setIdInventario($resultado['id_inventario']);
 			$inventario->setProducto($resultado['PRODUCTOS_id_producto']);
-			$inventario->setPrecio($resultado['precio']);
+			$inventario->setPrecioInventario($resultado['precio_inventario']);
 			$inventario->setUnidades($resultado['unidades']);
 			$inventario->setUnidadesDefectuosas($resultado['unidades_defectuosas']);
-			$inventario->setValorUtilidad($resultado['valor_utilidad'])
+			$inventario->setValorUtilidad($resultado['valor_utilidad']);
+			$inventario->setPrecioCompra($resultado['precio_compra']);
+			$inventario->setProveedor($resultado['usuarios_id_usuario'])
 			$conexion=null;
 			$statement=null;
 			return $inventario;
@@ -168,11 +183,34 @@ class Inventario {
 		return $statement;
 	}
 
+	public function cambiarPrecio($dato,$modo= true){   //modo = True  PrecioInventario -- modo = False ValorUtilidad
+		$conexion = Conexion::conectar();
+		$statement="UPDATE `inventario` SET `precio_inventario`=:precioInventario,`valor_utilidad`=:valorUtilidad WHERE `id_inventario` = :idInventario"
+		$statement->bindValue(":idInventario", $this->getIdInventario());
+		if($modo){
+			$nuevaUtilidad = (($dato-$this->getPrecioCompra())/($this->getPrecioCompra()))*100
+			$statement->bindValue(":valorUtilidad", $nuevaUtilidad);
+			$statement->bindValue(":precioInventario", $dato);
+		}else{
+			$nuevoPrecioInventario = (($this->getPrecioCompra()*$dato)/100) + $this->getPrecioCompra();
+			$statement->bindValue(":valorUtilidad", $dato);
+			$statement->bindValue(":precioInventario", $nuevoPrecioInventario);
+		}
+		$statement->execute();
+		$conexion=null;
+		if($statement){
+			return SUCCESS;
+		}else{
+			return ERROR;
+		}
+	} 
 
 
 
 
 }
+
+
 
 
 

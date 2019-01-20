@@ -11,7 +11,7 @@
 		private $idProductoxventa;
 		private $numeroUnidades;
 		private $precioVenta;
-		private $producto;
+		private $producprecioVentato;
 		private $venta;
 
 		public function __construct(){
@@ -22,11 +22,11 @@
 			}
 		}
 
-		public function __construct0($precioUnitario, $unidades, $id_producto, $id_venta){
+		public function __construct0($precioVenta, $unidades, $id_producto, $id_venta){
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("INSERT INTO `productoxventa` (`id_productoxventa`, `precio_unitario`, `unidades`, `PRODUCTOS_id_producto`, `VENTAS_id_venta`) VALUES (NULL, :precioUnitario, :numeroUnidades, :id_producto, :id_venta)");
+			$statement = $conexion->prepare("INSERT INTO `productoxventa` (`id_productoxventa`, `precio_venta`, `unidades`, `PRODUCTOS_id_producto`, `VENTAS_id_venta`) VALUES (NULL, :precioVenta, :numeroUnidades, :id_producto, :id_venta)");
 
-			$this->setPrecioUnitario($precioUnitario,$statement);
+			$this->setPrecioVenta($precioVenta,$statement);
 			$this->setNumeroUnidades($numeroUnidades,$statement);
 			$this->setProducto($id_producto,$statement);
 			$this->setVenta($id_venta,$statement);
@@ -64,15 +64,15 @@
 			
 		}
 
-		public function getPrecioUnitario(){
-			return $this->precioUnitario;
+		public function getPrecioVenta(){
+			return $this->precioVenta;
 		}
 
-		public function setPrecioUnitario($precioUnitario, $statement=NULL){
+		public function setPrecioVenta($precioVenta, $statement=NULL){
 			if($statement!=NULL){
-				$statement->bindParam(':precioUnitario',$precioUnitario,PDO::PARAM_INT);
+				$statement->bindParam(':precioVenta',$precioVenta,PDO::PARAM_INT);
 			}
-			$this->precioUnitario = $precioUnitario;
+			$this->precioVenta = $precioVenta;
 		}
 		public function getProducto(){
 			return $this->producto;
@@ -97,6 +97,8 @@
 			$this->venta = Venta::obtenerVenta($id_venta);
 
 		}
+
+		//methods
 		public static function obtenerProductoXVentaPorIdVenta($idVenta)
 		{
 			# code...
