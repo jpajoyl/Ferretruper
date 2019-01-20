@@ -112,7 +112,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 										<thead class="cf">
 											<tr>
 												<th></th>
-												<th>No. producto</th>
+												<th>Id</th>
 												<th>Nombre</th>
 												<th>Cod. Barras</th>
 												<th></th>
@@ -123,6 +123,69 @@ include_once '../assets/php/Controllers/GetSession.php';
 										</tbody>
 									</table>
 									<a role="button" href="#" id="añadir-producto" class="btn btn-success float-right mt mr" data-target="#añadirProducto" data-toggle="modal">Añadir producto nuevo<span class="btn-label btn-label-right"><i class="fa fa-plus-square"></i></span></a>
+								  	<div class="modal fade custom-modal" id="añadirProducto" tabindex="-1" role="dialog" aria-labelledby="customModal" aria-hidden="true">
+										<div class="modal-dialog" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="titleAñadirProducto">Añadir producto a <span id="nombre-proveedor"></span></h5>
+													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<form autocomplete="off" action="#" id="form-añadirProducto">
+														<div class="form-row">
+															<div class="form-group col-md-6">
+																<label>Identificacion <span class="text-danger">*</span></label>
+																<input type="text" class="form-control" id="input-id-producto" placeholder="Identificacion" autocomplete="off" required>
+															</div>
+															<div class="form-group col-md-6">
+																<label>Nombre<span class="text-danger">*</span></label>
+																<input type="text" class="form-control" id="input-nombre-producto" placeholder="Nombre del producto" required>
+															</div>
+														</div>
+														<div class="form-group">
+															<label>Descripcion del producto (Opcional)</label>
+															<textarea class="form-control" id="input-descripcion-producto"></textarea>
+														</div>
+														<div class="form-group">
+															<label>Referencia de fabrica<span class="text-danger">*</span></label>
+															<input type="text" class="form-control" id="input-referencia-fabrica" placeholder="Referencia de fabrica" required autocomplete="off">
+														</div>
+														<div class="form-row">
+															<div class="form-group col-md-6">
+																<label>Valor de utilidad <span class="text-danger">*</span></label>
+																<input type="number" class="form-control" id="input-valor-utilidad" placeholder="Valor Utilidad" value="30" required>
+															</div>
+															<div class="form-group col-md-6">
+																<label>Tiene IVA? <span class="text-danger">*</span></label>
+																<div class="form-check">
+																  <label class="form-check-label">
+																	<input class="form-check-input" type="radio" name="IVA" id="ivaSi" value="1" checked>
+																	SI
+																  </label>
+																</div>
+																<div class="form-check">
+																  <label class="form-check-label">
+																	<input class="form-check-input" type="radio" name="IVA" id="ivaNo" value="0">
+																	NO
+																  </label>
+																</div>
+															</div>
+														</div>	
+														<div class="form-group">
+															<label>Codigo de barras (Opcional)</label>
+															<input type="text" class="form-control" id="input-codigo-barras" placeholder="Codigo de barras" autocomplete="off">
+														</div>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelar-añadirProducto">Cancelar</button>
+														<button type="submit" class="btn btn-success">Registrar</button>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>														
 							</div><!-- end card-->					
 						</div>
@@ -137,10 +200,10 @@ include_once '../assets/php/Controllers/GetSession.php';
 									<table id="table-productos-compra" class="table table-responsive-xl table-striped">
 										<thead>
 											<tr>
-												<th scope="col">No. producto</th>
 												<th scope="col">Nombre</th>
 												<th scope="col">Uds</th>
 												<th scope="col">PU</th>
+												<th scope="col">Utilidad</th>
 											</tr>
 										</thead>
 										<tbody>

@@ -28,26 +28,35 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		$idProveedor=$_POST['idProveedor'];
 		$proveedor=Proveedor::obtenerProveedor($idProveedor,false);
 		if($proveedor!=false){
-			$consultaCompra=Compra::obtenerCompraNumeroFacturaXProveedor($numeroFactura,$idProveedor);
-			if($consultaCompra!=false){
-				$fecha=getdate();
-				$fechaHoy=$fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'];
-				try {
-					$compra = new Compra($numeroFactura, $fechaHoy, 0, 0, $proveedor);
+			try {
+				$consultaCompra=Compra::obtenerCompraNumeroFacturaXProveedor($numeroFactura,$idProveedor);
+				if($consultaCompra==false){
+					$fecha=getdate();
+					$fechaHoy=$fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'];
+					try {
+						$compra = new Compra($numeroFactura, $fechaHoy, 0, 0, $proveedor->getIdUsuario());
+						$data=array();
+						$data['response']=SUCCESS;
+						$data['nombre']=$proveedor->getNombre();
+						$data['id_compra']=$compra->getIdCompra();
+						$serializeCompra=serialize($compra);
+						setcookie("compra", $serializeCompra,3600);
+						echo json_encode($data);
+					} catch (Exception $e) {
+						echo ERROR;
+					}
+				}else{
 					$data=array();
-					$data['response']=SUCCESS;
-					$data['nombre']=$proveedor->getNombre();
-					$data['id_compra']=$compra->getIdCompra();
+					$data['response']=ALREADY_EXIST;
+					$data['id_compra']=$consultaCompra->getIdCompra();
+					$serializeCompra=serialize($consultaCompra);
+					setcookie("compra", $serializeCompra,3600);
 					echo json_encode($data);
-				} catch (Exception $e) {
-					echo ERROR;
 				}
-			}else{
-				$data=array();
-				$data['response']=ALREADY_EXIST;
-				$data['id_compra']=$consultaCompra->getIdCompra();
+			} catch (Exception $e) {
+				echo ERROR;
 			}
-			
+				
 		}
 	}
 }
