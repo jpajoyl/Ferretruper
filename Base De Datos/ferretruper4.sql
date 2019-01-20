@@ -21,7 +21,7 @@ USE `ferretruperbd2` ;
 -- Table `ferretruperbd2`.`usuarios`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`usuarios` (
-  `id_usuario` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_usuario` INT NOT NULL AUTO_INCREMENT,
   `tipo_usuario` VARCHAR(45) NOT NULL,
   `tipo_identificacion` VARCHAR(45) NOT NULL,
   `numero_identificacion` VARCHAR(45) NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`usuarios` (
   `clasificacion` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_usuario`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 38
+AUTO_INCREMENT = 43
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -44,12 +44,12 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `ferretruperbd2`.`ventas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`ventas` (
-  `id_venta` INT(11) NOT NULL AUTO_INCREMENT,
-  `subtotal` INT(11) NOT NULL,
-  `iva` INT(11) NOT NULL,
-  `retefuente` INT(11) NULL DEFAULT NULL,
-  `descuento` INT(11) NULL DEFAULT NULL,
-  `total` INT(11) NOT NULL,
+  `id_venta` INT NOT NULL AUTO_INCREMENT,
+  `subtotal` INT NOT NULL,
+  `iva` INT NOT NULL,
+  `retefuente` INT NULL DEFAULT NULL,
+  `descuento` INT NULL DEFAULT NULL,
+  `total` INT NOT NULL,
   `fecha` DATE NOT NULL,
   `anulada` TINYINT(1) NULL DEFAULT NULL,
   `fecha_anulada` DATE NULL DEFAULT NULL,
@@ -62,13 +62,13 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `ferretruperbd2`.`tipo_venta`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`tipo_venta` (
-  `id_tipo_venta` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_tipo_venta` INT NOT NULL AUTO_INCREMENT,
   `tipo_venta` VARCHAR(45) NOT NULL,
   `estado` VARCHAR(45) NOT NULL,
-  `plazo` INT(11) NULL DEFAULT NULL,
-  `USUARIOS_id_cliente` INT(11) NOT NULL,
-  `USUARIOS_id_empleado` INT(11) NOT NULL,
-  `VENTAS_id_venta` INT(11) NOT NULL,
+  `plazo` INT NULL DEFAULT NULL,
+  `USUARIOS_id_cliente` INT NOT NULL,
+  `USUARIOS_id_empleado` INT NOT NULL,
+  `VENTAS_id_venta` INT NOT NULL,
   PRIMARY KEY (`id_tipo_venta`),
   INDEX `fk_TIPO_VENTA_USUARIOS1_idx` (`USUARIOS_id_cliente` ASC),
   INDEX `fk_TIPO_VENTA_USUARIOS2_idx` (`USUARIOS_id_empleado` ASC),
@@ -96,10 +96,10 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `ferretruperbd2`.`abonos`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`abonos` (
-  `id_abono` INT(11) NOT NULL AUTO_INCREMENT,
-  `valor` INT(11) NOT NULL,
+  `id_abono` INT NOT NULL AUTO_INCREMENT,
+  `valor` INT NOT NULL,
   `fecha` DATE NOT NULL,
-  `TIPO_VENTA_id_tipo_venta` INT(11) NOT NULL,
+  `TIPO_VENTA_id_tipo_venta` INT NOT NULL,
   PRIMARY KEY (`id_abono`),
   INDEX `fk_ABONOS_TIPO_VENTA1_idx` (`TIPO_VENTA_id_tipo_venta` ASC),
   CONSTRAINT `fk_ABONOS_TIPO_VENTA1`
@@ -115,12 +115,12 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `ferretruperbd2`.`compras`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`compras` (
-  `id_compra` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_compra` INT NOT NULL AUTO_INCREMENT,
   `numero_factura` VARCHAR(45) NOT NULL,
   `fecha_compra` DATE NOT NULL,
-  `total_compra` INT(11) NOT NULL,
-  `descuento_compra` INT(11) NULL DEFAULT NULL,
-  `USUARIOS_id_proveedor` INT(11) NOT NULL,
+  `total_compra` INT NOT NULL,
+  `descuento_compra` INT NULL DEFAULT NULL,
+  `USUARIOS_id_proveedor` INT NOT NULL,
   PRIMARY KEY (`id_compra`),
   INDEX `fk_COMPRAS_USUARIOS1_idx` (`USUARIOS_id_proveedor` ASC),
   CONSTRAINT `fk_COMPRAS_USUARIOS1`
@@ -137,7 +137,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `ferretruperbd2`.`comprobantes_egreso`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`comprobantes_egreso` (
-  `id_comprobante_egreso` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_comprobante_egreso` INT NOT NULL AUTO_INCREMENT,
   `fecha_pago` DATE NOT NULL,
   `descripcion` VARCHAR(500) NOT NULL,
   PRIMARY KEY (`id_comprobante_egreso`))
@@ -150,10 +150,10 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `ferretruperbd2`.`credenciales_de_acceso`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`credenciales_de_acceso` (
-  `id_credencial` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_credencial` INT NOT NULL AUTO_INCREMENT,
   `usuario` VARCHAR(45) NOT NULL,
   `password` VARCHAR(100) NOT NULL,
-  `USUARIOS_id_usuario` INT(11) NOT NULL,
+  `USUARIOS_id_usuario` INT NOT NULL,
   PRIMARY KEY (`id_credencial`),
   INDEX `fk_CREDENCIALES_DE_ACCESO_USUARIOS1_idx` (`USUARIOS_id_usuario` ASC),
   CONSTRAINT `fk_CREDENCIALES_DE_ACCESO_USUARIOS1`
@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`credenciales_de_acceso` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -170,9 +170,9 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `ferretruperbd2`.`factura_compra`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`factura_compra` (
-  `idfactura_compra` INT(11) NOT NULL AUTO_INCREMENT,
-  `compras_id_compra` INT(11) NOT NULL,
-  `comprobantes_egreso_id_comprobante_egreso` INT(11) NULL,
+  `idfactura_compra` INT NOT NULL AUTO_INCREMENT,
+  `compras_id_compra` INT NOT NULL,
+  `comprobantes_egreso_id_comprobante_egreso` INT NULL DEFAULT NULL,
   PRIMARY KEY (`idfactura_compra`),
   INDEX `fk_factura_compra_compras1_idx` (`compras_id_compra` ASC),
   INDEX `fk_factura_compra_comprobantes_egreso1_idx` (`comprobantes_egreso_id_comprobante_egreso` ASC),
@@ -195,7 +195,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `ferretruperbd2`.`informacion_facturas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`informacion_facturas` (
-  `id_informacion_facturas` INT(11) NOT NULL,
+  `id_informacion_facturas` INT NOT NULL,
   `descripcion` VARCHAR(500) NULL DEFAULT NULL,
   PRIMARY KEY (`id_informacion_facturas`))
 ENGINE = InnoDB
@@ -206,12 +206,12 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `ferretruperbd2`.`resoluciones`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`resoluciones` (
-  `id_resolucion` INT(11) NOT NULL,
+  `id_resolucion` INT NOT NULL,
   `descripcion` VARCHAR(500) NOT NULL,
   `tipo` VARCHAR(45) NOT NULL,
   `vigente` TINYINT(1) NOT NULL,
   `activa` TINYINT(4) NOT NULL,
-  `numero_dian` INT(11) NOT NULL,
+  `numero_dian` INT NOT NULL,
   PRIMARY KEY (`id_resolucion`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
@@ -221,15 +221,15 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `ferretruperbd2`.`facturas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`facturas` (
-  `id_factura` INT(11) NOT NULL AUTO_INCREMENT,
-  `total` INT(11) NOT NULL,
+  `id_factura` INT NOT NULL AUTO_INCREMENT,
+  `total` INT NOT NULL,
   `fecha` DATE NOT NULL,
   `anulada` TINYINT(1) NULL DEFAULT NULL,
   `fecha_anulada` DATE NULL DEFAULT NULL,
-  `numero_dian` INT(11) NOT NULL,
-  `informacion_facturas_id_informacion_facturas` INT(11) NOT NULL,
-  `resoluciones_id_resolucion` INT(11) NOT NULL,
-  `ventas_id_venta` INT(11) NOT NULL,
+  `numero_dian` INT NOT NULL,
+  `informacion_facturas_id_informacion_facturas` INT NOT NULL,
+  `resoluciones_id_resolucion` INT NOT NULL,
+  `ventas_id_venta` INT NOT NULL,
   PRIMARY KEY (`id_factura`),
   INDEX `fk_facturas_informacion_facturas1_idx` (`informacion_facturas_id_informacion_facturas` ASC),
   INDEX `fk_facturas_resoluciones1_idx` (`resoluciones_id_resolucion` ASC),
@@ -257,7 +257,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `ferretruperbd2`.`productos`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`productos` (
-  `id_producto` INT(11) NOT NULL,
+  `id_producto` INT NOT NULL,
   `codigo_barras` VARCHAR(100) NULL DEFAULT NULL,
   `nombre` VARCHAR(255) NOT NULL,
   `descripcion` VARCHAR(500) NOT NULL,
@@ -265,6 +265,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`productos` (
   `tiene_iva` TINYINT(1) NOT NULL,
   `clasificacion_tributaria` VARCHAR(45) NOT NULL,
   `unidades_totales` INT NOT NULL,
+  `precio_mayor_inventario` INT NOT NULL,
   `activa` TINYINT(4) NOT NULL,
   PRIMARY KEY (`id_producto`))
 ENGINE = InnoDB
@@ -275,12 +276,12 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `ferretruperbd2`.`garantias`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`garantias` (
-  `id_garantias` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_garantias` INT NOT NULL AUTO_INCREMENT,
   `fecha_inicial` DATE NOT NULL,
   `fecha_caducacion` DATE NOT NULL,
   `caducada` TINYINT(1) NOT NULL,
-  `PRODUCTOS_id_producto` INT(11) NOT NULL,
-  `VENTAS_id_venta` INT(11) NOT NULL,
+  `PRODUCTOS_id_producto` INT NOT NULL,
+  `VENTAS_id_venta` INT NOT NULL,
   PRIMARY KEY (`id_garantias`),
   INDEX `fk_GARANTIAS_PRODUCTOS1_idx` (`PRODUCTOS_id_producto` ASC),
   INDEX `fk_GARANTIAS_VENTAS1_idx` (`VENTAS_id_venta` ASC),
@@ -302,13 +303,14 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `ferretruperbd2`.`inventario`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`inventario` (
-  `id_inventario` INT(11) NOT NULL AUTO_INCREMENT,
-  `precio` INT(11) NOT NULL,
-  `unidades` INT(11) NOT NULL,
-  `unidades_defectuosas` INT(11) NOT NULL,
+  `id_inventario` INT NOT NULL AUTO_INCREMENT,
+  `precio_inventario` INT NOT NULL,
+  `precio_compra` INT NOT NULL,
+  `unidades` INT NOT NULL,
+  `unidades_defectuosas` INT NOT NULL,
   `valor_utilidad` INT NOT NULL,
-  `productos_id_producto` INT(11) NOT NULL,
-  `usuarios_id_usuario` INT(11) NOT NULL,
+  `productos_id_producto` INT NOT NULL,
+  `usuarios_id_usuario` INT NOT NULL,
   PRIMARY KEY (`id_inventario`),
   INDEX `fk_inventario_productos1_idx` (`productos_id_producto` ASC),
   INDEX `fk_inventario_usuarios1_idx` (`usuarios_id_usuario` ASC),
@@ -331,12 +333,12 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `ferretruperbd2`.`productoxcompra`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`productoxcompra` (
-  `id_productoxcompra` INT(11) NOT NULL AUTO_INCREMENT,
-  `precio_unitario` INT(11) NOT NULL,
-  `unidades` INT(11) NOT NULL,
-  `descuento` INT(11) NULL DEFAULT NULL,
-  `COMPRAS_id_compra` INT(11) NOT NULL,
-  `PRODUCTOS_id_producto` INT(11) NOT NULL,
+  `id_productoxcompra` INT NOT NULL AUTO_INCREMENT,
+  `precio_unitario` INT NOT NULL,
+  `unidades` INT NOT NULL,
+  `descuento` INT NULL DEFAULT NULL,
+  `COMPRAS_id_compra` INT NOT NULL,
+  `PRODUCTOS_id_producto` INT NOT NULL,
   PRIMARY KEY (`id_productoxcompra`),
   INDEX `fk_PRODUCTOXCOMPRA_COMPRAS1_idx` (`COMPRAS_id_compra` ASC),
   INDEX `fk_PRODUCTOXCOMPRA_PRODUCTOS1_idx` (`PRODUCTOS_id_producto` ASC),
@@ -358,11 +360,11 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `ferretruperbd2`.`productoxventa`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`productoxventa` (
-  `id_productoxventa` INT(11) NOT NULL AUTO_INCREMENT,
-  `precio_unitario` INT(11) NOT NULL,
-  `unidades` INT(11) NOT NULL,
-  `PRODUCTOS_id_producto` INT(11) NOT NULL,
-  `VENTAS_id_venta` INT(11) NOT NULL,
+  `id_productoxventa` INT NOT NULL AUTO_INCREMENT,
+  `precio_venta` INT NOT NULL,
+  `unidades` INT NOT NULL,
+  `PRODUCTOS_id_producto` INT NOT NULL,
+  `VENTAS_id_venta` INT NOT NULL,
   PRIMARY KEY (`id_productoxventa`),
   INDEX `fk_PRODUCTOXVENTA_PRODUCTOS1_idx` (`PRODUCTOS_id_producto` ASC),
   INDEX `fk_PRODUCTOXVENTA_VENTAS1_idx` (`VENTAS_id_venta` ASC),

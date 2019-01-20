@@ -24,7 +24,10 @@ if(!isset($include)){
 			}else if(!strcmp($method,"iniciarCompra")){
 				$numeroFactura=$_POST['numeroFactura'];
 				$idProveedor=$_POST['idProveedor'];
-				
+				$proveedor=Proveedor::obtenerProveedor($idProveedor,false);
+				if($proveedor!=false){
+					
+				}
 			}
 		}
 	}
