@@ -244,7 +244,6 @@
 
 		}
 
-		public 
 		public static function obtenerProducto($idProducto,$returnStatement=false){
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("SELECT * FROM `productos` WHERE  `id_producto` = :idProducto");
