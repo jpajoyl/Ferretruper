@@ -150,10 +150,7 @@
 				$compra->setFecha($resultado['fecha_compra']);
 				$compra->setTotalCompra($resultado['total_compra']);
 				$compra->setDescuento($resultado['descuento_compra']);
-
-				$proveedor= Proveedor::obtenerProveedor($resultado['USUARIOS_id_proveedor'],false);
-
-				$compra->setProveedor($proveedor);
+				$compra->setProveedor($resultado['USUARIOS_id_proveedor']);
 
 				$conexion=null;
 				$statement=null;
@@ -177,10 +174,7 @@
 				$compra->setFecha($resultado['fecha_compra']);
 				$compra->setTotalCompra($resultado['total_compra']);
 				$compra->setDescuento($resultado['descuento_compra']);
-
-				$proveedor= Proveedor::obtenerProveedor($resultado['USUARIOS_id_proveedor'],false);
-
-				$compra->setProveedor($proveedor);
+				$compra->setProveedor($resultado['USUARIOS_id_proveedor']);
 
 				$conexion=null;
 				$statement=null;

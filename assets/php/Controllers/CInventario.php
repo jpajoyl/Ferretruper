@@ -36,7 +36,6 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 					$compra = new Compra($numeroFactura, $fechaHoy, 0, 0, $proveedor);
 					$data=array();
 					$data['response']=SUCCESS;
-					$data['id_proveedor']=$compra->getIdCompra();
 					$data['nombre']=$proveedor->getNombre();
 					$data['id_compra']=$compra->getIdCompra();
 					echo json_encode($data);
@@ -46,7 +45,6 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 			}else{
 				$data=array();
 				$data['response']=ALREADY_EXIST;
-				$data['id_proveedor']=$consultaCompra->getIdCompra();
 				$data['id_compra']=$consultaCompra->getIdCompra();
 			}
 			

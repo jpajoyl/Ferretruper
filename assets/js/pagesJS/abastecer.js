@@ -64,7 +64,7 @@ $(document).ready(function() {
                 success:function(data){
                     if(data!=""){
                     	if(data!=0){
-                            if(data==2){
+                            if(data.response==2){
                                 Swal({
                                   title: 'Error',
                                   text: "Al parecer esta compra ya esta registrada, esta seguro que el numero de factura es "+numeroFactura+"!",
@@ -76,7 +76,7 @@ $(document).ready(function() {
                                   cancelButtonText: "No"
                                 }).then((result) => {
                                     if (result.value) {
-                                        window.location.href = "abastecer.php?";
+                                        window.location.href = "abastecer.php?p=abastecer&numeroFactura="+;
                                     }
                                 });
                             }
