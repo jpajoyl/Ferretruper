@@ -73,7 +73,7 @@
 				$statement->bindParam(':precioUnitario',$precioUnitario,PDO::PARAM_INT);
 			}
 			$this->precioUnitario = $precioUnitario;
-			
+		}
 		public function getProducto(){
 			return $this->producto;
 		}
@@ -83,7 +83,7 @@
 				$statement->bindParam(':id_producto',$id_producto,PDO::PARAM_INT);
 			}
 			$this->producto = Producto::obtenerProducto($id_producto);
-			
+
 		}
 
 		public function getVenta(){
@@ -95,10 +95,13 @@
 				$statement->bindParam(':id_venta',$id_venta,PDO::PARAM_INT);
 			}
 			$this->venta = Venta::obtenerVenta($id_venta);
-			
-		}
 
+		}
+		public static function obtenerProductoXVentaPorIdVenta($idVenta)
+		{
+			# code...
+		}
 
 	}
 
- ?>
+	?>

@@ -22,7 +22,7 @@
 			}
 		}
 
-		public function __construct0($fechaPago, $descripcion){ //compra es un objeto de ese tipo
+		public function __construct0($fechaPago, $descripcion=""){ //compra es un objeto de ese tipo
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("INSERT INTO `comprobantes_egreso`(`id_comprobante_egreso`, `fecha_pago`, `descripcion`, `COMPRAS_id_compra`) VALUES (NULL,:fechaPago,:descripcion,:compra)");
 

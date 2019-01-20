@@ -12,7 +12,7 @@ include 'FacturaCompra.php';
 include 'Venta.php';
 include 'TipoVenta.php';
 include '../Controllers/Response.php';
-$ce = Factura::obtenerFactura(2);
+$ce = Factura::obtenerFactura(1);
 $ce->imprimirFacturaCarta();
 
 // $r = FacturaCompra::facturaCompraPorComprobanteEgreso(3);
