@@ -229,13 +229,13 @@
 		}
 
 		public function efectuarVenta(){ //Factura
-			$productosxventa=array();
+			$total=0;
 			$conexion = Conexion::conectar();
 			$statement= $this->verProductosxVenta();
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			while($resultado){
 				$productoxventa= ProductoXCompra::obtenerProductoXCompra($resultado["id_productoxcompra"]);
-				$productosxventa[]= $productoxventa;
+				$total+= $productoxventa->getPrecioVenta() * $productoxventa->getNumeroUnidades();
 				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			}
 			$tipoDeVenta=TipoVenta::obtenerTipoVenta($this->getIdVenta());

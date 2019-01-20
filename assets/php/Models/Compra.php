@@ -221,7 +221,10 @@
 				$id_producto=$producto->getIdProducto();
 
 				$inventario=Inventario::obtenerInventario($id_producto,$id_proveedor,true);
-
+				$precio=(($producto->getValorUtilidad()/100) * $productosxcompra->getPrecioUnitario()) + $productosxcompra->getPrecioUnitario()
+				if($producto->tieneIva()){
+					$precioFinal= $precio * IVA
+				}
 				$precio=(($producto->getValorUtilidad()/100) * $productosxcompra->getPrecioUnitario()) + $productosxcompra->getPrecioUnitario() ;
 				$unidades= $inventario->getUnidades() + $productosxcompra->getNumeroUnidades();
 
