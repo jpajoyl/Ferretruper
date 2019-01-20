@@ -6,11 +6,12 @@ class Inventario {
 	
 	private $idInventario;
 	private $producto;
-	private $precio;
+	private $precioInventario;
 	private $unidades;
 	private $unidadesDefectuosas;
 	private $valorUtilitad;
 	private $proveedor;
+	private $precioCompra;
 
 	public function __construct(){
 		$params = func_get_args();
@@ -22,7 +23,7 @@ class Inventario {
 
 	public function __construct0($precio, $unidades, $unidadesDefectuosas, $producto, $proveedor,$valorUtilidad){
 		$conexion = Conexion::conectar();
-		$statement = $conexion->prepare("INSERT INTO `inventario` (`id_inventario`, `precio`, `unidades`, `unidades_defectuosas`, `valor_utilidad`, `productos_id_producto`, `usuarios_id_usuario`) VALUES (NULL, :precio, :unidades, :unidadesDefectuosas,:valorUtilidad, :producto, :proveedor)");
+		$statement = $conexion->prepare("INSERT INTO `inventario` (`id_inventario`, `precio_inventario`, `precio_compra`, `unidades`, `unidades_defectuosas`, `valor_utilidad`, `productos_id_producto`, `usuarios_id_usuario`) VALUES (NULL, :precio, :precio_compra,:unidades, :unidadesDefectuosas,:valorUtilidad, :producto, :proveedor)");
 
 		$this->setPrecio($precio,$statement);
 		$this->setUnidades($unidades,$statement);

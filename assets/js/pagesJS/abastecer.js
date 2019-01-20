@@ -52,6 +52,7 @@ $(document).ready(function() {
     		  'error'
     		  );
     	}else{
+
     		var data={
     			"numeroFactura":numeroFactura,
     			"idProveedor":idProveedor
@@ -62,7 +63,7 @@ $(document).ready(function() {
                 data: data,
                 success:function(data){
                     if(data!=""){
-                    	
+                    	alert(data);
                     }  
                 }
             });
