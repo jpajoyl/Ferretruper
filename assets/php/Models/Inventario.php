@@ -6,11 +6,12 @@ class Inventario {
 	
 	private $idInventario;
 	private $producto;
-	private $precio;
+	private $precioInventario;
 	private $unidades;
 	private $unidadesDefectuosas;
 	private $valorUtilitad;
 	private $proveedor;
+	private $precioCompra;
 
 	public function __construct(){
 		$params = func_get_args();

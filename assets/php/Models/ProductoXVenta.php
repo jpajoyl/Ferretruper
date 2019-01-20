@@ -10,7 +10,7 @@
 		//atributos
 		private $idProductoxventa;
 		private $numeroUnidades;
-		private $precioUnitario;
+		private $precioVenta;
 		private $producto;
 		private $venta;
 
