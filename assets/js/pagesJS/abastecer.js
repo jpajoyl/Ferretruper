@@ -52,44 +52,62 @@ $(document).ready(function() {
     		  'error'
     		  );
     	}else{
-
-    		var data={
-    			"numeroFactura":numeroFactura,
-    			"idProveedor":idProveedor
-    		}
-    		$.ajax({
-                url: '../assets/php/Controllers/CInventario.php?method=iniciarCompra',
-                type: 'POST',
-                data: data,
-                success:function(data){
-                    if(data!=""){
-                    	if(data!=0){
-                            if(data.response==2){
-                                Swal({
-                                  title: 'Error',
-                                  text: "Al parecer esta compra ya esta registrada, esta seguro que el numero de factura es "+numeroFactura+"!",
-                                  type: 'error',
-                                  showCancelButton: true,
-                                  confirmButtonColor: '#3085d6',
-                                  cancelButtonColor: '#d33',
-                                  confirmButtonText: 'Si, seguir abasteciendo compra!',
-                                  cancelButtonText: "No"
-                                }).then((result) => {
-                                    if (result.value) {
-                                        window.location.href = "abastecer.php?p=abastecer&numeroFactura="+;
+            Swal({
+              title: 'Iniciar compra',
+              text: "Se iniciara una compra. El numero de factura es "+numeroFactura,
+              type: 'info',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Si, iniciar!',
+              cancelButtonText: "No"
+            }).then((result) => {
+                if (result.value) {
+                    var data={
+                        "numeroFactura":numeroFactura,
+                        "idProveedor":idProveedor
+                    }
+                    $.ajax({
+                        url: '../assets/php/Controllers/CInventario.php?method=iniciarCompra',
+                        type: 'POST',
+                        data: data,
+                        success:function(data){
+                            if(data!=""){
+                                if(data!=0){
+                                    data=$.parseJSON(data);
+                                    if(data.response==2){
+                                        setTimeout(function(){
+                                            Swal({
+                                              title: 'Error',
+                                              text: "Al parecer esta compra ya esta registrada, esta seguro que el numero de factura es "+numeroFactura+"!",
+                                              type: 'error',
+                                              showCancelButton: true,
+                                              confirmButtonColor: '#3085d6',
+                                              cancelButtonColor: '#d33',
+                                              confirmButtonText: 'Si, seguir abasteciendo compra!',
+                                              cancelButtonText: "No"
+                                            }).then((result) => {
+                                                if (result.value) {
+                                                    
+                                                }
+                                            });
+                                        },200);
+                                    }else{
+                                       loadDataProveedor(idProveedor);
                                     }
-                                });
-                            }
-                        }else{
-                            Swal(
-                              'Error!',
-                              'Ha ocurrido un error, recargue la pagina y vuelva a intentar',
-                              'error'
-                              );
+                                }else{
+                                    Swal(
+                                      'Error!',
+                                      'Ha ocurrido un error, recargue la pagina y vuelva a intentar',
+                                      'error'
+                                      );
+                                }
+                            }  
                         }
-                    }  
+                    });
                 }
             });
+    		
     	}
     });
 
