@@ -12,7 +12,6 @@
 		private $fecha;
 		private $descuento;
 		private $totalCompra;
-		private $pagado;	//boolean
 		private $proveedor; //Objeto
 
 		private $productosxcompra; //Array
@@ -26,7 +25,7 @@
 			}
 		}
 
-		public function __construct0($numeroFactura, $fecha, $totalCompra, $descuento, $proveedor, $pagado = false){
+		public function __construct0($numeroFactura, $fecha, $totalCompra, $descuento, $proveedor){
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("INSERT INTO `compras`(`id_compra`, `numero_factura`, `fecha_compra`, `total_compra`, `descuento_compra`, `USUARIOS_id_proveedor`) VALUES (null,:numeroFactura,:fecha,:totalCompra,:descuento,:id_proveedor)");
 
@@ -34,12 +33,12 @@
 			$this->setFecha($fecha,$statement);
 			$this->setTotalCompra($totalCompra,$statement);
 			$this->setDescuento($descuento,$statement);
-			$this->setPagado($pagado,$statement);
 			$this->setProveedor($proveedor,$statement);
 			$statement->execute();
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
 			}
+			$this->setIdCompra($conexion->lastInsertId());
 			$conexion = NULL;
 			$statement = NULL;
 		}
@@ -115,19 +114,6 @@
 			return $this;
 		}
 
-		public function getPagado()
-		{
-			return $this->pagado;
-		}
-		
-		public function setPagado($pagado, $statement=NULL)
-		{
-			if($statement!=NULL){
-				$statement->bindParam(':pagado',$pagado,PDO::PARAM_INT);
-			}
-			$this->pagado = $pagado;
-			return $this;
-		}
 
 		public function getProveedor()
 		{
@@ -147,7 +133,6 @@
 			$comprobante= new comprobanteEgreso(getdate(),$this);
 			if ( $comprobante != null){
 				$comprobante->imprimirComprobante();
-				$this->setPagado(True);
 			}
 		}
 
