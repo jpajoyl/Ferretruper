@@ -28,15 +28,27 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		$idProveedor=$_POST['idProveedor'];
 		$proveedor=Proveedor::obtenerProveedor($idProveedor,false);
 		if($proveedor!=false){
-			$fecha=getdate();
-			$fechaHoy=$fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'];
-			try {
-				$compra = new Compra($numeroFactura, $fechaHoy, 0, 0, $proveedor);
-				echo SUCCESS;
-			} catch (Exception $e) {
-				echo ERROR;
+			$consultaCompra=Compra::obtenerCompraNumeroFacturaXProveedor($numeroFactura,$idProveedor);
+			if($consultaCompra!=false){
+				$fecha=getdate();
+				$fechaHoy=$fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'];
+				try {
+					$compra = new Compra($numeroFactura, $fechaHoy, 0, 0, $proveedor);
+					$data=array();
+					$data['response']=SUCCESS;
+					$data['id_proveedor']=$compra->getIdCompra();
+					$data['nombre']=$proveedor->getNombre();
+					$data['id_compra']=$compra->getIdCompra();
+					echo json_encode($data);
+				} catch (Exception $e) {
+					echo ERROR;
+				}
+			}else{
+				$data=array();
+				$data['response']=ALREADY_EXIST;
+				$data['id_proveedor']=$consultaCompra->getIdCompra();
+				$data['id_compra']=$consultaCompra->getIdCompra();
 			}
-			
 			
 		}
 	}

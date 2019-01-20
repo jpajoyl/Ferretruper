@@ -63,7 +63,30 @@ $(document).ready(function() {
                 data: data,
                 success:function(data){
                     if(data!=""){
-                    	alert(data);
+                    	if(data!=0){
+                            if(data==2){
+                                Swal({
+                                  title: 'Error',
+                                  text: "Al parecer esta compra ya esta registrada, esta seguro que el numero de factura es "+numeroFactura+"!",
+                                  type: 'error',
+                                  showCancelButton: true,
+                                  confirmButtonColor: '#3085d6',
+                                  cancelButtonColor: '#d33',
+                                  confirmButtonText: 'Si, seguir abasteciendo compra!',
+                                  cancelButtonText: "No"
+                                }).then((result) => {
+                                    if (result.value) {
+                                        window.location.href = "abastecer.php?";
+                                    }
+                                });
+                            }
+                        }else{
+                            Swal(
+                              'Error!',
+                              'Ha ocurrido un error, recargue la pagina y vuelva a intentar',
+                              'error'
+                              );
+                        }
                     }  
                 }
             });

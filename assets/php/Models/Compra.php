@@ -145,6 +145,7 @@
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			if($resultado!=false){
 				$compra = new Compra();
+				$compra->setIdCompra($resultado['id_compra']);
 				$compra->setNumeroFactura($resultado['numero_factura']);
 				$compra->setFecha($resultado['fecha_compra']);
 				$compra->setTotalCompra($resultado['total_compra']);
@@ -161,6 +162,32 @@
 				return false;
 			}
 
+		}
+		public static function obtenerCompraNumeroFacturaXProveedor($numeroFactura,$idProveedor){
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("SELECT * FROM `compras` WHERE  `numero_factura` = :numero_factura AND `USUARIOS_id_proveedor` = :id_proveedor");
+			$statement->bindValue(":numero_factura", $numeroFactura);
+			$statement->bindValue(":id_proveedor", $idProveedor);
+			$statement->execute();
+			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+			if($resultado!=false){
+				$compra = new Compra();
+				$compra->setIdCompra($resultado['id_compra']);
+				$compra->setNumeroFactura($resultado['numero_factura']);
+				$compra->setFecha($resultado['fecha_compra']);
+				$compra->setTotalCompra($resultado['total_compra']);
+				$compra->setDescuento($resultado['descuento_compra']);
+
+				$proveedor= Proveedor::obtenerProveedor($resultado['USUARIOS_id_proveedor'],false);
+
+				$compra->setProveedor($proveedor);
+
+				$conexion=null;
+				$statement=null;
+				return $compra;
+			}else{
+				return false;
+			}
 		}
 		public static function verCompras($id_proveedor = null){
 			$conexion = Conexion::conectar();
