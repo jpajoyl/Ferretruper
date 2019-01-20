@@ -10,7 +10,7 @@ class TipoVenta{
 	private $plazo;
 
 	private $cliente;
-	private $empleado:
+	private $empleado;
 	private $venta;
 
 	public function __construct(){
@@ -34,6 +34,7 @@ class TipoVenta{
 		$this->setCelular($celular,$statement);
 		$this->setTelefono($telefono,$statement);
 		$this->setClasificacion($clasificacion,$statement);
+        $this->setCliente($cliente,$statement);
 		$statement->execute();
 		if(!$statement){
 			throw new Exception("Error Processing Request", 1);
@@ -56,7 +57,7 @@ class TipoVenta{
 
 
 	public function getTipoVenta() {
-        return $this->idTipoVenta;
+        return $this->tipoVenta;
     }
 
     public function setTipoVenta($tipoVenta, $statement=NULL) {
@@ -68,7 +69,7 @@ class TipoVenta{
 
 
     public function getEstado() {
-        return $this->idTipoVenta;
+        return $this->estado;
     }
 
     public function setEstado($estado, $statement=NULL) {
@@ -134,10 +135,10 @@ class TipoVenta{
     public static function obtenerTipoVenta($idVenta){ 
     	$conexion = Conexion::conectar();
     	$statement = $conexion->prepare("SELECT * FROM `tipo_venta` WHERE  `VENTAS_id_venta`= :idVenta");
-    	$statement->bindValue(":idVenta", $idVenta);
+    	$statement->bindParam(":idVenta", $idVenta);
     	$statement->execute();
     	$resultado = $statement->fetch(PDO::FETCH_ASSOC);
-    	if($resultado!=false){
+    	if($statement!=false){
     		$tipoVenta = new TipoVenta();
     		$tipoVenta->setIdTipoVenta($resultado['id_tipo_venta']);
     		$tipoVenta->setTipoVenta($resultado['tipo_venta']);
@@ -157,15 +158,15 @@ class TipoVenta{
     }
 
     public function verAbonos(){
-    	if ($this->Credito=="Credito"){
+    	if ($this->getTipoVenta()=="Credito"){
     		$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("SELECT * FROM `abonos` WHERE `id_tipo_venta` = :id_tipoVenta");
 			$id_tipoVenta= $this->getIdTipoVenta();
 			$statement->bindValue(":id_tipoVenta", $id_tipoVenta);
-			$statement->execute()
-			return $statement
+			$statement->execute();
+			return $statement;
     	}
-    	return ERROR
+    	return ERROR;
 
 
     }
@@ -173,7 +174,7 @@ class TipoVenta{
     public function cambiarTipoVenta(){
     	if($this->getTipoVenta()== "Decontado"){
     		$tipoVenta="Credito";
-    	}else if ($this->getTipoVenta == "Credito"){
+    	}else if ($this->getTipoVenta() == "Credito"){
     		$tipoVenta="Decontado";
     	}
 		$conexion = Conexion::conectar();

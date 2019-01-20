@@ -178,7 +178,8 @@ class Factura {
 			$factura->setNumeroDian($resultado['numero_dian']);
 			$factura->setVenta(Venta::obtenerVenta($resultado['ventas_id_venta']));
 			$idResolucion = $resultado['resoluciones_id_resolucion'];
-			$consulta=$conexion->prepare("SELECT descripcion FROM `resoluciones` WHERE ´id_resolucion´ = $idResolucion");
+			$consulta=$conexion->prepare("SELECT descripcion FROM `resoluciones` WHERE id_resolucion = :idResolucion");
+			$consulta->bindParam(':idResolucion',$idResolucion,PDO::PARAM_INT);
 			$consulta->execute();
 			$resultado2 = $consulta->fetch(PDO::FETCH_ASSOC);
 			$factura->setResolucion($resultado2['descripcion']);
@@ -204,7 +205,79 @@ class Factura {
 		$statement=null;
 	}
 	public function imprimirFacturaCarta(){
+		include_once '../Controllers/CifrasEnLetras.php';
+		require('../fpdf/fpdf.php');
+		$pdf=new FPDF();  //crea el objeto
+		$pdf->AddPage();  //añadimos una página. Origen coordenadas, esquina superior izquierda, posición por defeto a 1 cm de los bordes.
+		$pdf->Image('../../images/LOGO FERRETRUPER.jpg' , 7 , 7 , 40 , 10,'JPG');
+		$numeroDian = $this->getNumeroDian();
+		$archivo="comprobanteEgreso-$numeroDian.pdf";
+		$archivo_de_salida=$archivo;
+		$pdf->SetFont('Arial','B',10);
+		$pdf->Cell(115,5,utf8_decode('FERRETRUPER S.A.S'),0,0,'R', false);
+		$pdf->SetFont('Arial','',10);
+		$pdf->Cell(70,5, "Factura No. $numeroDian",0,1,'R',false);
+		$pdf->ln(5);
+		$pdf->Cell(40,10,"Fecha: ".$this->getFecha(),1,0,'L',false);
+		$pdf->SetFont('Arial','',10);
+		$pdf->MultiCell(110,4,"NIT: 900 307 086 - 7"."\n"."Carrera 51 # 40-74"."\n"."TEL:(4) 2327201"."\n".utf8_decode("Medellín - Colombia")."\n"."ferretrupersas@hotmail.com",0,"C",false);
+		$pdf->ln(2);
+		$venta = $this->getVenta();
+		$idVenta = $venta->getIdVenta();
+		$tipoVenta = TipoVenta::obtenerTipoVenta($idVenta);
+		$idCliente = $tipoVenta->getCliente();
+		$cliente = $tipoVenta->getCliente();
+		$pdf->SetFont('Arial','',11);
+		$pdf->Cell(100,5, utf8_decode("SEÑORES:"),0,0,'l',false);
+		$pdf->Cell(100,5, utf8_decode($cliente->getNombre()),0,0,'l',false);
+		$pdf->SetFont('Arial','',11);
+		$pdf->Cell(190,5,"     nit: ",0,1,'J',false);//HHHHHHHHHHHHHHHHHHH
+		$pdf->SetFont('Arial','U',11);
+		$pdf->Cell(190,5, "LA SUMA DE:",0,1,'J',false);
+		$pdf->SetFont('Arial','',11);
+		$pdf->Cell(190,5," pesos" ,0,1,'J',false);//HHHHHHHHHHHHHHHHHHH
+		$pdf->ln();
+		$pdf->SetFont('Arial','U',11);
+		$pdf->Cell(140,5, "CONCEPTO:",0,0,'J',false);
+		$pdf->Cell(190,5, "VALOR:",0,1,'J',false);
+		$pdf->SetFont('Arial','',11);
+/*		if ($manual) {
+			$descripcion = $this->getDescripcion();
+			$pdf->Cell(190,5, utf8_decode($descripcion),0,1,'J',false);//HHHHHHHHHHHHHHHHHHH
+		}else{
+			foreach ($arrayCompra as $compra) {
+				$descripcion =utf8_decode("Cancelación Factura #"). $compra->getNumeroFactura();
+				$pdf->Cell(140,5, $descripcion,0,0,'J',false);//HHHHHHHHHHHHHHHHHHH
+				$pdf->Cell(190,5, number_format($compra->getTotalCompra()),0,1,'L',false);
+				$pdf->ln(0.7);
+			}
+		}*/
+		$pdf->Rect(10, 63, 190, 2/*count($arrayCompra)*/*9);
 
+		$pdf->ln();
+
+		// $pdf->SetXY(10, 70);
+		$pdf->SetFont('Arial','',10);
+		$pdf->Cell(70,10, "$                ",1,0,'L',false);//HHHHHHHHHHHHHHHHHHHHHHHH
+		$pdf->Cell(30,10, "Efectivo: si | no",1,1,'C',false);//HHHHHHHHHHHHHHHHHHH
+		$pdf->Cell(100,20, "Cheque No.",1,0,'L',false);
+		$pdf->Cell(90,20, "Firma y Sello Beneficiario:",1,1,'L',false);
+
+
+
+
+		$pdf->Output('I',$archivo_de_salida,true);
+		header("Content-type:application/pdf");
+		//Creacion de las cabeceras que generarán el archivo pdf
+		header ("Content-Type: application/download");
+		header ("Content-Disposition: attachment; filename=$archivo");
+		header("Content-Length: " . filesize("$archivo"));
+		$fp = fopen($archivo, "r");
+		fpassthru($fp);
+		fclose($fp);
+
+		//Eliminación del archivo en el servidor
+		unlink($archivo);
 	}
 
 

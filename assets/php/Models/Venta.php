@@ -52,7 +52,7 @@
 			return $this->idVenta;
 		}
 
-		public function setIdVenta($idVenta){
+		public function setIdVenta($idVenta, $statement=NULL){
 			if($statement!=NULL){
 				$statement->bindParam(':idVenta',$idVenta,PDO::PARAM_INT);
 			}
@@ -64,7 +64,7 @@
 			return $this->subtotal;
 		}
 
-		public function setSubtotal($subtotal){
+		public function setSubtotal($subtotal, $statement=NULL){
 			if($statement!=NULL){
 				$statement->bindParam(':subtotal',$subtotal,PDO::PARAM_INT);
 			}
@@ -76,7 +76,7 @@
 			return $this->iva;
 		}
 
-		public function setIva($iva){
+		public function setIva($iva, $statement=NULL){
 			if($statement!=NULL){
 				$statement->bindParam(':iva',$iva,PDO::PARAM_INT);
 			}
@@ -88,7 +88,7 @@
 			return $this->retefuente;
 		}
 
-		public function setRetefuente($retefuente){
+		public function setRetefuente($retefuente, $statement=NULL){
 			if($statement!=NULL){
 				$statement->bindParam(':retefuente',$retefuente,PDO::PARAM_INT);
 			}
@@ -100,7 +100,7 @@
 			return $this->total;
 		}
 
-		public function setTotal($total){
+		public function setTotal($total, $statement=NULL){
 			if($statement!=NULL){
 				$statement->bindParam(':total',$total,PDO::PARAM_INT);
 			}
@@ -112,7 +112,7 @@
 			return $this->descuento;
 		}
 
-		public function setDescuento($descuento){
+		public function setDescuento($descuento, $statement=NULL){
 			if($statement!=NULL){
 				$statement->bindParam(':descuento',$descuento,PDO::PARAM_INT);
 			}
@@ -124,7 +124,7 @@
 			return $this->fecha;
 		}
 
-		public function setFecha($fecha){
+		public function setFecha($fecha, $statement=NULL){
 			if($statement!=NULL){
 				$statement->bindParam(':fecha',$fecha,PDO::PARAM_STR,45);
 			}
@@ -136,7 +136,7 @@
 			return $this->anulada;
 		}
 
-		public function setAnulada($anulada){
+		public function setAnulada($anulada, $statement=NULL){
 			if($statement!=NULL){
 				$statement->bindParam(':anulada',$anulada,PDO::PARAM_INT);
 			}
@@ -148,7 +148,7 @@
 			return $this->fechaanulada;
 		}
 
-		public function setFechaAnulada($fechaAnulada){
+		public function setFechaAnulada($fechaAnulada, $statement=NULL){
 			if($statement!=NULL){
 				$statement->bindParam(':fechaAnulada',$fechaAnulada,PDO::PARAM_STR,45);
 			}
@@ -160,7 +160,7 @@
 			return $this->resolucion;
 		}
 
-		public function setResolucion($resolucion){
+		public function setResolucion($resolucion, $statement=NULL){
 			if($statement!=NULL){
 				$statement->bindParam(':resolucion',$resolucion,PDO::PARAM_INT);
 			}
@@ -170,13 +170,13 @@
 
 		public static function obtenerVenta($idVenta){
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("SELECT * FROM `ventas` WHERE  `idVenta` = :idVenta");
+			$statement = $conexion->prepare("SELECT * FROM `ventas` WHERE  `id_venta` = :idVenta");
 			$statement->bindValue(":idVenta", $idVenta);
 			$statement->execute();
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			if($resultado!=false){
 				$venta = new Venta();
-				$venta->setNumeroDian($resultado['numero_dian']);
+				$venta->setIdVenta($idVenta);
 				$venta->setSubtotal($resultado['subtotal']);
 				$venta->setIva($resultado['iva']);
 				$venta->setRetefuente($resultado['retefuente']);
@@ -185,7 +185,6 @@
 				$venta->setFecha($resultado['fecha']);
 				$venta->setAnulada($resultado['anulada']);
 				$venta->setFechaAnulada($resultado['fecha_anulada']);
-				$venta->setResolucion($resultado['RESOLUCIONES_id_resolucion']);
 				$conexion=null;
 				$statement=null;
 				return $venta;

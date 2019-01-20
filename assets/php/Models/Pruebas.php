@@ -1,13 +1,19 @@
 <?php 
 
 include '../Conexion.php';
-include 'Compra.php';
 include 'Usuario.php';
+include 'Cliente.php';
+include 'Compra.php';
+include 'Empleado.php';
 include 'Proveedor.php';
-include 'ComprobanteEgreso.php';
+include 'Factura.php';
+
 include 'FacturaCompra.php';
-$ce = ComprobanteEgreso::obtenerComprobanteEgreso(3);
-$ce->imprimirComprobante(false);
+include 'Venta.php';
+include 'TipoVenta.php';
+include '../Controllers/Response.php';
+$ce = Factura::obtenerFactura(2);
+$ce->imprimirFacturaCarta();
 
 // $r = FacturaCompra::facturaCompraPorComprobanteEgreso(3);
 
