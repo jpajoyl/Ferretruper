@@ -184,13 +184,13 @@
 		}
 
 		public function calcularUnidades(){
-			$unidadesTotalesContador=0
+			$unidadesTotalesContador=0;
 			$conexion = Conexion::conectar();
 			$statement = Inventario::obtenerInventarios($this->getIdProducto());
 			$statement->execute();
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			while($resultado){
-				$unidadesTotalesContador+=$resultado['unidades']
+				$unidadesTotalesContador+=$resultado['unidades'];
 				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			}
 			$cambiarUnidades=$this->cambiarUnidadesTotales($unidadesTotalesContador)
@@ -220,19 +220,22 @@
 		}
 
 		public function obtenerPrecioMayorInventario(){
-			$PrecioMayor=0
+			$precioMayor=0;
 			$conexion = Conexion::conectar();
 			$statement = Inventario::obtenerInventarios($this->getIdProducto());
 			$statement->execute();
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			while($resultado){
-				$precioActual=$resultado['unidades']
+				$precioActual=$resultado['precio_inventario'];
+				if ($precioActual > $precioMayor){
+					$precioMayor = $precioActual;
+				}
 				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			}
-			$cambiarUnidades=$this->cambiarUnidadesTotales($unidadesTotalesContador)
+			$cambiarPrecioMayorInventario=$this->cambiarUnidadesTotales($unidadesTotalesContador);
 			$conexion=null;
-			if($cambiarUnidadaes == SUCCESS){
-				return $unidadesTotalesContador;
+			if($cambiarPrecioMayorInventario == SUCCESS){
+				return $precioMayor;
 			}else{
 				return ERROR;
 			}
@@ -240,6 +243,8 @@
 
 
 		}
+
+		public 
 		public static function obtenerProducto($idProducto,$returnStatement=false){
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("SELECT * FROM `productos` WHERE  `id_producto` = :idProducto");
