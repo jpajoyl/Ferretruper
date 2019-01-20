@@ -25,7 +25,7 @@
 			}
 		}
 
-		public function __construct0($numeroFactura, $fecha, $totalCompra, $descuento, $proveedor){
+		public function __construct0($numeroFactura, $fecha, $totalCompra, $descuento, $id_proveedor){
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("INSERT INTO `compras`(`id_compra`, `numero_factura`, `fecha_compra`, `total_compra`, `descuento_compra`, `USUARIOS_id_proveedor`) VALUES (null,:numeroFactura,:fecha,:totalCompra,:descuento,:id_proveedor)");
 
@@ -33,7 +33,7 @@
 			$this->setFecha($fecha,$statement);
 			$this->setTotalCompra($totalCompra,$statement);
 			$this->setDescuento($descuento,$statement);
-			$this->setProveedor($proveedor,$statement);
+			$this->setProveedor($id_proveedor,$statement);
 			$statement->execute();
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
@@ -55,7 +55,7 @@
 				$statement->bindParam(':idCompra',$idCompra,PDO::PARAM_INT);
 			}
 			$this->idCompra = $idCompra;
-			return $this;
+		
 		}
 
 		public function getNumeroFactura()
@@ -69,7 +69,7 @@
 				$statement->bindParam(':numeroFactura',$numeroFactura,PDO::PARAM_STR,45);
 			}
 			$this->numeroFactura = $numeroFactura;
-			return $this;
+		
 		}
 
 		public function getFecha()
@@ -83,7 +83,7 @@
 				$statement->bindParam(':fecha',$fecha,PDO::PARAM_STR,45);
 			}
 			$this->fecha = $fecha;
-			return $this;
+		
 		}
 
 		public function getDescuento()
@@ -97,7 +97,7 @@
 				$statement->bindParam(':descuento',$descuento,PDO::PARAM_INT);
 			}
 			$this->descuento = $descuento;
-			return $this;
+			
 		}
 
 		public function getTotalCompra()
@@ -111,7 +111,7 @@
 				$statement->bindParam(':totalCompra',$totalCompra,PDO::PARAM_INT);
 			}
 			$this->totalCompra = $totalCompra;
-			return $this;
+		
 		}
 
 
@@ -120,13 +120,13 @@
 			return $this->proveedor;
 		}
 		
-		public function setProveedor($proveedor, $statement=NULL)
+		public function setProveedor($id_proveedor, $statement=NULL)
 		{
 			if($statement!=NULL){
-				$statement->bindParam(':id_proveedor',$proveedor->getIdUsuario(),PDO::PARAM_INT);
+				$statement->bindParam(':id_proveedor',$id_proveedor->getIdUsuario(),PDO::PARAM_INT);
 			}
-			$this->proveedor = $proveedor;
-			return $this;
+			$this->proveedor = Proveedor::obtenerProveedor($id_proveedor);
+
 		}
 
 		public function pagarCompra(){
