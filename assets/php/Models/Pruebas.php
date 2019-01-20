@@ -14,7 +14,6 @@ include 'TipoVenta.php';
 include '../Controllers/Response.php';
 $ce = Factura::obtenerFactura(1);
 $ce->imprimirFacturaCarta();
-
 // $r = FacturaCompra::facturaCompraPorComprobanteEgreso(3);
 
 /*if($r->rowCount()>0){
