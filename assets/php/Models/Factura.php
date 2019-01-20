@@ -50,6 +50,7 @@ class Factura {
 		$this->setResolucion($resolucion,$statement);
 		$this->setNumeroDian($numeroDian,$statement);
 		$statement->execute();
+		$this->setidFactura($conexion->lastInsertId());
 		if(!$statement){
 			throw new Exception("Error Processing Request", 1);
 		}
@@ -245,23 +246,30 @@ class Factura {
 		while ($producto = $statementProductos->fetch(PDO::FETCH_ASSOC)) {
 			$array[]=$producto;
 		}
+		$pdf->ln();
+		$pdf->SetFont('Arial','',8);
+		$pdf->Cell(15,5, "CODIGO:",1,0,'J',false);
+		$pdf->Cell(74,5, "NOMBRE PRODUCTO:",1,0,'J',false);
+		$pdf->Cell(35,5, "REFERENCIA:",1,0,'J',false);
+		$pdf->Cell(20,5, "CANTIDAD:",1,0,'J',false);
+		$pdf->Cell(23,5, "VR UNITARIO:",1,0,'J',false);
+		$pdf->Cell(23,5, "VR TOTAL:",1,0,'J',false);
+		$pdf->ln(10);
 		foreach ($array as $item) {
-			$descripcion =$item['id_producto'];
-			$pdf->Cell(140,5, $descripcion,0,1,'J',false);//HHHHHHHHHHHHHHHHHHH
-			//$pdf->Cell(190,5, number_format($compra->getTotalCompra()),0,1,'L',false);
-			$pdf->ln(0.7);
+			$pdf->Cell(15,5, $item['id_producto'],0,0,'J',false);
+			$pdf->Cell(74,5, utf8_decode($item['nombre']),0,0,'J',false);
+			$pdf->Cell(35,5, utf8_decode($item['referencia_fabrica']),0,0,'J',false);
+			$pdf->Cell(20,5, $item['unidades'],0,0,'J',false);
+			$pdf->Cell(23,5, $item['precio_venta'],0,0,'J',false);
+			$valorTotal = $item['unidades'] * $item['precio_venta'];
+			$pdf->Cell(23,5, $valorTotal,0,1,'J',false);
 		}
-
-			$pdf->ln();
-
-		// $pdf->SetXY(10, 70);
+		$pdf->Rect(10, 80, 190, 150);
+		$pdf->ln(150);
+		$pdf->SetFont('Arial','B',10);
+		$pdf->Cell(70,10, "Condiciones de pago: ",1,0,'L',false);//HHHHHHHHHHHHHHHHHHHHHHHH
 		$pdf->SetFont('Arial','',10);
-		$pdf->Cell(70,10, "$                ",1,0,'L',false);//HHHHHHHHHHHHHHHHHHHHHHHH
-		$pdf->Cell(30,10, "Efectivo: si | no",1,1,'C',false);//HHHHHHHHHHHHHHHHHHH
-		$pdf->Cell(100,20, "Cheque No.",1,0,'L',false);
-		$pdf->Cell(90,20, "Firma y Sello Beneficiario:",1,1,'L',false);
-
-
+		$pdf->Cell(70,10, $tipoVenta->getTipoVenta(),1,0,'L',false);
 
 
 		$pdf->Output('I',$archivo_de_salida,true);

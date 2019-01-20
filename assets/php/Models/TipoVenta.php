@@ -5,7 +5,7 @@
  */
 class TipoVenta{
 	private $idTipoVenta;
-	private $tipoVenta; //Decontado o Credito
+	private $tipoVenta; //Efectivo o Credito
 	private $estado;
 	private $plazo;
 
@@ -21,7 +21,7 @@ class TipoVenta{
 		}
 	}
 
-	public function __construct0($id_cliente, $id_empleado, $id_venta, $tipoVenta="Decontado", $estado="", $plazo=0){
+	public function __construct0($id_cliente, $id_empleado, $id_venta, $tipoVenta="Efectivo", $estado="", $plazo=0){
 		$conexion = Conexion::conectar();
 		$statement = $conexion->prepare("INSERT INTO `tipo_venta`(`id_tipo_venta`, `tipo_venta`, `estado`, `plazo`, `USUARIOS_id_cliente`, `USUARIOS_id_empleado`, `VENTAS_id_venta`) VALUES (null,:tipoVenta,:estado,:plazo,:id_cliente,:id_empleado,:id_venta)");
 		$this->setNumeroDeIdentificacion($numeroDeIdentificacion,$statement);
@@ -173,10 +173,10 @@ class TipoVenta{
     }
 
     public function cambiarTipoVenta(){
-    	if($this->getTipoVenta()== "Decontado"){
+    	if($this->getTipoVenta()== "Efectivo"){
     		$tipoVenta="Credito";
     	}else if ($this->getTipoVenta() == "Credito"){
-    		$tipoVenta="Decontado";
+    		$tipoVenta="Efectivo";
     	}
 		$conexion = Conexion::conectar();
 		$statement = $conexion->prepare("UPDATE `tipo_venta` SET `tipo_venta`=:tipo_venta WHERE `id_tipo_venta` = :id_tipoVenta");
