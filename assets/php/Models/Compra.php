@@ -223,18 +223,20 @@
 				$inventario=Inventario::obtenerInventario($id_producto,$id_proveedor,true);
 				$precio=(($producto->getValorUtilidad()/100) * $productosxcompra->getPrecioUnitario()) + $productosxcompra->getPrecioUnitario()
 				if($producto->tieneIva()){
-					$precioFinal= $precio * IVA
+					$precioFinal= ($precio * IVA)+$precio;
+				}else{
+					$precioFinal = $precio;
 				}
-				$precio=(($producto->getValorUtilidad()/100) * $productosxcompra->getPrecioUnitario()) + $productosxcompra->getPrecioUnitario() ;
+			
 				$unidades= $inventario->getUnidades() + $productosxcompra->getNumeroUnidades();
 
 				if(!$inventario){
-					$inventario= new Inventario($precio,$unidades,0,$id_producto,$id_proveedor);
+					$inventario= new Inventario($precioFinal,$unidades,0,$id_producto,$id_proveedor);
 
 				}
 
 				$inventario->setUnidades($unidades,$statement);
-				$inventario->setPrecio($precio,$statement);
+				$inventario->setPrecio($precioFinal,$statement);
 				$statement->bindValue(":id_producto", $id_producto);
 				$statement->bindValue(":id_usuario", $id_proveedor);
 
