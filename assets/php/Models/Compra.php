@@ -123,7 +123,7 @@
 		public function setProveedor($id_proveedor, $statement=NULL)
 		{
 			if($statement!=NULL){
-				$statement->bindParam(':id_proveedor',$id_proveedor->getIdUsuario(),PDO::PARAM_INT);
+				$statement->bindParam(':id_proveedor',$id_proveedor,PDO::PARAM_INT);
 			}
 			$this->proveedor = Proveedor::obtenerProveedor($id_proveedor);
 
