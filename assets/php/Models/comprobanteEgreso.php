@@ -11,7 +11,6 @@
 		private $numeroConsecutivo;
 		private $fechaPago;
 		private $descripcion;
-		private $compra;//objeto compra
 
 
 		public function __construct(){
@@ -24,7 +23,7 @@
 
 		public function __construct0($fechaPago, $descripcion=""){ //compra es un objeto de ese tipo
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("INSERT INTO `comprobantes_egreso`(`id_comprobante_egreso`, `fecha_pago`, `descripcion`, `COMPRAS_id_compra`) VALUES (NULL,:fechaPago,:descripcion,:compra)");
+			$statement = $conexion->prepare("INSERT INTO `comprobantes_egreso`(`id_comprobante_egreso`, `fecha_pago`, `descripcion`) VALUES (NULL,:fechaPago,:descripcion)");
 
 			$this->setFechaPago($fechaPago,$statement);
 			$this->setDescripcion($descripcion,$statement);
@@ -32,24 +31,13 @@
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
 			}
+			$this->setNumeroConsecutivo($conexion->lastInsertId());
 			$conexion = NULL;
 			$statement = NULL;
 		}
 
+
 		//get & set
-		public function getDescripcion()
-		{
-		    return $this->descripcion;
-		}
-		
-		public function setDescripcion($descripcion, $statement=NULL)
-		{
-			if($statement!=NULL){
-				$statement->bindParam(':descripcion',$descripcion,PDO::PARAM_STR, 500);
-			}
-			$this->descripcion = $descripcion;
-			return $this;
-		}
 		public function getNumeroConsecutivo()
 		{
 		    return $this->numeroConsecutivo;
@@ -61,8 +49,24 @@
 				$statement->bindParam(':numeroConsecutivo',$numeroConsecutivo,PDO::PARAM_INT);
 			}
 			$this->numeroConsecutivo = $numeroConsecutivo;
-			return $this;
+			
 		}
+
+
+		public function getDescripcion()
+		{
+		    return $this->descripcion;
+		}
+		
+		public function setDescripcion($descripcion, $statement=NULL)
+		{
+			if($statement!=NULL){
+				$statement->bindParam(':descripcion',$descripcion,PDO::PARAM_STR, 500);
+			}
+			$this->descripcion = $descripcion;
+			
+		}
+
 
 		public function getFechaPago()
 		{
@@ -75,7 +79,7 @@
 				$statement->bindParam(':fechaPago',$fechaPago,PDO::PARAM_STR, 45);
 			}
 			$this->fechaPago = $fechaPago;
-			return $this;
+			
 		}
 
 		public static function obtenerComprobanteEgreso($numeroDeConsulta){

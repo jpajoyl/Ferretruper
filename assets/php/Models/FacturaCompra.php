@@ -10,8 +10,31 @@ class FacturaCompra {
 	private $compra;
 	private $comprobanteEgreso;
 
+	public function __construct(){
+		$params = func_get_args();
+		$num_params = func_num_args();
+		if($num_params>0){
+			call_user_func_array(array($this,"__construct0"),$params);
+		}
+	}
+
+	public function __construct0($compra, $comprobanteEgreso){
+		$conexion = Conexion::conectar();
+		$statement = $conexion->prepare("INSERT INTO `factura_compra` (`idfactura_compra`, `compras_id_compra`, `comprobantes_egreso_id_comprobante_egreso`) VALUES (NULL, :compra, :comprobanteEgreso)");
+
+		$this->setCompra($compra,$statement);
+		$this->setComprobanteEgreso($comprobanteEgreso,$statement);
+		$statement->execute();
+		if(!$statement){
+			throw new Exception("Error Processing Request", 1);
+		}
+		$this->setIdFacturaCompra($conexion->lastInsertId());
+		$conexion = NULL;
+		$statement = NULL;
+	}
+
 //get & set
-		public function getIdFacturaCompra(){
+	public function getIdFacturaCompra(){
 		return $this->idFacturaCompra;
 	}
 
@@ -47,27 +70,6 @@ class FacturaCompra {
 		return $this;
 	}
 
-	public function __construct(){
-		$params = func_get_args();
-		$num_params = func_num_args();
-		if($num_params>0){
-			call_user_func_array(array($this,"__construct0"),$params);
-		}
-	}
-
-	public function __construct0($compra, $comprobanteEgreso){
-		$conexion = Conexion::conectar();
-		$statement = $conexion->prepare("INSERT INTO `factura_compra` (`idfactura_compra`, `compras_id_compra`, `comprobantes_egreso_id_comprobante_egreso`) VALUES (NULL, :compra, :comprobanteEgreso)");
-
-		$this->setCompra($compra,$statement);
-		$this->setComprobanteEgreso($comprobanteEgreso,$statement);
-		$statement->execute();
-		if(!$statement){
-			throw new Exception("Error Processing Request", 1);
-		}
-		$conexion = NULL;
-		$statement = NULL;
-	}
 
 	public static function facturaCompraPorComprobanteEgreso($idComprobanteEgreso){
 		$conexion = Conexion::conectar();

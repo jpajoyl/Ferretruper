@@ -39,6 +39,7 @@
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
 			}
+			$this->setIdGarantia($conexion->lastInsertId());
 			$conexion = NULL;
 			$statement = NULL;
 		}

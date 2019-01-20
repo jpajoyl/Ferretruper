@@ -43,6 +43,7 @@
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
 			}
+			$this->setIdVenta($conexion->lastInsertId());
 			$conexion = NULL;
 			$statement = NULL;
 		}

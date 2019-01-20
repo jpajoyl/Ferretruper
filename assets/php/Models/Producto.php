@@ -47,6 +47,7 @@
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
 			}
+			$this->setIdProducto($conexion->lastInsertId());
 			$conexion = NULL;
 			$statement = NULL;
 		}

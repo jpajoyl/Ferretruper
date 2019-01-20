@@ -36,6 +36,7 @@ class Inventario {
 		if(!$statement){
 			throw new Exception("Error Processing Request", 1);
 		}
+		$this->setIdInventario($conexion->lastInsertId());
 		$conexion = NULL;
 		$statement = NULL;
 	}

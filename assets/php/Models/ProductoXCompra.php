@@ -35,6 +35,7 @@
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
 			}
+			$this->setIdProductoxCompra($conexion->lastInsertId());
 			$conexion = NULL;
 			$statement = NULL;
 		}

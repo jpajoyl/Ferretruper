@@ -1,4 +1,4 @@
-s<?php 
+<?php 
 
 
 	/**
@@ -34,6 +34,7 @@ s<?php
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
 			}
+			$this->setIdProductoxventa($conexion->lastInsertId());
 			$conexion = NULL;
 			$statement = NULL;
 		}
