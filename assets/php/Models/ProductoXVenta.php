@@ -99,6 +99,7 @@
 
 		}
 
+
 		//methods
 		public static function obtenerProductoXVentaPorIdVenta($idVenta)
 		{

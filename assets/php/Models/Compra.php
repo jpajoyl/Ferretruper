@@ -205,7 +205,7 @@
 		public function abastecer(){
 			$productosxcompra=array();
 			$conexion = Conexion::conectar();
-			$statement= $this->verProductosxCompra;
+			$statement= $this->verProductosxCompra();
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			while($resultado){
 				$productoxcompra= ProductoXCompra::obtenerProductoXCompra($resultado["id_productoxcompra"]);
@@ -240,6 +240,7 @@
 					throw new Exception("Error Processing Request", 1);
 					return ERROR;
 				}
+				$facturaCompra = new FacturaCompra($this->getIdCompra());
 				$conexion = null;
 				$statement=null;
 				return SUCCESS;

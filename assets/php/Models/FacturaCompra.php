@@ -18,9 +18,9 @@ class FacturaCompra {
 		}
 	}
 
-	public function __construct0($compra, $comprobanteEgreso){
+	public function __construct0($compra){
 		$conexion = Conexion::conectar();
-		$statement = $conexion->prepare("INSERT INTO `factura_compra` (`idfactura_compra`, `compras_id_compra`, `comprobantes_egreso_id_comprobante_egreso`) VALUES (NULL, :compra, :comprobanteEgreso)");
+		$statement = $conexion->prepare("INSERT INTO `factura_compra` (`idfactura_compra`, `compras_id_compra`, `comprobantes_egreso_id_comprobante_egreso`) VALUES (NULL, :compra, NULL)");
 
 		$this->setCompra($compra,$statement);
 		$this->setComprobanteEgreso($comprobanteEgreso,$statement);
@@ -62,11 +62,11 @@ class FacturaCompra {
 		return $this->comprobanteEgreso;
 	}
 
-	public function setComprobanteEgreso($comprobanteEgreso, $statement=NULL){
+	public function setComprobanteEgreso($idComprobanteEgreso, $statement=NULL){
 		if($statement!=NULL){
-			$statement->bindParam(':comprobanteEgreso',$comprobanteEgreso,PDO::PARAM_INT);
+			$statement->bindParam(':idComprobanteEgreso',$idComprobanteEgreso,PDO::PARAM_INT);
 		}
-		$this->comprobanteEgreso = $comprobanteEgreso;
+		$this->comprobanteEgreso = $idComprobanteEgreso;
 		return $this;
 	}
 
@@ -93,17 +93,26 @@ class FacturaCompra {
 		$consulta->execute();
 		$resultado2=$consulta->fetch(PDO::FETCH_ASSOC);
 		$numeroProveedor = $resultado2['USUARIOS_id_proveedor'];
+		$conexion = null;
 		return Proveedor::obtenerProveedor($numeroProveedor, false);
 	}
 
-	
+	public function asociarComprobanteEgreso($idComprobanteEgreso){
+		$conexion = Conexion::conectar();
+		$statement = $conexion->prepare("UPDATE `factura_compra` SET `comprobantes_egreso_id_comprobante_egreso`=:idComprobanteEgreso WHERE `idfactura_compra` = :idFacturaCompra");
+		$idFacturaCompra= $this->getIdFacturaCompra();
+		$this->setComprobanteEgreso($idComprobanteEgreso,$statement);
+		$statement->bindParam(':idFacturaCompra',$idFacturaCompra,PDO::PARAM_INT);
+		$statement->execute();
+		$conexion=null;
+		if ($statement){
+			return SUCCESS;
+		}else{
+			return ERROR;
+		}
+
+		}
 }
-
-
-
-
-
-
 
 
 

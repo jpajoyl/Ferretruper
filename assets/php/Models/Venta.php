@@ -211,6 +211,12 @@
 			}
 
 		}
+
+		public function desseleccionarProducto(){
+
+		}
+
+
 		public function obtenerInfoProductosProductoXVenta()
 		{
 			$idVenta=$this->getIdVenta();
@@ -222,9 +228,29 @@
 			return $statement;
 		}
 
-		public function efectuarCompra(){ //Factura
+		public function efectuarVenta(){ //Factura
+			$productosxventa=array();
+			$conexion = Conexion::conectar();
+			$statement= $this->verProductosxVenta();
+			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+			while($resultado){
+				$productoxventa= ProductoXCompra::obtenerProductoXCompra($resultado["id_productoxcompra"]);
+				$productosxventa[]= $productoxventa;
+				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+			}
+			$tipoDeVenta=TipoVenta::obtenerTipoVenta($this->getIdVenta());
+			$factura = new factura()
 
+		}
 
+		public function verProductosxVenta(){
+			$idVenta=$this->getIdVenta();
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("SELECT * FROM productos INNER JOIN `productoxventa` ON productoxventa.productos_id_producto = productos.id_producto WHERE productoxventa.VENTAS_id_venta = :idVenta");
+			$statement->bindParam(':idVenta',$idVenta,PDO::PARAM_INT);
+			$statement->execute();
+			$conexion=null;
+			return $statement;
 		}
 
 
