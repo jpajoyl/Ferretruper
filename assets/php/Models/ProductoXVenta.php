@@ -97,10 +97,6 @@
 			$this->venta = Venta::obtenerVenta($id_venta);
 
 		}
-		public static function obtenerProductoXVentaPorIdVenta($idVenta)
-		{
-			# code...
-		}
 
 	}
 

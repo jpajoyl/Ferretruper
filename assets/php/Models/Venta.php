@@ -210,11 +210,22 @@
 			}
 
 		}
+		public function obtenerInfoProductosProductoXVenta()
+		{
+			$idVenta=$this->getIdVenta();
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("SELECT * FROM productos INNER JOIN productoxventa ON productoxventa.PRODUCTOS_id_producto = productos.id_producto WHERE productoxventa.VENTAS_id_venta = :idVenta and productos.activa = 1");
+			$statement->bindParam(':idVenta',$idVenta,PDO::PARAM_INT);
+			$statement->execute();
+			$conexion=null;
+			return $statement;
+		}
 
 		public function efectuarCompra(){ //Factura
 
 
 		}
+
 
 	}
 

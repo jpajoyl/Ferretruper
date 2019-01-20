@@ -240,13 +240,17 @@ class Factura {
 		$pdf->Cell(50,7, $cliente->getDireccion(),1,0,'J',false);
 		$pdf->Cell(35,7, "CIUDAD:",0,0,'J',true);
 		$pdf->Cell(70,7,$cliente->getCiudad() ,1,1,'J',false);
-		
-		foreach ($arrayCompra as $compra) {
-			$descripcion =utf8_decode("Cancelación Factura #"). $compra->getNumeroFactura();
-				$pdf->Cell(140,5, $descripcion,0,0,'J',false);//HHHHHHHHHHHHHHHHHHH
-				$pdf->Cell(190,5, number_format($compra->getTotalCompra()),0,1,'L',false);
-				$pdf->ln(0.7);
-			}
+		$statementProductos = $venta->obtenerInfoProductosProductoXVenta();
+		$array = array();
+		while ($producto = $statementProductos->fetch(PDO::FETCH_ASSOC)) {
+			$array[]=$producto;
+		}
+		foreach ($array as $item) {
+			$descripcion =$item['id_producto'];
+			$pdf->Cell(140,5, $descripcion,0,1,'J',false);//HHHHHHHHHHHHHHHHHHH
+			//$pdf->Cell(190,5, number_format($compra->getTotalCompra()),0,1,'L',false);
+			$pdf->ln(0.7);
+		}
 
 			$pdf->ln();
 
