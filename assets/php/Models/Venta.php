@@ -203,7 +203,7 @@
 			if($numeroUnidades< $producto-getUnidadesTotales()){
 
 				$conexion = Conexion::conectar();	
-				$statement= Inventario::obtenerInventarios($idProducto);
+				$statement= Inventario::obtenerInventariosParaVenta($idProducto);
 				$resultado=$statement->fetch(PDO::FETCH_ASSOC);
 				if($resultado){
 					$unidadesSumadas=0;
@@ -263,43 +263,55 @@
 			$conexion = Conexion::conectar();
 			$producto = $productoXVenta->getProducto();
 			$unidades = $productoXVenta->getNumeroUnidades();
-			$precido = $productoXVenta->getPrecioVenta();
+			$precio = $productoXVenta->getPrecioVenta();
 			$arrayDistribucion = $productoXVenta->getArrayDistribucion();
 
 			foreach ($arrayDistribucion as $idInventario => $unidadesRestadas) {
 			 	$statement = null;
-			 	$statement = 
+			 	$inventario= Inventario::obtenerInventario($idInventario);
+			 	$unidadesNuevas = $inventario->getUnidades() + $unidadesRestadas; 
+			 	$statement = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidadesNuevas WHERE `id_inventario` = :idInventario");
+			 	$statement->bindValue(":unidadesNuevas", $unidadesNuevas);
+			 	$statement->bindValue(":idInventario", $idInventario);
+			 	$statement->execute();
+			 	if(!$statement){
+			 		return ERROR;
+			 	}
 
-			 } 
-
-
-			$idVenta=$this->getIdVenta();
-			$inventarioProducto = Inventario::obtenerInventario($idInventario);
-			$productoxventa = new ProductoXVenta($inventarioProducto->getPrecioInventario(), $numeroUnidades, ($inventarioProducto->getProducto())->getIdProducto(), $this->getIdVenta());
-			$unidadesResultantes = $inventarioProducto->getUnidades() - $numeroUnidades;
-			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("UPDATE `inventario` SET `unidades` = $unidadesResultantes WHERE `inventario`.`id_inventario` = $idInventario");
+			 }
+			$statement = $conexion->prepare("DELETE FROM `productoxventa` WHERE `id_productoxventa` = :idProductoXVenta ");
+			$statement->bindValue(":idProductoXVenta", $productoXVenta->getIdProductoxventa());
 			$statement->execute();
-			$total=$this->getTotal()+($numeroUnidades*$inventario->getPrecioInventario());
+
+
+			$total=$this->getTotal()-($unidades*$precio);
 			$this->setTotal($total);
-			$producto = $inventarioProducto->getProducto();
 			$subtotalIva=$total;
 
 			if($producto->tieneIva()){
 				$subtotalIva = $total/(1+IVA);
 			}
-			$this->setSubtotal($this->getSubtotal()+$subtotalIva);
+			$this->setSubtotal($this->getSubtotal()-$subtotalIva);
 
-			$statement = $conexion->prepare("DELETE FROM `productoxventa` WHERE `id_productoxventa` = :idProductoXVenta ");
-			$statement->bindValue(":idProductoXVenta", $idProductoXVenta);
-			$statement->execute();
-
+			$conexion = null;
+			return SUCCESS;
 
 		}
 
 
-		public function cancelarCompra(){
-			
+		public function cancelarVenta($productosxVenta){
+			foreach ($productosxVenta as $productoxVenta) {
+				$this->desseleccionarProducto($productoxVenta);
+			}
+			$conexion = Conexion::conectar();
+			$conexion->prepare("DELETE FROM `ventas` WHERE `id_venta` = :idVenta");
+			$statement->bindValue(":idVenta", $this->getIdVenta());
+			$statement->execute();
+			if(!$statement){
+				return ERROR;
+			}
+			return SUCCESS;
+
 		}
 
 		public function obtenerInfoProductosProductoXVenta()
