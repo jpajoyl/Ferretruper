@@ -5,7 +5,7 @@
 	 * 
 	 */
 	class ProductoXVenta {
-
+		private $arrayDistribucion = Array();
 
 		//atributos
 		private $idProductoxventa;
@@ -96,11 +96,18 @@
 				$statement->bindParam(':id_venta',$id_venta,PDO::PARAM_INT);
 			}
 			$this->venta = Venta::obtenerVenta($id_venta);
-
 		}
 
+		public function getArrayDistribucion(){
+			return $this->arrayDistribucion;
+		}
+		
+		public function setArrayDistribucion($ArrayDistribucion){
+			$this->arrayDistribucion = $ArrayDistribucion;
+		}	
 
 		//methods
+
 		public static function obtenerProductoXVentaPorIdVenta($idVenta)
 		{
 			# code...

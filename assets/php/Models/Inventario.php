@@ -178,7 +178,7 @@ class Inventario {
 		if ($modo) {
 			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE productos_id_producto = $numeroDeConsulta ORDER BY `inventario`.`precio_inventario` DESC");
 		}else{
-			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE usuarios_id_usuario = $numeroDeConsulta ORDER BY `inventario`.`precio_inventario` DESC");
+			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE productos_id_producto = $numeroDeConsulta ORDER BY `inventario`.`precio_inventario` DESC");
 		}
 		$statement->execute();
 		$conexion=null;

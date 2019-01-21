@@ -197,22 +197,59 @@
 		}
 
 		public function seleccionarProducto($idProducto, $numeroUnidades){
+			$arrayDistribucion=Array();
+
 			$producto = Producto::obtenerProducto($idProducto);
 			if($numeroUnidades< $producto-getUnidadesTotales()){
-				$idVenta=$this->getIdVenta();
+
 				$conexion = Conexion::conectar();	
 				$statement= Inventario::obtenerInventarios($idProducto);
 				$resultado=$statement->fetch(PDO::FETCH_ASSOC);
 				if($resultado){
 					$unidadesSumadas=0;
 					while($resultado){
-						$unidadesSumadas+=$resultado['unidades'];
+						$idInventario=$resultado['id_inventario'];
+						$unidadesInventario=$resultado['unidades'];
+						$unidadesSumadas+=$unidadesInventario;
 						if($unidadesSumadas< $numeroUnidades){
-							
+							$statement = null;
+							$statement = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidades WHERE `id_inventario` = :idInventario");
+							$unidadesRestantes=0;
+							$statement->bindValue(":unidades", $unidadesRestantes);
+							$statement->bindValue(":idInventario", $idInventario);
+							$statement->execute();
 
+						}elseif ($unidadesSumadas >= $numeroUnidades) {
+							$unidadesRestantes= $unidadesSumadas-$numeroUnidades;
+							$statement = null;
+							$statement = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidades WHERE `id_inventario` = :idInventario");
+
+							$statement->bindValue(":unidades", $unidadesRestantes);
+							$statement->bindValue(":idInventario", $idInventario);
+							$statement->execute();
+							break;
 						}
 
+						if($statement){
+							$arrayDistribucion[$idInventario]=$unidadesInventario-$unidadesRestantes;
+						}else{
+							return Error;
+						}
+
+					$resultado=$statement->fetch(PDO::FETCH_ASSOC);
 					}
+
+				$productoxventa = new ProductoXVenta($producto->getPrecioMayorInventario(), $numeroUnidades, $producto->getIdProducto(), $this->getIdVenta());
+				$total=$this->getTotal()+($numeroUnidades*$producto->getPrecioMayorInventario());
+				$this->setTotal($total);
+				$subtotalIva=$total;
+				if($producto->tieneIva()){
+					$subtotalIva = $total/(1+IVA);
+				}
+				$this->setSubtotal($this->getSubtotal()+$subtotalIva);
+				$conexion = null;
+				$productoxventa->setArrayDistribucion($arrayDistribucion);
+				return $productoxventa;	
 				}else{
 					return ERROR;
 				}
@@ -220,41 +257,15 @@
 
 			}
 
-
-
-
-			$inventarioProducto = Inventario::obtenerInventario($idInventario);
-			if ($inventarioProducto->getUnidades()>=$numeroUnidades) {
-				$productoxventa = new ProductoXVenta($inventarioProducto->getPrecioInventario(), $numeroUnidades, ($inventarioProducto->getProducto())->getIdProducto(), $this->getIdVenta());
-				$unidadesResultantes = $inventarioProducto->getUnidades() - $numeroUnidades;
-				
-				$statement = $conexion->prepare("UPDATE `inventario` SET `unidades` = $unidadesResultantes WHERE `inventario`.`id_inventario` = $idInventario");
-				$statement->execute();
-				$total=$this->getTotal()+($numeroUnidades*$inventario->getPrecioInventario());
-				$this->setTotal($total);
-				$producto = $inventarioProducto->getProducto();
-				$subtotalIva=$total;
-
-				if($producto->tieneIva()){
-					$subtotalIva = $total/(1+IVA);
-				}
-				$this->setSubtotal($this->getSubtotal()+$subtotalIva);
-				$conexion = null;
-				return $productoxventa;
-			} else{
-				return ERROR;
-			}
-
 		}
 
-		public function desseleccionarProducto($idProductoXVenta){
+		public function desseleccionarProducto($productoXVenta){
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("DELETE FROM `productoxventa` WHERE `id_productoxventa` = :idProductoXVenta ");
-			$statement->bindValue(":idProductoXVenta", $idProductoXVenta);
-			$statement->execute();
-			if($statement){
+			$producto = $productoXVenta->getProducto();
+			$unidades = $productoXVenta->getNumeroUnidades();
+			$precido = $productoXVenta->getPrecioVenta();
+			$arrayDistribucion = $productoXVenta-> 
 
-			}
 
 			$idVenta=$this->getIdVenta();
 			$inventarioProducto = Inventario::obtenerInventario($idInventario);
@@ -272,6 +283,10 @@
 				$subtotalIva = $total/(1+IVA);
 			}
 			$this->setSubtotal($this->getSubtotal()+$subtotalIva);
+
+			$statement = $conexion->prepare("DELETE FROM `productoxventa` WHERE `id_productoxventa` = :idProductoXVenta ");
+			$statement->bindValue(":idProductoXVenta", $idProductoXVenta);
+			$statement->execute();
 
 
 		}
