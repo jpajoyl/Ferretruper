@@ -114,7 +114,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 												<th></th>
 												<th>Id</th>
 												<th>Nombre</th>
-												<th>Cod. Barras</th>
+												<th>Ref. fab</th>
 												<th></th>
 											</tr>
 										</thead>

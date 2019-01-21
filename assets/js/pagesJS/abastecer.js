@@ -88,12 +88,16 @@ $(document).ready(function() {
                                               cancelButtonText: "No"
                                             }).then((result) => {
                                                 if (result.value) {
+                                                    loadDataProveedor(idProveedor);
+                                                    loadDataCompra();
                                                     $(".nombre-proveedor").html(data.nombre);
+                                                    $("#input-id-proveedor").val(idProveedor);
                                                 }
                                             });
                                         },200);
                                     }else{
                                        loadDataProveedor(idProveedor);
+                                       loadDataCompra();
                                        $(".nombre-proveedor").html(data.nombre);
                                        $("#input-id-proveedor").val(idProveedor);
                                     }
@@ -147,7 +151,7 @@ $(document).ready(function() {
             },
             {"data":"id_producto"},
             {"data":"nombre"},
-            {"data":"codigo_barras"},
+            {"data":"referencia_fabrica"},
             {"defaultContent":"<button class='btn btn-primary btn-xs editar-producto'><i class='fa fa-pencil'></i></button>\
             </button><button class='btn btn-success btn-xs comprar-producto'><i class='fa fa-arrow-circle-right'></i></button>"}
             ],
@@ -161,6 +165,24 @@ $(document).ready(function() {
                 "infoEmpty": "No hay registros disponibles",
                 "infoFiltered": "(registros disponibles _MAX_)"
             }
+        });
+    }
+
+    function loadDataCompra() {
+            $.ajax({
+                url: '../assets/php/Controllers/CInventario.php?method=getProductosXCompra',
+                type: 'GET',
+                success:function(data){ 
+                  if(data!=""){
+                    if(data!=3){
+                        $.map($.parseJSON(data).productos, function(producto) {
+                            
+                        });
+
+                    }
+                  }
+                  
+                }   
         });
     }
 
@@ -222,7 +244,6 @@ $(document).ready(function() {
             data: data,
             success:function(data){ 
               if(data!=""){
-                console.log(data);
                 if(data==1){
                     $("#añadirProducto").modal("hide");
                     setTimeout(function(){
@@ -312,6 +333,8 @@ $(document).ready(function() {
             }
         });
     }
+
+
 
 
 });

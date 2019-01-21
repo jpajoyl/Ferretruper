@@ -59,6 +59,19 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 			}
 				
 		}
+	}else if (!strcmp($method,"getProductosXCompra")) {
+		if(isset($_COOKIE['compra'])){
+			$compra=unserialize($_COOKIE['compra']);
+			$productosxcompra=$compra->verProductosxCompra();
+			if($productosxcompra->rowCount()>0){
+				while ($producto = $productosxcompra->fetch(PDO::FETCH_ASSOC)) {
+					$array['productos'][]=$producto;
+				}
+				echo json_encode($array);
+			}else{
+				echo NOT_FOUND;
+			}
+		}
 	}
 }
 
