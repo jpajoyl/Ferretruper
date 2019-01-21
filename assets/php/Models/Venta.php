@@ -196,14 +196,36 @@
 
 		}
 
-		public function seleccionarProducto($idInventario, $numeroUnidades){
+		public function seleccionarProducto($idProducto, $numeroUnidades){
+			
+			if($numeroUnidades< $producto-getUnidadesTotales()){
+				$idVenta=$this->getIdVenta();
 
-			$idVenta=$this->getIdVenta();
+				$producto = Producto::obtenerProducto($idProducto);
+				$conexion = Conexion::conectar();	
+				$statement= Inventario::obtenerInventarios($idProducto);
+				$resultado=$statement->fetch(PDO::FETCH_ASSOC);
+				if($resultado){
+					$unidadesSumadas=0;
+					while($resultado){
+						$unidadesInventario=
+
+					}
+				}else{
+					return ERROR;
+				}
+
+
+			}
+
+
+
+
 			$inventarioProducto = Inventario::obtenerInventario($idInventario);
 			if ($inventarioProducto->getUnidades()>=$numeroUnidades) {
 				$productoxventa = new ProductoXVenta($inventarioProducto->getPrecioInventario(), $numeroUnidades, ($inventarioProducto->getProducto())->getIdProducto(), $this->getIdVenta());
 				$unidadesResultantes = $inventarioProducto->getUnidades() - $numeroUnidades;
-				$conexion = Conexion::conectar();
+				
 				$statement = $conexion->prepare("UPDATE `inventario` SET `unidades` = $unidadesResultantes WHERE `inventario`.`id_inventario` = $idInventario");
 				$statement->execute();
 				$total=$this->getTotal()+($numeroUnidades*$inventario->getPrecioInventario());
@@ -215,7 +237,7 @@
 					$subtotalIva = $total/(1+IVA);
 				}
 				$this->setSubtotal($this->getSubtotal()+$subtotalIva);
-
+				$conexion = null;
 				return $productoxventa;
 			} else{
 				return ERROR;
@@ -223,9 +245,35 @@
 
 		}
 
-		public function desseleccionarProducto(){
+		public function desseleccionarProducto($idProductoXVenta){
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("DELETE FROM `productoxventa` WHERE `id_productoxventa` = :idProductoXVenta ");
+			$statement->bindValue(":idProductoXVenta", $idProductoXVenta);
+			$statement->execute();
+			if($statement){
+
+			}
+
+			$idVenta=$this->getIdVenta();
+			$inventarioProducto = Inventario::obtenerInventario($idInventario);
+			$productoxventa = new ProductoXVenta($inventarioProducto->getPrecioInventario(), $numeroUnidades, ($inventarioProducto->getProducto())->getIdProducto(), $this->getIdVenta());
+			$unidadesResultantes = $inventarioProducto->getUnidades() - $numeroUnidades;
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("UPDATE `inventario` SET `unidades` = $unidadesResultantes WHERE `inventario`.`id_inventario` = $idInventario");
+			$statement->execute();
+			$total=$this->getTotal()+($numeroUnidades*$inventario->getPrecioInventario());
+			$this->setTotal($total);
+			$producto = $inventarioProducto->getProducto();
+			$subtotalIva=$total;
+
+			if($producto->tieneIva()){
+				$subtotalIva = $total/(1+IVA);
+			}
+			$this->setSubtotal($this->getSubtotal()+$subtotalIva);
+
 
 		}
+
 
 		public function cancelarCompra(){
 			
@@ -277,11 +325,7 @@
 			}else{
 				return ERROR;
 			}
-			
-	
 
-			
-			
 
 
 		}
