@@ -230,11 +230,6 @@
 			
 				$unidades= $inventario->getUnidades() + $productosxcompra->getNumeroUnidades();
 
-				if(!$inventario){
-					$inventario= new Inventario($precioFinal,$unidades,0,$id_producto,$id_proveedor);
-
-				}
-
 				$inventario->setUnidades($unidades,$statement);
 				$inventario->setPrecioInventario($precioFinal,$statement);
 				$statement->bindValue(":id_producto", $id_producto);
