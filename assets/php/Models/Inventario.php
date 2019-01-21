@@ -175,7 +175,6 @@ class Inventario {
 	public static function obtenerInventarios($numeroDeConsulta, $modo=true)
 	{//true->>busca por idProducto     //false busca por idProveedor
 		$conexion = Conexion::conectar();
-		SELECT * FROM `inventario` 
 		if ($modo) {
 			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE productos_id_producto = $numeroDeConsulta");
 		}else{
