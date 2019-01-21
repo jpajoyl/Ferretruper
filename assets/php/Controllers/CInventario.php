@@ -3,10 +3,12 @@
 if(!isset($include)){
 	include_once '../Conexion.php';
 	include_once 'SesionEmpleado.php';
+	include_once '../Models/Inventario.php';
 	include_once '../Models/Usuario.php';
 	include_once '../Models/Proveedor.php';
 	include_once '../Models/Producto.php';
 	include_once '../Models/Compra.php';
+	include_once '../Models/ProductoXCompra.php';
 	$objectSession =new SesionEmpleado();
 	$method = isset($_GET['method'])?$_GET['method']:"";
 	date_default_timezone_set("America/Bogota");
@@ -62,16 +64,44 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 	}else if (!strcmp($method,"getProductosXCompra")) {
 		if(isset($_COOKIE['compra'])){
 			$compra=unserialize($_COOKIE['compra']);
-			$productosxcompra=$compra->verProductosxCompra();
-			if($productosxcompra->rowCount()>0){
-				while ($producto = $productosxcompra->fetch(PDO::FETCH_ASSOC)) {
-					$array['productos'][]=$producto;
+			if($compra instanceof Compra){
+				$productosxcompra=$compra->verProductosxCompra();
+				if($productosxcompra->rowCount()>0){
+					while ($producto = $productosxcompra->fetch(PDO::FETCH_ASSOC)) {
+						$array['productos'][]=$producto;
+					}
+					echo json_encode($array);
+				}else{
+					echo NOT_FOUND;
 				}
-				echo json_encode($array);
 			}else{
-				echo NOT_FOUND;
+				echo ERROR;
 			}
+		}else{
+			echo ERROR;
 		}
+	}else if(!strcmp($method,"añadirProductoxcompra")){
+		if(isset($_COOKIE['compra'])){
+			$compra=unserialize($_COOKIE['compra']);
+			if($compra instanceof Compra){
+				$idProducto=$_POST['idProducto'];
+				$idCompra=$compra->getIdCompra();
+				$productoxcompra=ProductoXCompra::obtenerProductoXCompraConIdProductoIdCompra($idCompra,$idProducto);
+				if($productoxcompra==false){
+					try {
+						$productoxcompra = new ProductoXCompra(0, 0, $idCompra,$idProducto);
+						echo SUCCESS;
+					} catch (Exception $e) {
+						echo ERROR;
+					}
+				}else{
+					echo ALREADY_EXIST;
+				}
+			}
+		}else{
+			echo ERROR;
+		}
+
 	}
 }
 

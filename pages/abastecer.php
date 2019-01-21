@@ -101,7 +101,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 								
 							</div><!-- end card-->													
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">					
+						<div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xl-5">					
 							<div class="card mb-3">
 								<div class="card-header">
 									<h3><i class="fa fa-table"></i> Productos del proveedor <span class="nombre-proveedor"></span></h3>
@@ -114,7 +114,6 @@ include_once '../assets/php/Controllers/GetSession.php';
 												<th></th>
 												<th>Id</th>
 												<th>Nombre</th>
-												<th>Ref. fab</th>
 												<th></th>
 											</tr>
 										</thead>
@@ -123,6 +122,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 										</tbody>
 									</table>
 									<a role="button" href="#" id="añadir-producto" class="btn btn-success float-right mt mr" data-target="#añadirProducto" data-toggle="modal">Añadir producto nuevo<span class="btn-label btn-label-right"><i class="fa fa-plus-square"></i></span></a>
+									<!-- Modal -->
 								  	<div class="modal fade custom-modal" id="añadirProducto" tabindex="-1" role="dialog" aria-labelledby="customModal" aria-hidden="true">
 										<div class="modal-dialog" role="document">
 											<div class="modal-content">
@@ -193,31 +193,95 @@ include_once '../assets/php/Controllers/GetSession.php';
 											</div>
 										</div>
 									</div>
+									<!-- Modal -->
+									<div class="modal fade custom-modal" id="modal-editar-producto" tabindex="-1" role="dialog" aria-labelledby="customModal" aria-hidden="true">
+										<div class="modal-dialog" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="titleEditarProducto">Editar Producto: <span id="nombre-producto"></span></span></h5>
+													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<form autocomplete="off" action="#" id="form-editarProducto">
+														<input type="hidden" id="input-id-proveedor"required>
+														<div class="form-row">
+															<div class="form-group col-md-6">
+																<label>Identificacion <span class="text-danger">*</span></label>
+																<input type="text" class="form-control" id="input-id-producto-editar" placeholder="Identificacion" autocomplete="off" required disabled>
+															</div>
+															<div class="form-group col-md-6">
+																<label>Nombre<span class="text-danger">*</span></label>
+																<input type="text" class="form-control" id="input-nombre-producto-editar" placeholder="Nombre del producto" required>
+															</div>
+														</div>
+														<div class="form-group">
+															<label>Descripcion del producto (Opcional)</label>
+															<textarea class="form-control" id="input-descripcion-producto-editar"></textarea>
+														</div>
+														<div class="form-group">
+															<label>Referencia de fabrica<span class="text-danger">*</span></label>
+															<input type="text" class="form-control" id="input-referencia-fabrica-editar" placeholder="Referencia de fabrica" required autocomplete="off">
+														</div>
+														<div class="form-row">
+															<div class="form-group col-md-6">
+																<label>Tiene IVA? <span class="text-danger">*</span></label>
+																<div class="form-check">
+																  <label class="form-check-label">
+																	<input class="form-check-input" type="radio" name="IVA-editar" id="ivaSi" value="1" checked>
+																	SI
+																  </label>
+																</div>
+																<div class="form-check">
+																  <label class="form-check-label">
+																	<input class="form-check-input" type="radio" name="IVA-editar" id="ivaNo" value="0">
+																	NO
+																  </label>
+																</div>
+															</div>
+															<div class="form-group col-md-6">
+																<label>Codigo de barras (Opcional)</label>
+																<input type="text" class="form-control" id="input-codigo-barras-editar" placeholder="Codigo de barras" autocomplete="off">
+															</div>
+														</div>	
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelar-editarProducto">Cancelar</button>
+														<button type="submit" class="btn btn-success">Editar</button>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>														
 							</div><!-- end card-->					
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">						
+						<div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 col-xl-7">						
 							<div class="card mb-3">
 								<div class="card-header">
 									<h3><i class="fa fa-table"></i> Productos a abastecer</h3>
 								</div>
 
 								<div class="card-body">
-
-									<table id="table-productos-compra" class="table table-responsive-xl table-striped">
-										<thead>
-											<tr>
-												<th scope="col">Nombre</th>
-												<th scope="col">Uds</th>
-												<th scope="col">PU</th>
-												<th scope="col">Utilidad</th>
-											</tr>
-										</thead>
-										<tbody>
-											
-										</tbody>
-									</table>
-
+									<form autocomplete="off" action="#" id="data-compra">
+										<table id="table-productos-compra" class="table table-responsive-xl table-striped">
+											<thead>
+												<tr>
+													<th scope="col"><center>Nombre</center></th>
+													<th scope="col"><center>P Unidad</center></th>
+													<th scope="col"><center>Uds</center></th>
+													<th scope="col"><center>Utilidad</center></th>
+													<th scope="col"><center>P Venta</center></th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody>
+												
+											</tbody>		
+										</table>
+										<button type="submit" class="btn btn-info float-right mr">Abastecer<span class="btn-label btn-label-right"><i class="fa fa-send "></i></span></button>
+									</form>
 								</div>							
 							</div><!-- end card-->					
 

@@ -122,10 +122,33 @@
 				$productoxcompra->setIdProductoxCompra($resultado['id_productoxcompra']);
 				$productoxcompra->setPrecioUnitario($resultado['precio_unitario']);
 				$productoxcompra->setNumeroUnidades($resultado['unidades']);
-				$productoxcompra->setDescuentoProducto($resultado['descuento']);
 
-				$productoxcompra->setProducto(Producto::obtenerProducto($resultado['PRODUCTOS_id_producto']));
-				$productoxcompra->setCompra(Compra::obtenerCompra($resultado['COMPRAS_id_compra']));
+				$productoxcompra->setProducto($resultado['PRODUCTOS_id_producto']);
+				$productoxcompra->setCompra($resultado['COMPRAS_id_compra']);
+
+				$conexion=null;
+				$statement=null;
+				return $productoxcompra;
+			}else{
+				return false;
+			}
+		}
+
+		public static function obtenerProductoXCompraConIdProductoIdCompra($idCompra,$idProducto){
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("SELECT * FROM `productoxcompra` WHERE `COMPRAS_id_compra` = :idCompra and `PRODUCTOS_id_producto` = :idProducto");
+			$statement->bindValue(":idCompra", $idCompra);
+			$statement->bindValue(":idProducto", $idProducto);
+			$statement->execute();
+			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+			if($resultado!=false){
+				$productoxcompra = new ProductoXCompra();
+				$productoxcompra->setIdProductoxCompra($resultado['id_productoxcompra']);
+				$productoxcompra->setPrecioUnitario($resultado['precio_unitario']);
+				$productoxcompra->setNumeroUnidades($resultado['unidades']);
+
+				$productoxcompra->setProducto($resultado['PRODUCTOS_id_producto']);
+				$productoxcompra->setCompra($resultado['COMPRAS_id_compra']);
 
 				$conexion=null;
 				$statement=null;

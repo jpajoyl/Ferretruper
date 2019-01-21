@@ -188,10 +188,12 @@
 			$conexion = Conexion::conectar();
 			$statement = Inventario::obtenerInventarios($this->getIdProducto());
 			$statement->execute();
-			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
-			while($resultado){
-				$unidadesTotalesContador+=$resultado['unidades'];
+			if($statement->rowCount()>0){
 				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+				while($resultado){
+					$unidadesTotalesContador+=$resultado['unidades'];
+					$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+				}
 			}
 			$cambiarUnidades=$this->cambiarUnidadesTotales($unidadesTotalesContador);
 			$conexion=null;
@@ -294,7 +296,7 @@
 
 			$idProducto=$this->getIdProducto();
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("UPDATE `productos` SET `codigo_barras` = :codigoBarras, `nombre` = :nombre, `descripcion` = :descripcion, `referencia_fabrica` = :referenciaFabrica, `tiene_iva` = :tieneIva, `clasificacion_tributaria` = :clasificacionTributaria, `unidades_totales` = :unidadesTotales  WHERE `productos`.`id_producto` = :idProducto");
+			$statement = $conexion->prepare("UPDATE `productos` SET `codigo_barras` = :codigoBarras, `nombre` = :nombre, `descripcion` = :descripcion, `referencia_fabrica` = :referenciaFabrica, `tiene_iva` = :tieneIva, `clasificacion_tributaria` = :clasificacionTributaria  WHERE `productos`.`id_producto` = :idProducto");
 			$statement->bindValue(":idProducto", $idProducto);
 			$this->setCodigoBarras($codigoBarras,$statement);
 			$this->setNombre($nombre,$statement);
@@ -302,14 +304,12 @@
 			$this->setReferenciaFabrica($referenciaFabrica,$statement);
 			$this->setTieneIva($tieneIva,$statement);
 			$this->setClasificacionTributaria($clasificacionTributaria,$statement);
-
-			$this->setUnidadesTotales($producto->calcularUnidades());
-			$this->setPrecioMayorInventario($producto->obtenerPrecioMayorInventario());
 			$statement->execute();
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
 			}
-			
+			$this->calcularUnidades();
+			$this->obtenerPrecioMayorInventario();
 			$conexion = NULL;
 			$statement = NULL;
 

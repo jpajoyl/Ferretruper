@@ -57,17 +57,16 @@
 			$nombre=$_POST['nombre'];
 			$descripcion=$_POST['descripcion'];
 			$referenciaFabrica=$_POST['referenciaFabrica'];
-			$clasificacionTributaria=$_POST['clasificacionTributaria'];
 			$iva=$_POST['iva'];
 			$codigoDeBarras=$_POST['CodigoDeBarras'];
 
 			$producto=Producto::obtenerProducto($idProducto);
 			if($producto!=false){
 				try {
-					$producto->editarProducto($codigoDeBarras, $nombre, $descripcion, $referenciaFabrica, $iva, $clasificacionTributaria);
+					$producto->editarProducto($codigoDeBarras, $nombre, $descripcion, $referenciaFabrica, $iva, "GRAVADO");
 					echo SUCCESS;
 				} catch (Exception $e) {
-					echo ERROR;
+					echo $e->getMessage();
 				}
 			}else{
 				echo NOT_FOUND;
