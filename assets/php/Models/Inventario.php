@@ -140,6 +140,7 @@ class Inventario {
 
 	}
 
+
 	public static function obtenerInventario($numeroDeConsulta, $id_usuario=-1, $modo=false){
 		//idProducto->True, idInventario->False
 		$conexion = Conexion::conectar();
@@ -176,9 +177,9 @@ class Inventario {
 		$conexion = Conexion::conectar();
 		SELECT * FROM `inventario` 
 		if ($modo) {
-			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE productos_id_producto = $numeroDeConsulta ORDER BY `inventario`.`precio_inventario` DESC");
+			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE productos_id_producto = $numeroDeConsulta");
 		}else{
-			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE productos_id_producto = $numeroDeConsulta ORDER BY `inventario`.`precio_inventario` DESC");
+			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE productos_id_producto = $numeroDeConsulta");
 		}
 		$statement->execute();
 		$conexion=null;

@@ -264,7 +264,13 @@
 			$producto = $productoXVenta->getProducto();
 			$unidades = $productoXVenta->getNumeroUnidades();
 			$precido = $productoXVenta->getPrecioVenta();
-			$arrayDistribucion = $productoXVenta-> 
+			$arrayDistribucion = $productoXVenta->getArrayDistribucion();
+
+			foreach ($arrayDistribucion as $idInventario => $unidadesRestadas) {
+			 	$statement = null;
+			 	$statement = 
+
+			 } 
 
 
 			$idVenta=$this->getIdVenta();
