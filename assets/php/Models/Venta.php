@@ -214,7 +214,7 @@
 				if($producto->tieneIva()){
 					$subtotalIva = $total/(1+IVA);
 				}
-				$this->setSubtotal($this->getSubtotal()+$subtotalIva)
+				$this->setSubtotal($this->getSubtotal()+$subtotalIva);
 
 				return $productoxventa;
 			} else{
@@ -267,7 +267,7 @@
 					$statement=null;
 					$resultado=null;
 					$numeroNuevoDian = $numeroDian;
-					$statement=$conexion->prepare("UPDATE `resoluciones` SET `numero_dian`=:numeroNuevoDian WHERE `id_resolucion` = :idResolucion ")
+					$statement=$conexion->prepare("UPDATE `resoluciones` SET `numero_dian`=:numeroNuevoDian WHERE `id_resolucion` = :idResolucion ");
 					$statement->bindParam(':idResolucion',$resolucion,PDO::PARAM_INT);
 					$statement->bindParam(':numeroNuevoDian',$numeroNuevoDian,PDO::PARAM_INT);
 					$statement->execute();
