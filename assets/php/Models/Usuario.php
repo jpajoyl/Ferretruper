@@ -210,9 +210,9 @@ class Usuario{
 		$resultado = array();
 		$conexion = Conexion::conectar();
 		if($modo){
-			$statement = $conexion->prepare("SELECT * FROM `usuarios` WHERE  numero_identificacion = :numeroDeConsulta");
+			$statement = $conexion->prepare("SELECT * FROM `usuarios` WHERE  numero_identificacion = :numeroDeConsulta AND `activa` = 1");
 		}else{
-			$statement = $conexion->prepare("SELECT * FROM `usuarios` WHERE  `id_usuario` = :numeroDeConsulta");
+			$statement = $conexion->prepare("SELECT * FROM `usuarios` WHERE  `id_usuario` = :numeroDeConsulta AND `activa` = 1");
 		}
 		$statement->bindParam(":numeroDeConsulta", $numeroDeConsulta);
 		$statement->execute();

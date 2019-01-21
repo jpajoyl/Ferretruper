@@ -262,7 +262,7 @@
 
 		public static function obtenerProducto($idProducto,$returnStatement=false){
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("SELECT * FROM `productos` WHERE  `id_producto` = :idProducto");
+			$statement = $conexion->prepare("SELECT * FROM `productos` WHERE  `id_producto` = :idProducto AND `activa` = 1");
 			$statement->bindValue(":idProducto", $idProducto);
 			$statement->execute();
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
@@ -339,6 +339,10 @@
 				return false;
 			}
 			
+		}
+
+		public function igualarPreciosInventario{
+
 		}
 
 
