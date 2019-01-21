@@ -40,7 +40,7 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 						$data['nombre']=$proveedor->getNombre();
 						$data['id_compra']=$compra->getIdCompra();
 						$serializeCompra=serialize($compra);
-						setcookie("compra", $serializeCompra,3600);
+						setcookie("compra", $serializeCompra,time() + 3600, "/");
 						echo json_encode($data);
 					} catch (Exception $e) {
 						echo ERROR;
@@ -48,9 +48,10 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 				}else{
 					$data=array();
 					$data['response']=ALREADY_EXIST;
+					$data['nombre']=$proveedor->getNombre();
 					$data['id_compra']=$consultaCompra->getIdCompra();
 					$serializeCompra=serialize($consultaCompra);
-					setcookie("compra", $serializeCompra,3600);
+					setcookie("compra", $serializeCompra,time() + 3600, "/");
 					echo json_encode($data);
 				}
 			} catch (Exception $e) {

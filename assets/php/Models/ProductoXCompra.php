@@ -7,10 +7,9 @@
 		
 
 		//atributtos
-		private $id_productoxcompra;
+		private $idProductoxcompra;
 		private $precioUnitario;
 		private $numeroUnidades;
-		private $descuentoProducto;
 		//idk
 		private $compra;
 		private $producto;
@@ -23,14 +22,14 @@
 			}
 		}
 
-		public function __construct0($precioUnitario, $numeroUnidades, $descuentoProducto, $id_compra,$id_producto){
+		public function __construct0($precioUnitario, $numeroUnidades, $idCompra,$idProducto){
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("INSERT INTO `productoxcompra`(`id_productoxcompra`, `precio_unitario`, `unidades`, `descuento`, `COMPRAS_id_compra`, `PRODUCTOS_id_producto`) VALUES (NULL,:precioUnitario,:unidades,:descuentos,:id_compra,:id_producto)");
+			$statement = $conexion->prepare("INSERT INTO `productoxcompra` (`id_productoxcompra`, `precio_unitario`, `unidades`, `COMPRAS_id_compra`, `PRODUCTOS_id_producto`) VALUES (NULL, :precioUnitario, :numeroUnidades, :idCompra, :idProducto)");
 
 			$this->setPrecioUnitario($precioUnitario,$statement);
 			$this->setNumeroUnidades($numeroUnidades,$statement);
-			$this->setProducto($id_compra,$statement);
-			$this->setCompra($id_producto,$statement);
+			$this->setProducto($idCompra,$statement);
+			$this->setCompra($idProducto,$statement);
 			$statement->execute();
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
@@ -46,8 +45,8 @@
 		public function getIdProductoxCompra(){
 			return $this->id_productoxcompra;
 		}
-		public function setIdProductoxCompra($id_productoxcompra){
-			$this->id_productoxcompra;
+		public function setIdProductoxCompra($idProductoxcompra){
+			$this->idProductoxcompra;
 		}
 
 
@@ -56,7 +55,7 @@
 		    return $this->precioUnitario;
 		}
 		
-		public function setPrecioUnitario($precioUnitario)
+		public function setPrecioUnitario($precioUnitario, $statement=NULL)
 		{
 			if($statement!=NULL){
 				$statement->bindParam(':precioUnitario',$precioUnitario,PDO::PARAM_INT);
@@ -71,40 +70,26 @@
 		    return $this->numeroUnidades;
 		}
 		
-		public function setNumeroUnidades($numeroUnidades)
+		public function setNumeroUnidades($numeroUnidades, $statement=NULL)
 		{	
 			if($statement!=NULL){
-				$statement->bindParam(':unidades',$numeroUnidades,PDO::PARAM_INT);
+				$statement->bindParam(':numeroUnidades',$numeroUnidades,PDO::PARAM_INT);
 			}
 		    $this->numeroUnidades = $numeroUnidades;
 		  
 		}
 
 
-		public function getDescuentoProducto()
-		{
-		    return $this->descuentoProducto;
-		}
-		
-		public function setDescuentoProducto($descuentoProducto)
-		{
-			if($statement!=NULL){
-				$statement->bindParam(':descuentos',$descuentoProducto,PDO::PARAM_INT);
-			}
-		    $this->descuentoProducto = $descuentoProducto;
-		   
-		}
-
 
 		public function getProducto(){
 			return $this->producto;
 		}
 
-		public function setProducto($id_producto){
+		public function setProducto($idProducto, $statement=NULL){
 			if($statement!=NULL){
-				$statement->bindParam(':id_producto',$id_producto,PDO::PARAM_INT);
+				$statement->bindParam(':idProducto',$idProducto,PDO::PARAM_INT);
 			}
-			$this->producto = Producto::obtenerProducto($id_producto);
+			$this->producto = Producto::obtenerProducto($idProducto);
 		}
 
 
@@ -112,11 +97,12 @@
 			return $this->Compra;
 		}
 
-		public function setCompra($id_compra){
+		public function setCompra($idCompra, $statement=NULL){
+			$compra=27;
 			if($statement!=NULL){
-				$statement->bindParam(':id_compra',$id_compra,PDO::PARAM_INT);
+				$statement->bindParam(':idCompra',$compra,PDO::PARAM_INT);
 			}
-			$this->Compra = Compra::obtenerCompra($id_compra);
+			$this->Compra = Compra::obtenerCompra($idCompra);
 		}
 
 		public function calcularPrecioTotal(){
@@ -124,10 +110,10 @@
 			return ($precioTotal)-(($precioTotal*$this->getDescuentoProducto())/100);
 		}
 
-		public static function obtenerProductoXCompra($id_productoxcompra){
+		public static function obtenerProductoXCompra($idProductoxcompra){
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("SELECT * FROM `productoxcompra` WHERE `id_productoxcompra` = :id_productoxcompra");
-			$statement->bindValue(":id_productoxcompra", $id_productoxcompra);
+			$statement = $conexion->prepare("SELECT * FROM `productoxcompra` WHERE `id_productoxcompra` = :idProductoxcompra");
+			$statement->bindValue(":idProductoxcompra", $idProductoxcompra);
 			$statement->execute();
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			if($resultado!=false){
@@ -146,9 +132,6 @@
 			}else{
 				return false;
 			}
-
-
-
 		}
 
 	}

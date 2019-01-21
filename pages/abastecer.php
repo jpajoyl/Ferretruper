@@ -127,13 +127,14 @@ include_once '../assets/php/Controllers/GetSession.php';
 										<div class="modal-dialog" role="document">
 											<div class="modal-content">
 												<div class="modal-header">
-													<h5 class="modal-title" id="titleAñadirProducto">Añadir producto a <span id="nombre-proveedor"></span></h5>
+													<h5 class="modal-title" id="titleAñadirProducto">Añadir producto a <span class="nombre-proveedor"></span></h5>
 													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 														<span aria-hidden="true">&times;</span>
 													</button>
 												</div>
 												<div class="modal-body">
 													<form autocomplete="off" action="#" id="form-añadirProducto">
+														<input type="hidden" id="input-id-proveedor"required>
 														<div class="form-row">
 															<div class="form-group col-md-6">
 																<label>Identificacion <span class="text-danger">*</span></label>
@@ -154,10 +155,6 @@ include_once '../assets/php/Controllers/GetSession.php';
 														</div>
 														<div class="form-row">
 															<div class="form-group col-md-6">
-																<label>Valor de utilidad <span class="text-danger">*</span></label>
-																<input type="number" class="form-control" id="input-valor-utilidad" placeholder="Valor Utilidad" value="30" required>
-															</div>
-															<div class="form-group col-md-6">
 																<label>Tiene IVA? <span class="text-danger">*</span></label>
 																<div class="form-check">
 																  <label class="form-check-label">
@@ -172,11 +169,21 @@ include_once '../assets/php/Controllers/GetSession.php';
 																  </label>
 																</div>
 															</div>
-														</div>	
-														<div class="form-group">
-															<label>Codigo de barras (Opcional)</label>
-															<input type="text" class="form-control" id="input-codigo-barras" placeholder="Codigo de barras" autocomplete="off">
+															<div class="form-group col-md-6">
+																<label>Codigo de barras (Opcional)</label>
+																<input type="text" class="form-control" id="input-codigo-barras" placeholder="Codigo de barras" autocomplete="off">
+															</div>
 														</div>
+														<div class="form-row">
+															<div class="form-group col-md-6">
+																<label>Precio compra<span class="text-danger">*</span></label>
+																<input type="number" class="form-control" id="input-precio-compra" placeholder="Precio de compra" required>
+															</div>
+															<div class="form-group col-md-6">
+																<label>Numero de unidades<span class="text-danger">*</span></label>
+																<input type="number" class="form-control" id="input-numero-unidades" placeholder="Numero de unidades" required>
+															</div>
+														</div>	
 													</div>
 													<div class="modal-footer">
 														<button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelar-añadirProducto">Cancelar</button>

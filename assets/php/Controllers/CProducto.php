@@ -2,9 +2,12 @@
 	if(!isset($include)){
 		include_once '../Conexion.php';
 		include_once 'SesionEmpleado.php';
+		include_once '../Models/Inventario.php';
 		include_once '../Models/Usuario.php';
 		include_once '../Models/Proveedor.php';
 		include_once '../Models/Producto.php';
+		include_once '../Models/Compra.php';
+		include_once '../Models/ProductoXCompra.php';
 		$objectSession =new SesionEmpleado();
 		$method = isset($_GET['method'])?$_GET['method']:"";
 	}
@@ -17,19 +20,21 @@
 			$descripcion=$_POST['descripcion'];
 			$referenciaFabrica=$_POST['referenciaFabrica'];
 			$clasificacionTributaria=$_POST['clasificacionTributaria'];
-			$utilidad=$_POST['utilidad'];
 			$iva=$_POST['iva'];
-			$CodigoDeBarras=$_POST['CodigoDeBarras'];
+			$codigoDeBarras=$_POST['codigoDeBarras'];
+			$precioCompra=$_POST['precioCompra'];
+			$numeroUnidades=$_POST['numeroUnidades'];
+			$compra=unserialize($_COOKIE['compra']);
 
 			$proveedor=Proveedor::obtenerProveedor($idProveedor,false);
 			if($proveedor!=false){
 				if(Producto::obtenerProducto($idProducto)==false){
 					try {
-						$producto = new Producto($idProducto, $nombre, $descripcion, $referenciaFabrica, $iva, $clasificacionTributaria, $utilidad, "1", $CodigoDeBarras);
-						$productoxproveedor=$proveedor->añadirProductoxproveedor($idProducto);
+						$producto = new Producto($idProducto, $nombre, $descripcion, $referenciaFabrica, $iva, $clasificacionTributaria, 1, $codigoDeBarras);
+						$productoxcompra = new ProductoXCompra($precioCompra, $numeroUnidades, $compra->getIdCompra(),$idProducto);
 						echo SUCCESS;
 					} catch (Exception $e) {
-						echo ERROR;
+						echo $e->getMessage();
 						$conexion=null;
 						$statement=null;
 					}
@@ -38,7 +43,7 @@
 						echo ALREADY_EXIST;
 					}else{
 						//VERIFICAR QUE SI SEA EL ID DEL PRODUCTO QUE QUIERE AGREGAR
-						$productoxproveedor=$proveedor->añadirProductoxproveedor($idProducto);
+						$productoxproveedor=$proveedor->añadirInventarioxproveedor($idProducto);
 						echo SUCCESS;
 						//NO FUNCIONAAA!
 					}
@@ -53,14 +58,13 @@
 			$descripcion=$_POST['descripcion'];
 			$referenciaFabrica=$_POST['referenciaFabrica'];
 			$clasificacionTributaria=$_POST['clasificacionTributaria'];
-			$utilidad=$_POST['utilidad'];
 			$iva=$_POST['iva'];
-			$CodigoDeBarras=$_POST['CodigoDeBarras'];
+			$codigoDeBarras=$_POST['CodigoDeBarras'];
 
 			$producto=Producto::obtenerProducto($idProducto);
 			if($producto!=false){
 				try {
-					$producto->editarProducto($CodigoDeBarras, $nombre, $descripcion, $referenciaFabrica, $iva, $clasificacionTributaria, $utilidad);
+					$producto->editarProducto($codigoDeBarras, $nombre, $descripcion, $referenciaFabrica, $iva, $clasificacionTributaria);
 					echo SUCCESS;
 				} catch (Exception $e) {
 					echo ERROR;

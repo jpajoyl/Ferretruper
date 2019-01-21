@@ -162,7 +162,7 @@ class Inventario {
 			$inventario->setUnidadesDefectuosas($resultado['unidades_defectuosas']);
 			$inventario->setValorUtilidad($resultado['valor_utilidad']);
 			$inventario->setPrecioCompra($resultado['precio_compra']);
-			$inventario->setProveedor($resultado['usuarios_id_usuario'])
+			$inventario->setProveedor($resultado['usuarios_id_usuario']);
 			$conexion=null;
 			$statement=null;
 			return $inventario;
@@ -186,10 +186,10 @@ class Inventario {
 
 	public function cambiarPrecio($dato,$modo= true){   //modo = True  PrecioInventario -- modo = False ValorUtilidad
 		$conexion = Conexion::conectar();
-		$statement="UPDATE `inventario` SET `precio_inventario`=:precioInventario,`valor_utilidad`=:valorUtilidad WHERE `id_inventario` = :idInventario"
+		$statement="UPDATE `inventario` SET `precio_inventario`=:precioInventario,`valor_utilidad`=:valorUtilidad WHERE `id_inventario` = :idInventario";
 		$statement->bindValue(":idInventario", $this->getIdInventario());
 		if($modo){
-			$nuevaUtilidad = (($dato-$this->getPrecioCompra())/($this->getPrecioCompra()))*100
+			$nuevaUtilidad = (($dato-$this->getPrecioCompra())/($this->getPrecioCompra()))*100;
 			$statement->bindValue(":valorUtilidad", $nuevaUtilidad);
 			$statement->bindValue(":precioInventario", $dato);
 		}else{
