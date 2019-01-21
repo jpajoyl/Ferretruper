@@ -168,6 +168,7 @@
 			}else{
 				return ERROR;
 			}
+			$conexion=null;
 
 		}
 
