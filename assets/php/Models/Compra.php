@@ -214,14 +214,14 @@
 			}
 			foreach ($productosxcompra as $productoxcompra) {
 				$conexion = Conexion::conectar();
-				$statement = $conexion->prepare(" UPDATE `inventario` SET `precio`=:precio ,`unidades`=:unidades  WHERE `productos_id_producto`=:id_producto and `usuarios_id_usuario` = :id_usuario ");
+				$statement = $conexion->prepare(" UPDATE `inventario` SET `precio_inventario`=:precioInventario ,`unidades`=:unidades  WHERE `productos_id_producto`=:id_producto and `usuarios_id_usuario` = :id_usuario ");
 				$proveedor= $productoxcompra->getProveedor();
 				$producto=$productoxcompra->getProducto();
 				$id_proveedor=$proveedor->getIdUsuario();
 				$id_producto=$producto->getIdProducto();
 
 				$inventario=Inventario::obtenerInventario($id_producto,$id_proveedor,true);
-				$precio=(($producto->getValorUtilidad()/100) * $productosxcompra->getPrecioUnitario()) + $productosxcompra->getPrecioUnitario()
+				$precio=(($producto->getValorUtilidad()/100) * $productosxcompra->getPrecioUnitario()) + $productosxcompra->getPrecioUnitario();
 				if($producto->tieneIva()){
 					$precioFinal= ($precio * IVA)+$precio;
 				}else{
@@ -236,7 +236,7 @@
 				}
 
 				$inventario->setUnidades($unidades,$statement);
-				$inventario->setPrecio($precioFinal,$statement);
+				$inventario->setPrecioInventario($precioFinal,$statement);
 				$statement->bindValue(":id_producto", $id_producto);
 				$statement->bindValue(":id_usuario", $id_proveedor);
 

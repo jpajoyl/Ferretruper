@@ -3,6 +3,7 @@
 	/**
 	 * 
 	 */
+	date_default_timezone_set("America/Bogota");
 	class Venta {
 		
 
@@ -235,11 +236,12 @@
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			while($resultado){
 				$productoxventa= ProductoXCompra::obtenerProductoXCompra($resultado["id_productoxcompra"]);
-				$total+= $productoxventa->getPrecioVenta() * $productoxventa->getNumeroUnidades();
+				$total+= ($productoxventa->getPrecioVenta() * $productoxventa->getNumeroUnidades());
 				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			}
 			$tipoDeVenta=TipoVenta::obtenerTipoVenta($this->getIdVenta());
-			$factura = new factura()
+			$fecha=getDate();
+			$factura = new factura($total,$fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'],)
 
 		}
 
