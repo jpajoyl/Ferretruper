@@ -201,11 +201,21 @@
 			$idVenta=$this->getIdVenta();
 			$inventarioProducto = Inventario::obtenerInventario($idInventario);
 			if ($inventarioProducto->getUnidades()>=$numeroUnidades) {
-				$productoxventa = new ProductoXVenta($inventarioProducto->getPrecio(), $numeroUnidades, ($inventarioProducto->getProducto())->getIdProducto(), $this->getIdVenta());
+				$productoxventa = new ProductoXVenta($inventarioProducto->getPrecioInventario(), $numeroUnidades, ($inventarioProducto->getProducto())->getIdProducto(), $this->getIdVenta());
 				$unidadesResultantes = $inventarioProducto->getUnidades() - $numeroUnidades;
 				$conexion = Conexion::conectar();
 				$statement = $conexion->prepare("UPDATE `inventario` SET `unidades` = $unidadesResultantes WHERE `inventario`.`id_inventario` = $idInventario");
 				$statement->execute();
+				$total=$this->getTotal()+($numeroUnidades*$inventario->getPrecioInventario());
+				$this->setTotal($total);
+				$producto = $inventarioProducto->getProducto();
+				$subtotalIva=$total;
+
+				if($producto->tieneIva()){
+					$subtotalIva = $total/(1+IVA);
+				}
+				$this->setSubtotal($this->getSubtotal()+$subtotalIva)
+
 				return $productoxventa;
 			} else{
 				return ERROR;
@@ -217,6 +227,9 @@
 
 		}
 
+		public function cancelarCompra(){
+			
+		}
 
 		public function obtenerInfoProductosProductoXVenta()
 		{
@@ -230,24 +243,46 @@
 		}
 
 		public function efectuarVenta(){ //Factura
-			$total=0;
+			$total=$this->getTotal();
 			$conexion = Conexion::conectar();
-			$statement= $this->verProductosxVenta();
-			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
-			while($resultado){
-				$productoxventa= ProductoXCompra::obtenerProductoXCompra($resultado["id_productoxcompra"]);
-				$total+= ($productoxventa->getPrecioVenta() * $productoxventa->getNumeroUnidades());
-				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
-			}
+			$statement= prepare("UPDATE `ventas` SET `subtotal`=:subtotal,`total`=:total WHERE `id_venta` = :idVenta");
+			$statement->bindParam(':subtotal',$this->getSubtotal(),PDO::PARAM_INT);
+			$statement->bindParam(':total',$total,PDO::PARAM_INT);
+			$statement->bindParam(':idVenta',$this->getIdVenta(),PDO::PARAM_INT);
+			$statement->execute();
+
 			$statement = null;
 			$resultado= null;
-			$tipoDeVenta=TipoVenta::obtenerTipoVenta($this->getIdVenta());
 			$fecha=getDate();
+			$resolucion=$this->getResolucion();
+			$statement = $conexion->prepare("SELECT * FROM `resoluciones` WHERE `id_resolucion` = :idResolucion ");
+			$statement->bindParam(':idResolucion',$resolucion,PDO::PARAM_INT);
+			$statement->execute();
+			$resultado=$statement->fetch(PDO::FETCH_ASSOC);
+			if($resultado){
+				$numeroDian = $resultado['numero_dian']+ 1;
+				$factura = new factura($total,($fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday']),$resolucion,$this->getIdVenta(),$resolucion,$numeroDian);
 
-			$statement
-			$informacionFactura=
+				if($factura){
+					$statement=null;
+					$resultado=null;
+					$numeroNuevoDian = $numeroDian;
+					$statement=$conexion->prepare("UPDATE `resoluciones` SET `numero_dian`=:numeroNuevoDian WHERE `id_resolucion` = :idResolucion ")
+					$statement->bindParam(':idResolucion',$resolucion,PDO::PARAM_INT);
+					$statement->bindParam(':numeroNuevoDian',$numeroNuevoDian,PDO::PARAM_INT);
+					$statement->execute();
+				}else{
+					return ERROR;
+				}
+			}else{
+				return ERROR;
+			}
+			
+	
 
-			$factura = new factura($total,$fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'],1);
+			
+			
+
 
 		}
 
