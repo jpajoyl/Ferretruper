@@ -202,7 +202,7 @@
 			}
 
 		}
-		public function abastecer(){
+		public function abastecer($arrayUtilidad){
 			$productosxcompra=array();
 			$conexion = Conexion::conectar();
 			$statement= $this->verProductosxCompra();
@@ -213,33 +213,41 @@
 				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			}
 			foreach ($productosxcompra as $productoxcompra) {
-				$conexion = Conexion::conectar();
-				$statement = $conexion->prepare(" UPDATE `inventario` SET `precio_inventario`=:precioInventario ,`unidades`=:unidades  WHERE `productos_id_producto`=:id_producto and `usuarios_id_usuario` = :id_usuario ");
 				$proveedor= $productoxcompra->getProveedor();
 				$producto=$productoxcompra->getProducto();
 				$id_proveedor=$proveedor->getIdUsuario();
 				$id_producto=$producto->getIdProducto();
+				$nuevaUtilidad= $arrayUtilidad[$id_producto];
 
-				$inventario=Inventario::obtenerInventario($id_producto,$id_proveedor,true);
-				$precio=(($producto->getValorUtilidad()/100) * $productosxcompra->getPrecioUnitario()) + $productosxcompra->getPrecioUnitario();
+				$precio=(($nuevaUtilidad/100) * $productosxcompra->getPrecioUnitario()) + $productosxcompra->getPrecioUnitario();
+
 				if($producto->tieneIva()){
 					$precioFinal= ($precio * IVA)+$precio;
 				}else{
 					$precioFinal = $precio;
 				}
-			
-				$unidades= $inventario->getUnidades() + $productosxcompra->getNumeroUnidades();
 
-				$inventario->setUnidades($unidades,$statement);
-				$inventario->setPrecioInventario($precioFinal,$statement);
-				$statement->bindValue(":id_producto", $id_producto);
-				$statement->bindValue(":id_usuario", $id_proveedor);
+				$inventario=Inventario::obtenerInventario($id_producto,$id_proveedor,true);
+				if($inventario){
+					$unidades= $inventario->getUnidades() + $productosxcompra->getNumeroUnidades();
+					$conexion = Conexion::conectar();
+					$statement = $conexion->prepare(" UPDATE `inventario` SET `precio_inventario`=:precioInventario ,`unidades`=:unidades,`valor_utilidad`=:valorUtilidad WHERE `productos_id_producto`=:id_producto and `usuarios_id_usuario` = :id_usuario ");
+					$inventario->setUnidades($unidades,$statement);
+					$inventario->setPrecioInventario($precioFinal,$statement);
+					$statement->bindValue(":id_producto", $id_producto);
+					$statement->bindValue(":id_usuario", $id_proveedor);
+					$statement->bindValue(":valorUtilidad", $nuevaUtilidad);
+					$statement->execute();
+					if(!$statement){
+						throw new Exception("Error Processing Request", 1);
+						return ERROR;
+					}
+					$conexion=null;
+				}else{
+					$unidades= $productosxcompra->getNumeroUnidades();
+					$inventario = new Inventario($precioFinal,$productosxcompra->getPrecioUnitario(),$unidades,0,$id_producto,$id_proveedor,$nuevaUtilidad);
+				}	
 
-				$statement->execute();
-				if(!$statement){
-					throw new Exception("Error Processing Request", 1);
-					return ERROR;
-				}
 				$facturaCompra = new FacturaCompra($this->getIdCompra());
 				$conexion = null;
 				$statement=null;

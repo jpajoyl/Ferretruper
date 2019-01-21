@@ -239,8 +239,14 @@
 				$total+= ($productoxventa->getPrecioVenta() * $productoxventa->getNumeroUnidades());
 				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			}
+			$statement = null;
+			$resultado= null;
 			$tipoDeVenta=TipoVenta::obtenerTipoVenta($this->getIdVenta());
 			$fecha=getDate();
+
+			$statement
+			$informacionFactura=
+
 			$factura = new factura($total,$fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'],1);
 
 		}
