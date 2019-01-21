@@ -341,7 +341,7 @@
 			
 		}
 
-		public function igualarPreciosInventario{
+		public function igualarPreciosInventario(){
 
 		}
 
