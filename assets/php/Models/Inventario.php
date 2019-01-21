@@ -185,6 +185,19 @@ class Inventario {
 		return $statement;
 	}
 
+		public static function obtenerInventariosParaVenta($numeroDeConsulta, $modo=true)
+	{//true->>busca por idProducto     //false busca por idProveedor
+		$conexion = Conexion::conectar();
+		if ($modo) {
+			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE productos_id_producto = $numeroDeConsulta AND `unidades` > 0 ORDER BY `inventario`.`precio_inventario` DESC");
+		}else{
+			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE productos_id_producto = $numeroDeConsulta AND `unidades` > 0 ORDER BY `inventario`.`precio_inventario` DESC");
+		}
+		$statement->execute();
+		$conexion=null;
+		return $statement;
+	}
+
 	public function cambiarPrecio($dato,$modo= true){   //modo = True  PrecioInventario -- modo = False ValorUtilidad
 		$conexion = Conexion::conectar();
 		$statement="UPDATE `inventario` SET `precio_inventario`=:precioInventario,`valor_utilidad`=:valorUtilidad WHERE `id_inventario` = :idInventario";
