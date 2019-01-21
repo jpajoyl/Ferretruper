@@ -46,8 +46,19 @@ class Factura {
 		$this->setAnulada($anulada,$statement);
 		$this->setFechaAnulada($fechaAnulada,$statement);
 		$this->setInformacionFactura($informacionFactura,$statement);
+		$consulta=$conexion->prepare("SELECT descripcion FROM `informacion_facturas` WHERE id_informacion_facturas = :informacionFactura");
+		$consulta->bindParam(':informacionFactura',$informacionFactura,PDO::PARAM_INT);
+		$consulta->execute();
+		$resultado2 = $consulta->fetch(PDO::FETCH_ASSOC);
+		$this->setInformacionFactura($resultado2['descripcion']);
 		$this->setVenta($venta,$statement);
 		$this->setResolucion($resolucion,$statement);
+		$consulta=$conexion->prepare("SELECT descripcion FROM `resoluciones` WHERE id_resolucion = :idResolucion");
+		$consulta->bindParam(':idResolucion',$resolucion,PDO::PARAM_INT);
+		$consulta->execute();
+		$resultado2 = $consulta->fetch(PDO::FETCH_ASSOC);
+		$this->setResolucion($resultado2['descripcion']);
+		$consulta=null;
 		$this->setNumeroDian($numeroDian,$statement);
 		$statement->execute();
 		$this->setidFactura($conexion->lastInsertId());
@@ -184,6 +195,15 @@ class Factura {
 			$consulta->execute();
 			$resultado2 = $consulta->fetch(PDO::FETCH_ASSOC);
 			$factura->setResolucion($resultado2['descripcion']);
+
+
+
+			$idInformacionFacturas = $resultado['informacion_facturas_id_informacion_facturas'];
+			$consulta2=$conexion->prepare("SELECT descripcion FROM `informacion_facturas` WHERE id_informacion_facturas = :informacionFactura");
+			$consulta2->bindParam(':informacionFactura',$idInformacionFacturas,PDO::PARAM_INT);
+			$consulta2->execute();
+			$resultado2 = $consulta2->fetch(PDO::FETCH_ASSOC);
+			$factura->setInformacionFactura($resultado2['descripcion']);
 			$consulta=null;
 			$conexion=null;
 			$statement=null;
@@ -261,12 +281,12 @@ class Factura {
 			$pdf->Cell(74,5, utf8_decode($item['nombre']),0,0,'J',false);
 			$pdf->Cell(35,5, utf8_decode($item['referencia_fabrica']),0,0,'J',false);
 			$pdf->Cell(20,5, $item['unidades'],0,0,'J',false);
-			$pdf->Cell(23,5, $item['precio_venta'],0,0,'J',false);
+			$pdf->Cell(23,5, number_format($item['precio_venta']),0,0,'J',false);
 			$valorTotal = $item['unidades'] * $item['precio_venta'];
-			$pdf->Cell(23,5, $valorTotal,0,1,'J',false);
+			$pdf->Cell(23,5, number_format($valorTotal),0,1,'J',false);
 			$tieneIva = $item['tiene_iva'];
 			if ($tieneIva==1) {
-				$totalBruto+=$item['precio_venta']/1.19;
+				$totalBruto+=($item['precio_venta']/1.19)*$item['unidades'];
 			}
 		}
 		$pdf->Rect(10, 80, 190, 150);
@@ -287,6 +307,15 @@ class Factura {
 		$pdf->Cell(110,7,"",0,0,'J',false);
 		$pdf->SetFont('Arial','B',10);
 		$pdf->Cell(50,7, "Total: ",1,0,'J',false);
+		$pdf->SetFont('Arial','',10);
+		$pdf->Cell(30,7,number_format(($totalBruto*IVA)+$totalBruto,2),1,1,'R',false);
+		$pdf->ln(3);
+		$pdf->SetFont('Arial','',12);
+		$pdf->MultiCell(190,5,utf8_decode($this->getInformacionFactura()) ,0,"C",false);
+		$pdf->line(200,261,10,261);
+		$pdf->SetFont('Arial','',9);
+		$pdf->MultiCell(190,5, utf8_decode($this->getResolucion()),0,"J",false);
+
 
 
 
