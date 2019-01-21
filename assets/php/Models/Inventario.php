@@ -53,7 +53,7 @@ class Inventario {
 			$statement->bindParam(':id_proveedor',$id_proveedor,PDO::PARAM_INT);
 		}
 		$this->proveedor = Proveedor::obtenerProveedor($id_proveedor,false);
-		return $this;
+
 	}
 	public function getIdInventario(){
 		return $this->idInventario;
@@ -64,7 +64,7 @@ class Inventario {
 			$statement->bindParam(':idInventario',$idInventario,PDO::PARAM_INT);
 		}
 		$this->idInventario = $idInventario;
-		return $this;
+
 	}
 
 	public function getProducto(){
@@ -76,7 +76,7 @@ class Inventario {
 			$statement->bindParam(':id_producto',$id_producto,PDO::PARAM_INT);
 		}
 		$this->producto = Producto::obtenerProducto($id_producto);
-		return $this;
+
 	}
 
 	public function getPrecioInventario(){
@@ -88,7 +88,7 @@ class Inventario {
 			$statement->bindParam(':precioInventario',$precioInventario,PDO::PARAM_INT);
 		}
 		$this->precioInventario = $precioInventario;
-		return $this;
+
 	}
 
 	public function getPrecioCompra(){
@@ -100,7 +100,7 @@ class Inventario {
 			$statement->bindParam(':precioCompra',$precioCompra,PDO::PARAM_INT);
 		}
 		$this->precioCompra = $precioCompra;
-		return $this;
+
 	}
 
 	public function getUnidades(){
@@ -112,7 +112,7 @@ class Inventario {
 			$statement->bindParam(':unidades',$unidades,PDO::PARAM_INT);
 		}
 		$this->unidades = $unidades;
-		return $this;
+
 		
 	}
 
@@ -125,7 +125,7 @@ class Inventario {
 			$statement->bindParam(':unidadesDefectuosas',$unidadesDefectuosas,PDO::PARAM_INT);
 		}
 		$this->unidadesDefectuosas = $unidadesDefectuosas;
-		return $this;
+
 	}
 
 	public function getValorUtilidad(){
@@ -137,7 +137,7 @@ class Inventario {
 			$statement->bindParam(':valorUtilitad',$valorUtilitad,PDO::PARAM_INT);
 		}
 		$this->valorUtilitad = $valorUtilitad;
-		return $this;
+
 	}
 
 	public static function obtenerInventario($numeroDeConsulta, $id_usuario=-1, $modo=false){
