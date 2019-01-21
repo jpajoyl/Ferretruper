@@ -158,6 +158,19 @@
 			}
 		}
 
+		public function eliminarProductoxCompra(){
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("DELETE FROM `productoxcompra` WHERE `id_productoxcompra` = :idProductoxcompra");
+			$statement->bindValue(":idProductoxcompra", $this->getIdProductoxCompra());
+			$statement->execute();
+			if($statement){
+				return SUCCESS;
+			}else{
+				return ERROR;
+			}
+
+		}
+
 	}
 
 	
