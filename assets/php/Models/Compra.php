@@ -130,7 +130,8 @@
 		}
 
 		public function pagarCompra(){
-			$comprobante= new comprobanteEgreso(getdate(),$this);
+			$fecha=getDate();
+			$comprobante= new comprobanteEgreso(($fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday']),$this);
 			if ( $comprobante != null){
 				$comprobante->imprimirComprobante();
 			}

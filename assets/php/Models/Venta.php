@@ -249,7 +249,7 @@
 				$this->setSubtotal($this->getSubtotal()+$subtotalIva);
 				$conexion = null;
 				$productoxventa->setArrayDistribucion($arrayDistribucion);
-				return $productoxventa;	
+				return $productoxventa;	 //GUARDAR ESTO EN UN ARRAY;
 				}else{
 					return ERROR;
 				}
@@ -259,7 +259,7 @@
 
 		}
 
-		public function desseleccionarProducto($productoXVenta){
+		public function desseleccionarProducto($productoXVenta){ //OBJETO PRODUCTO X VENTA;
 			$conexion = Conexion::conectar();
 			$producto = $productoXVenta->getProducto();
 			$unidades = $productoXVenta->getNumeroUnidades();
@@ -299,7 +299,7 @@
 		}
 
 
-		public function cancelarVenta($productosxVenta){
+		public function cancelarVenta($productosxVenta){ //ARRAY CON LOS PRODUCTOS X VENTA;
 			foreach ($productosxVenta as $productoxVenta) {
 				$this->desseleccionarProducto($productoxVenta);
 			}
