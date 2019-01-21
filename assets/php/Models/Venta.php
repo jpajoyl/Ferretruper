@@ -197,18 +197,20 @@
 		}
 
 		public function seleccionarProducto($idProducto, $numeroUnidades){
-			
+			$producto = Producto::obtenerProducto($idProducto);
 			if($numeroUnidades< $producto-getUnidadesTotales()){
 				$idVenta=$this->getIdVenta();
-
-				$producto = Producto::obtenerProducto($idProducto);
 				$conexion = Conexion::conectar();	
 				$statement= Inventario::obtenerInventarios($idProducto);
 				$resultado=$statement->fetch(PDO::FETCH_ASSOC);
 				if($resultado){
 					$unidadesSumadas=0;
 					while($resultado){
-						$unidadesInventario=
+						$unidadesSumadas+=$resultado['unidades'];
+						if($unidadesSumadas< $numeroUnidades){
+							
+
+						}
 
 					}
 				}else{
