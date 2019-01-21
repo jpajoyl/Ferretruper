@@ -241,7 +241,7 @@
 			}
 			$tipoDeVenta=TipoVenta::obtenerTipoVenta($this->getIdVenta());
 			$fecha=getDate();
-			$factura = new factura($total,$fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'],)
+			$factura = new factura($total,$fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday']);
 
 		}
 
