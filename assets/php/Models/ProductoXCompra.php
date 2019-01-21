@@ -1,5 +1,6 @@
 <?php 
 
+
 	/**
 	 * 
 	 */
@@ -28,8 +29,9 @@
 
 			$this->setPrecioUnitario($precioUnitario,$statement);
 			$this->setNumeroUnidades($numeroUnidades,$statement);
-			$this->setProducto($idCompra,$statement);
-			$this->setCompra($idProducto,$statement);
+			$this->setProducto($idProducto,$statement);
+			$this->setCompra($idCompra,$statement);
+
 			$statement->execute();
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
@@ -43,7 +45,7 @@
 
 
 		public function getIdProductoxCompra(){
-			return $this->id_productoxcompra;
+			return $this->idProductoxcompra;
 		}
 		public function setIdProductoxCompra($idProductoxcompra){
 			$this->idProductoxcompra;
@@ -98,9 +100,8 @@
 		}
 
 		public function setCompra($idCompra, $statement=NULL){
-			$compra=27;
 			if($statement!=NULL){
-				$statement->bindParam(':idCompra',$compra,PDO::PARAM_INT);
+				$statement->bindParam(':idCompra',$idCompra,PDO::PARAM_INT);
 			}
 			$this->Compra = Compra::obtenerCompra($idCompra);
 		}
@@ -137,6 +138,4 @@
 	}
 
 	
-
-
  ?>

@@ -195,7 +195,7 @@
 			}
 			$cambiarUnidades=$this->cambiarUnidadesTotales($unidadesTotalesContador);
 			$conexion=null;
-			if($cambiarUnidadaes == SUCCESS){
+			if($cambiarUnidades == SUCCESS){
 				return $unidadesTotalesContador;
 			}else{
 				return ERROR;
@@ -232,7 +232,7 @@
 				}
 				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			}
-			$cambiarPrecioMayorInventario=$this->cambiarUnidadesTotales($unidadesTotalesContador);
+			$cambiarPrecioMayorInventario=$this->cambiarPrecioMayorInventario($precioMayor);
 			$conexion=null;
 			if($cambiarPrecioMayorInventario == SUCCESS){
 				return $precioMayor;
@@ -249,7 +249,7 @@
 			$idProducto = $this->getIdProducto();
 			$statement = $conexion->prepare("UPDATE `productos` SET `precio_mayor_inventario`=:precioMayorInventario WHERE  `id_producto` = :idProducto");
 			$statement->bindValue(":idProducto", $idProducto);
-			$statement->bindValue(":$precioMayorInventario", $precioMayorInventario);
+			$statement->bindValue(":precioMayorInventario", $precioMayorInventario);
 			$statement->execute();
 			if($statement){
 				return SUCCESS;
