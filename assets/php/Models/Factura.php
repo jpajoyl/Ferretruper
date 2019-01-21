@@ -37,7 +37,7 @@ class Factura {
 		}
 	}
 
-	public function __construct0($total, $fecha, $anulada, $fechaAnulada, $informacionFactura, $venta, $resolucion, $numeroDian){
+	public function __construct0($total, $fecha, $informacionFactura, $venta, $resolucion, $numeroDian, $anulada=NULL, $fechaAnulada=NULL){
 		$conexion = Conexion::conectar();
 		$statement = $conexion->prepare("INSERT INTO `facturas` (`id_factura`, `total`, `fecha`, `anulada`, `fecha_anulada`, `numero_dian`, `informacion_facturas_id_informacion_facturas`, `resoluciones_id_resolucion`, `ventas_id_venta`) VALUES (NULL, :total, :fecha, :anulada, :fechaAnulada, :numeroDian, :informacionFactura, :resolucion, :venta)");
 
@@ -255,6 +255,7 @@ class Factura {
 		$pdf->Cell(23,5, "VR UNITARIO:",1,0,'J',false);
 		$pdf->Cell(23,5, "VR TOTAL:",1,0,'J',false);
 		$pdf->ln(10);
+		$totalBruto=0;
 		foreach ($array as $item) {
 			$pdf->Cell(15,5, $item['id_producto'],0,0,'J',false);
 			$pdf->Cell(74,5, utf8_decode($item['nombre']),0,0,'J',false);
@@ -263,13 +264,30 @@ class Factura {
 			$pdf->Cell(23,5, $item['precio_venta'],0,0,'J',false);
 			$valorTotal = $item['unidades'] * $item['precio_venta'];
 			$pdf->Cell(23,5, $valorTotal,0,1,'J',false);
+			$tieneIva = $item['tiene_iva'];
+			if ($tieneIva==1) {
+				$totalBruto+=$item['precio_venta']/1.19;
+			}
 		}
 		$pdf->Rect(10, 80, 190, 150);
-		$pdf->ln(150);
+		$pdf->ln(140);
 		$pdf->SetFont('Arial','B',10);
-		$pdf->Cell(70,10, "Condiciones de pago: ",1,0,'L',false);//HHHHHHHHHHHHHHHHHHHHHHHH
+		$pdf->Cell(60,7, "Condiciones de pago: ",0,0,'J',false);//HHHHHHHHHHHHHHHHHHHHHHHH
 		$pdf->SetFont('Arial','',10);
-		$pdf->Cell(70,10, $tipoVenta->getTipoVenta(),1,0,'L',false);
+		$pdf->Cell(50,7, $tipoVenta->getTipoVenta(),0,0,'J',false);
+		$pdf->SetFont('Arial','B',10);
+		$pdf->Cell(50,7, "Total Bruto: ",1,0,'J',false);
+		$pdf->SetFont('Arial','',10);
+		$pdf->Cell(30,7,number_format($totalBruto,2),1,1,'R',false);
+		$pdf->Cell(110,7,"",0,0,'J',false);
+		$pdf->SetFont('Arial','B',10);
+		$pdf->Cell(50,7, "Iva: ",1,0,'J',false);
+		$pdf->SetFont('Arial','',10);
+		$pdf->Cell(30,7,number_format($totalBruto*IVA,2),1,1,'R',false);
+		$pdf->Cell(110,7,"",0,0,'J',false);
+		$pdf->SetFont('Arial','B',10);
+		$pdf->Cell(50,7, "Total: ",1,0,'J',false);
+
 
 
 		$pdf->Output('I',$archivo_de_salida,true);
