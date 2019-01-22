@@ -110,7 +110,34 @@
 			$statement->execute();
 			
 	    }
-	    
+	    public static function obtenerAbono($idAbono)
+	    {
+	    	$conexion = Conexion::conectar();
+	    	$statement = $conexion->prepare("SELECT * FROM `abonos` WHERE  `id_abono`= :idAbono");
+	    	$statement->bindParam(":idAbono", $idAbono);
+	    	$statement->execute();
+	    	$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+	    	if($statement!=false){
+	    		$abono = new Abono();
+	    		$abono->setIdAbono($resultado['id_abono']);
+	    		$abono->setValor($resultado['valor']);
+	    		$abono->setFecha($resultado['fecha']);
+	    		$abono->setTipoVenta($resultado['TIPO_VENTA_id_tipo_venta']);
+	    		$conexion=null;
+	    		$statement=null;
+	    		return $abono;
+	    	}else{
+	    		return ERROR;
+	    	}
+	    }
+	    public static function obtenerAbonos($idTipoVenta){
+	    	$conexion = Conexion::conectar();
+	    	$statement = $conexion->prepare("SELECT * FROM `abonos` WHERE TIPO_VENTA_id_tipo_venta = :idTipoVenta");
+	    	$statement->bindParam(":idTipoVenta";$idTipoVenta);
+	    	$statement->execute();
+	    	$conexion=null;
+	    	return $statement;
+	    }
 
 
 
