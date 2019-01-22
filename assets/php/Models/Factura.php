@@ -17,7 +17,7 @@ class Factura {
 
 	public function getNumeroDian()
 	{
-	    return $this->numeroDian;
+		return $this->numeroDian;
 	}
 	
 	public function setNumeroDian($numeroDian, $statement=NULL)
@@ -155,7 +155,7 @@ class Factura {
 	}
 	public function getResolucion()
 	{
-	    return $this->resolucion;
+		return $this->resolucion;
 	}
 	
 	public function setResolucion($resolucion, $statement=NULL)
@@ -233,7 +233,7 @@ class Factura {
 		$pdf->SetFillColor(215, 205, 203);
 		$pdf->Image('../../images/LOGO FERRETRUPER.jpg' , 7 , 7 , 40 , 10,'JPG');
 		$numeroDian = $this->getNumeroDian();
-		$archivo="comprobanteEgreso-$numeroDian.pdf";
+		$archivo="FacturaCarta-$numeroDian.pdf";
 		$archivo_de_salida=$archivo;
 		$pdf->SetFont('Arial','B',10);
 		$pdf->Cell(115,5,utf8_decode('FERRETRUPER S.A.S'),0,0,'R', false);
@@ -247,7 +247,6 @@ class Factura {
 		$venta = $this->getVenta();
 		$idVenta = $venta->getIdVenta();
 		$tipoVenta = TipoVenta::obtenerTipoVenta($idVenta);
-		$idCliente = $tipoVenta->getCliente();
 		$cliente = $tipoVenta->getCliente();
 		$pdf->SetFont('Arial','',11);
 		$pdf->Cell(85,7, utf8_decode("SEÑORES:"),0,0,'J',true);
@@ -276,6 +275,14 @@ class Factura {
 		$pdf->Cell(23,5, "VR TOTAL:",1,0,'J',false);
 		$pdf->ln(10);
 		$totalBruto=0;
+		$totalFinal=0;
+		$totalDescuento=0;
+		$totalIva=0;
+		$descuento = $venta->getDescuento();
+		if ($descuento==NULL) {
+			$descuento = 0;
+		}
+		$descuento = $descuento/100;
 		foreach ($array as $item) {
 			$pdf->Cell(15,5, $item['id_producto'],0,0,'J',false);
 			$pdf->Cell(74,5, utf8_decode($item['nombre']),0,0,'J',false);
@@ -285,16 +292,38 @@ class Factura {
 			$valorTotal = $item['unidades'] * $item['precio_venta'];
 			$pdf->Cell(23,5, number_format($valorTotal),0,1,'J',false);
 			$tieneIva = $item['tiene_iva'];
+
 			if ($tieneIva==1) {
-				$totalBruto+=($item['precio_venta']/1.19)*$item['unidades'];
+				$descuentoUnitarioSinIva=(($item['precio_venta']/1.19)*$descuento);
+				$descuentoTotalSinIva=$descuentoUnitarioSinIva*$item['unidades'];
+
+				$precioBrutoUnitario=($item['precio_venta']/1.19)-$descuentoUnitarioSinIva;
+				$totalBruto+=($precioBrutoUnitario)*$item['unidades'];
+				$totalFinal+=$precioBrutoUnitario *$item['unidades']* 1.19;
+				$totalDescuento+=$descuentoTotalSinIva;
+				$totalIva+=$precioBrutoUnitario*IVA*$item['unidades'];
+			}else{
+				$descuentoUnitario=(($item['precio_venta'])*$descuento);
+				$descuentoTotal=$descuentoUnitario*$item['unidades'];
+
+				$precioBrutoUnitario=$item['precio_venta']-$descuentoUnitario;
+				$totalBruto+=(($precioBrutoUnitario)*$item['unidades']);
+				$totalFinal+=(($precioBrutoUnitario)*$item['unidades']);
+				$totalDescuento+=$descuentoTotal;
+
 			}
 		}
-		$pdf->Rect(10, 80, 190, 150);
-		$pdf->ln(140);
+		$pdf->Rect(10, 80, 190, 130);
+		$pdf->ln(120);
 		$pdf->SetFont('Arial','B',10);
 		$pdf->Cell(60,7, "Condiciones de pago: ",0,0,'J',false);//HHHHHHHHHHHHHHHHHHHHHHHH
 		$pdf->SetFont('Arial','',10);
 		$pdf->Cell(50,7, $tipoVenta->getTipoVenta(),0,0,'J',false);
+		$pdf->SetFont('Arial','B',10);
+		$pdf->Cell(50,7, "Descuento: ",1,0,'J',false);
+		$pdf->SetFont('Arial','',10);
+		$pdf->Cell(30,7,number_format($totalDescuento,2),1,1,'R',false);
+		$pdf->Cell(110,7,"",0,0,'J',false);
 		$pdf->SetFont('Arial','B',10);
 		$pdf->Cell(50,7, "Total Bruto: ",1,0,'J',false);
 		$pdf->SetFont('Arial','',10);
@@ -303,18 +332,28 @@ class Factura {
 		$pdf->SetFont('Arial','B',10);
 		$pdf->Cell(50,7, "Iva: ",1,0,'J',false);
 		$pdf->SetFont('Arial','',10);
-		$pdf->Cell(30,7,number_format($totalBruto*IVA,2),1,1,'R',false);
+		$pdf->Cell(30,7,number_format($totalIva,2),1,1,'R',false);
+		$pdf->Cell(110,7,"",0,0,'J',false);
+		$pdf->SetFont('Arial','B',10);
+		$retefuente=$venta->getRetefuente();
+		if ($retefuente==NULL) {
+			$retefuente=0;
+		}
+		$pdf->Cell(50,7, "Retefuente ".$retefuente."% : ",1,0,'J',false);
+		$pdf->SetFont('Arial','',10);
+		$totalRetefuente = $totalBruto*($retefuente/100);
+		$pdf->Cell(30,7,number_format($totalRetefuente,2),1,1,'R',false);
 		$pdf->Cell(110,7,"",0,0,'J',false);
 		$pdf->SetFont('Arial','B',10);
 		$pdf->Cell(50,7, "Total: ",1,0,'J',false);
 		$pdf->SetFont('Arial','',10);
-		$pdf->Cell(30,7,number_format(($totalBruto*IVA)+$totalBruto,2),1,1,'R',false);
+		$pdf->Cell(30,7,number_format($totalFinal-$totalRetefuente,2),1,1,'R',false);
 		$pdf->ln(3);
 		$pdf->SetFont('Arial','',12);
-		$pdf->MultiCell(190,5,utf8_decode($this->getInformacionFactura()) ,0,"C",false);
-		$pdf->line(200,261,10,261);
+		$pdf->MultiCell(190,6,utf8_decode($this->getInformacionFactura()) ,0,"C",false);
+		$pdf->line(200,256,10,256);
 		$pdf->SetFont('Arial','',9);
-		$pdf->MultiCell(190,5, utf8_decode($this->getResolucion()),0,"J",false);
+		$pdf->MultiCell(190,6, utf8_decode($this->getResolucion()),0,"J",false);
 
 
 
@@ -332,6 +371,88 @@ class Factura {
 		//Eliminación del archivo en el servidor
 		unlink($archivo);
 	}
+	public function imprimirFacturaPOS()
+	{
+		include_once '../Controllers/CifrasEnLetras.php';
+		require('../fpdf/fpdf.php');
+		$pdf = new FPDF($orientation='P',$unit='mm', array(45,350));
+		$pdf->AddPage();
+		$numeroDian = $this->getNumeroDian();
+		$archivo="FacturaCarta-$numeroDian.pdf";
+		$archivo_de_salida=$archivo;
+		$pdf->SetFont('Arial','B',5);    //Letra Arial, negrita (Bold), tam. 20
+		$textypos = 5;
+		$pdf->setY(2);
+		$pdf->setX(2);
+		$pdf->Cell(41,4, "FERRETRUPER S.A.S",0,1,'C',false);
+		$pdf->SetFont('Arial','',4);
+		$pdf->setX(2);
+		$pdf->MultiCell(41,2,"NIT: 900 307 086 - 7"."\n"."Carrera 51 # 40-74"."\n"."TEL:(4) 2327201"."\n".utf8_decode("Medellín - Colombia")."\n"."ferretrupersas@hotmail.com",0,"C",false);
+		$pdf->SetFont('Arial','',5);    //Letra Arial, negrita (Bold), tam. 20
+		$textypos+=6;
+		$pdf->setY(11);
+		$pdf->setX(2);
+		$pdf->Cell(41,11,'-------------------------------------------------------------------',0,1,"C",false);
+		$pdf->setY(17);
+		$pdf->setX(2);
+		$pdf->SetFont('Arial','B',4);
+		$pdf->Cell(41,3, "Factura No. $numeroDian",0,1,'C',false);
+		$pdf->setX(2);
+		$pdf->SetFont('Arial','',4);
+		$venta = $this->getVenta();
+		$idVenta = $venta->getIdVenta();
+		$tipoVenta = TipoVenta::obtenerTipoVenta($idVenta);
+		$cliente = $tipoVenta->getCliente();
+		$pdf->Cell(41,2,"Fecha: ".$this->getFecha(),0,1,'L',false);
+		$pdf->setX(2);
+		$pdf->Cell(41,2,"Vendedor: ".$tipoVenta->getEmpleado()->getNombre(),0,1,'L',false);
+		$pdf->setX(2);
+		$pdf->Cell(41,2,"Cliente: ".$cliente->getNombre(),0,1,'L',false);
+		$pdf->setX(2);
+		$pdf->Cell(41,2,"Nit / C.C.: ".$cliente->getNumeroDeIdentificacion(),0,1,'L',false);
+		$pdf->setX(2);
+		$pdf->Cell(41,2,"Direccion: ".$cliente->getDireccion(),0,1,'L',false);
+		$pdf->setX(2);
+		$pdf->Cell(41,3,'-------------------------------------------------------------------------------------',0,1,"C",false);
+		$pdf->setX(2);
+		$pdf->SetFont('Arial','',3);
+		$pdf->Cell(6,4, "CODIGO",1,0,'L',false);
+		$pdf->MultiCell(9, 2, "NOMBRE PRODUCTO",1,'C', false);
+		$pdf->ln(-6);
+		$pdf->setX(17);
+		$pdf->Cell(6.8,2, "REFERENCIA",1,0,'J',false);
+		$pdf->Cell(6.8,2, "CANT",1,0,'J',false);
+		$pdf->Cell(6.8,2, "VR UNITARIO",1,0,'J',false);
+		$pdf->Cell(6.8,2, "VR TOTAL",1,0,'J',false);
+		$total =0;
+		$off = $textypos+6;
+		$producto = array(
+			"q"=>1,
+			"name"=>"Computadora Lenovo i5",
+			"price"=>100
+		);
+		$productos = array($producto, $producto, $producto, $producto, $producto );
+		foreach($productos as $pro){
+			$pdf->setX(2);
+			$pdf->Cell(5,$off,$pro["q"]);
+			$pdf->setX(6);
+			$pdf->Cell(35,$off,  strtoupper(substr($pro["name"], 0,12)) );
+			$pdf->setX(20);
+			$pdf->Cell(11,$off,  "$".number_format($pro["price"],2,".",",") ,0,0,"R");
+			$pdf->setX(32);
+			$pdf->Cell(11,$off,  "$ ".number_format($pro["q"]*$pro["price"],2,".",",") ,0,0,"R");
+			$total += $pro["q"]*$pro["price"];
+			$off+=6;
+		}
+		$textypos=$off+6;
+		$pdf->setX(2);
+		$pdf->Cell(5,$textypos,"TOTAL: " );
+		$pdf->setX(38);
+		$pdf->Cell(5,$textypos,"$ ".number_format($total,2,".",","),0,0,"R");
+		$pdf->setX(2);
+		$pdf->Cell(5,$textypos+6,'GRACIAS POR TU COMPRA ');
+		$pdf->output();
+	}
 
 
 
@@ -341,4 +462,4 @@ class Factura {
 
 
 
- ?>
+?>
