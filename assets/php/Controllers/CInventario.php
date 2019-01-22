@@ -102,6 +102,21 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 			echo ERROR;
 		}
 
+	}else if(!strcmp($method,"eliminarProductoxcompra")){
+		$idProductoxcompra=$_POST['idProductoxcompra'];
+		$productoxcompra=ProductoXCompra::obtenerProductoXCompra($idProductoxcompra);
+		if($productoxcompra!=false){
+			try {
+				$productoxcompra->eliminarProductoxCompra();
+				echo SUCCESS;
+			} catch (Exception $e) {
+				echo ERROR;
+			}
+		}else{
+			echo NOT_FOUND;
+		}
+	}else if(!strcmp($method,"obtenerIva")){
+		echo IVA;
 	}
 }
 

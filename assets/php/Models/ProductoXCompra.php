@@ -48,7 +48,7 @@
 			return $this->idProductoxcompra;
 		}
 		public function setIdProductoxCompra($idProductoxcompra){
-			$this->idProductoxcompra;
+			$this->idProductoxcompra=$idProductoxcompra;
 		}
 
 
@@ -119,7 +119,7 @@
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			if($resultado!=false){
 				$productoxcompra = new ProductoXCompra();
-				$productoxcompra->setIdProductoxCompra($resultado['id_productoxcompra']);
+				$productoxcompra->setIdProductoxCompra($idProductoxcompra);
 				$productoxcompra->setPrecioUnitario($resultado['precio_unitario']);
 				$productoxcompra->setNumeroUnidades($resultado['unidades']);
 
@@ -143,7 +143,7 @@
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			if($resultado!=false){
 				$productoxcompra = new ProductoXCompra();
-				$productoxcompra->setIdProductoxCompra($resultado['id_productoxcompra']);
+				$productoxcompra->setIdProductoxCompra($idProductoxcompra);
 				$productoxcompra->setPrecioUnitario($resultado['precio_unitario']);
 				$productoxcompra->setNumeroUnidades($resultado['unidades']);
 

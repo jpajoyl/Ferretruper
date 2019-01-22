@@ -1,4 +1,16 @@
 $(document).ready(function() {
+
+  $(window).load(function(){
+      $.ajax({
+          url: '../assets/php/Controllers/CInventario.php?method=obtenerIva',
+          type: 'POST',
+          success:function(data){
+              if(data!=""){
+                window.iva=parseFloat(data);
+              }  
+          }
+      });
+    });
 	    
     $("#input-nombre-o-nit").autocomplete({
         source: function(request,response){
@@ -209,7 +221,6 @@ $(document).ready(function() {
                 type: 'POST',
                 data:{"idProducto":data.id_producto},
                 success:function(data){ 
-                  console.log(data);
                   if(data!=""){
                     if(data==1){
                       loadDataCompra();
@@ -242,15 +253,18 @@ $(document).ready(function() {
                       $("#table-productos-compra > tbody").html("");
                         $.map($.parseJSON(data).productos, function(producto) {
                             var tbody='<tr>'+
-                              '<td width="20%">'+producto.nombre+'</td>'+
-                              '<td width="15%"><input type="number" class="form-control" class="input-pu" placeholder="PU" autocomplete="off" required value="'+producto.precio_unitario+'"></td>'+
-                              '<td width="11%"><input type="number" class="form-control" class="input-uds" placeholder="Uds" autocomplete="off" required value="'+producto.unidades+'"></td>'+
-                              '<td width="11%"><input type="number" class="form-control" class="input-utilidad" placeholder="Utilidad" autocomplete="off" required value="30"></td>'+
-                              '<td width="15%"><input type="number" class="form-control" class="input-pv" placeholder="PV" autocomplete="off" required value="'+obtenerPrecioVenta(producto.precio_unitario,producto.unidades,30)+'"></td>'+
+                              '<td width="20%" class="nombre-producto-compra" id-productoxcompra="'+producto.id_productoxcompra+'">'+producto.nombre+'</td>'+
+                              '<td width="15%"><input type="number" class="form-control input-compra input-pu" id-productoxcompra="'+producto.id_productoxcompra+'" placeholder="PU" autocomplete="off" required value="'+producto.precio_unitario+'"></td>'+
+                              '<td width="11%"><input type="number" class="form-control input-compra input-uds" id-productoxcompra="'+producto.id_productoxcompra+'" placeholder="Uds" autocomplete="off" required value="'+producto.unidades+'"></td>'+
+                              '<td width="11%"><input type="number" class="form-control input-compra input-utilidad" id-productoxcompra="'+producto.id_productoxcompra+'" placeholder="Utilidad" autocomplete="off" required value="30"></td>'+
+                              '<input type="hidden" class="input-iva" id-productoxcompra="'+producto.id_productoxcompra+'">'+
+                              '<td width="15%"><input type="number" class="form-control input-pv" id-productoxcompra="'+producto.id_productoxcompra+'" placeholder="PV" autocomplete="off" required value="'+obtenerPrecioVenta(producto.precio_unitario,30,false)+'" '+obtenerPrecioVenta(producto.precio_unitario,30,true)+'></td>'+
                               '<td width="5%"><button class="btn btn-danger btn-xs eliminar-producto" id-productoxcompra="'+producto.id_productoxcompra+'"><i class="fa fa-trash"></i></button></td>'+
                               '</tr>';
                             $("#table-productos-compra > tbody").append(tbody);
                         });
+
+                        dinamizarCompra("#table-productos-compra > tbody");
                     }
                   }
                   
@@ -258,8 +272,86 @@ $(document).ready(function() {
         });
     }
 
-    function obtenerPrecioVenta(precioUnitario,unidades,utilidad) {
-      return (precioUnitario+precioUnitario*(utilidad/100));
+    function obtenerPrecioVenta(precioUnitario,utilidad,returnDisabled){
+      var precioVenta=precioUnitario*(1+(utilidad/100))+precioUnitario*(1+(utilidad/100))*window.iva;
+      if(!returnDisabled){
+        return (precioVenta);
+      }else{
+        if(precioVenta==0){
+          return "disabled";
+        }
+      }
+    }
+
+    function dinamizarCompra(tbody){
+      $(tbody).on("change keyup",".input-compra",function(){
+        calcularValorVenta($(this).attr("id-productoxcompra"));
+      });
+
+      $(tbody).on("change keyup",".input-pv",function(){
+        calcularValorUtilidad($(this).attr("id-productoxcompra"),parseInt($(this).val()));
+      });
+
+      $(tbody).on("click",".eliminar-producto",function(){
+        Swal({
+          title:'Eliminar producto',
+          text: "Seguro que desea eliminar el "+$(".nombre-producto-compra[id-productoxcompra="+$(this).attr("id-productoxcompra")+"]").html(),
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',  
+          confirmButtonText: 'Si, eliminar!',
+          cancelButtonText: "No"
+        }).then((result) => {
+            if (result.value) {
+                var data={
+                    "idProductoxcompra":$(this).attr("id-productoxcompra")
+                }
+                $.ajax({
+                    url: '../assets/php/Controllers/CInventario.php?method=eliminarProductoxcompra',
+                    type: 'POST',
+                    data: data,
+                    success:function(data){
+                        if(data!=""){
+                            if(data==1){
+                              loadDataCompra();
+                            }else if(data==0 || data==3){
+                              Swal(
+                                'Error!',
+                                'Ha ocurrido un error, recargue la pagina y vuelva a intentar',
+                                'error'
+                                );
+                            }
+                        }  
+                    }
+                });
+            }
+        });
+      });
+
+    }
+
+    function calcularValorVenta(idProductoxcompra){
+      var precioUnitario=parseInt($(".input-pu[id-productoxcompra="+idProductoxcompra+"]").val());
+      var unidades=parseInt($(".input-uds[id-productoxcompra="+idProductoxcompra+"]").val());
+      var utilidad=parseInt($(".input-utilidad[id-productoxcompra="+idProductoxcompra+"]").val());
+      var precioVenta=obtenerPrecioVenta(precioUnitario,utilidad,false);
+      $(".input-pv[id-productoxcompra="+idProductoxcompra+"]").val(precioVenta);
+      if(precioVenta>0 && unidades>0){
+        $(".input-pv[id-productoxcompra="+idProductoxcompra+"]").removeAttr("disabled");
+      }else{
+        $(".input-pv[id-productoxcompra="+idProductoxcompra+"]").attr("disabled");
+      }
+    }
+
+    function calcularValorUtilidad(idProductoxcompra,precioVenta) {
+      if(precioVenta>=0){
+        var precioUnitario=parseInt($(".input-pu[id-productoxcompra="+idProductoxcompra+"]").val());
+        var utilidad=((precioVenta-(1+window.iva)*precioUnitario)/((1+window.iva)*precioUnitario)*100).toFixed(2);
+        $(".input-utilidad[id-productoxcompra="+idProductoxcompra+"]").val(utilidad);
+      }else{
+        calcularValorVenta(idProductoxcompra);
+      }
     }
 
     function getDataEditProducto(tbody,table){
@@ -407,7 +499,8 @@ $(document).ready(function() {
         }   
         }).always(function(){
             var idProveedor=$("#id-proveedor").val();
-            loadDataProveedor(idProveedor);                        
+            loadDataProveedor(idProveedor);
+            loadDataCompra();                         
         });
 
     });

@@ -273,7 +273,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 													<th scope="col"><center>Uds</center></th>
 													<th scope="col"><center>Utilidad</center></th>
 													<th scope="col"><center>P Venta</center></th>
-													<th></th>
+													<th scope="col"><center>Iva: <span id="valor-iva"></span></center></th>
 												</tr>
 											</thead>
 											<tbody>
