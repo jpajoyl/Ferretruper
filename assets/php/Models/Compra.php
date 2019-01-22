@@ -214,11 +214,13 @@
 				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			}
 			foreach ($productosxcompra as $productoxcompra) {
+
 				$proveedor= $productoxcompra->getProveedor();
 				$producto=$productoxcompra->getProducto();
-				$id_proveedor=$proveedor->getIdUsuario();
-				$id_producto=$producto->getIdProducto();
-				$nuevaUtilidad= $arrayUtilidad[$id_producto];
+				$idProveedor=$proveedor->getIdUsuario();
+				$idProducto=$producto->getIdProducto();
+				$idProductoxCompra =  $productoxcompra->getIdProductoxCompra();
+				$nuevaUtilidad= $arrayUtilidad[$idProductoxCompra];
 
 				$precio=(($nuevaUtilidad/100) * $productosxcompra->getPrecioUnitario()) + $productosxcompra->getPrecioUnitario();
 
@@ -228,14 +230,14 @@
 					$precioFinal = $precio;
 				}
 
-				$inventario=Inventario::obtenerInventario($id_producto,$id_proveedor,true);
+				$inventario=Inventario::obtenerInventario($idProducto,$idProveedor,true);
 				if($inventario){
 					$unidades= $inventario->getUnidades() + $productosxcompra->getNumeroUnidades();
-					$statement = $conexion->prepare(" UPDATE `inventario` SET `precio_inventario`=:precioInventario ,`unidades`=:unidades,`valor_utilidad`=:valorUtilidad WHERE `productos_id_producto`=:id_producto and `usuarios_id_usuario` = :id_usuario ");
+					$statement = $conexion->prepare(" UPDATE `inventario` SET `precio_inventario`=:precioInventario ,`unidades`=:unidades,`valor_utilidad`=:valorUtilidad WHERE `productos_idProducto`=:idProducto and `usuarios_id_usuario` = :idUsuario ");
 					$inventario->setUnidades($unidades,$statement);
 					$inventario->setPrecioInventario($precioFinal,$statement);
-					$statement->bindValue(":id_producto", $id_producto);
-					$statement->bindValue(":id_usuario", $id_proveedor);
+					$statement->bindValue(":idProducto", $idProducto);
+					$statement->bindValue(":idUsuario", $idProveedor);
 					$statement->bindValue(":valorUtilidad", $nuevaUtilidad);
 					$statement->execute();
 					if(!$statement){
@@ -245,7 +247,7 @@
 					$conexion=null;
 				}else{
 					$unidades= $productosxcompra->getNumeroUnidades();
-					$inventario = new Inventario($precioFinal,$productosxcompra->getPrecioUnitario(),$unidades,0,$id_producto,$id_proveedor,$nuevaUtilidad);
+					$inventario = new Inventario($precioFinal,$productosxcompra->getPrecioUnitario(),$unidades,0,$idProducto,$idProveedor,$nuevaUtilidad);
 				}	
 
 				$facturaCompra = new FacturaCompra($this->getIdCompra());
@@ -260,7 +262,6 @@
 			$idCompra=$this->getIdCompra();
 			$conexion = Conexion::conectar();
 			$statement= $conexion->prepare("SELECT * FROM `productoxcompra` WHERE `COMPRAS_id_compra` = :idCompra"); 
-			//$statement = $conexion->prepare("SELECT * FROM productos INNER JOIN `productoxcompra` ON productoxcompra.productos_id_producto = productos.id_producto WHERE productoxcompra.COMPRAS_id_compra = :idCompra");
 			$statement->bindParam(':idCompra',$idCompra,PDO::PARAM_INT);
 			$statement->execute();
 			$conexion=null;
