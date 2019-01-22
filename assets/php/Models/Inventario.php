@@ -176,9 +176,9 @@ class Inventario {
 	{//true->>busca por idProducto     //false busca por idProveedor
 		$conexion = Conexion::conectar();
 		if ($modo) {
-			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE productos_id_producto = $numeroDeConsulta");
+			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE `productos_id_producto` = $numeroDeConsulta");
 		}else{
-			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE productos_id_producto = $numeroDeConsulta");
+			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE `usuarios_id_usuario` = $numeroDeConsulta");
 		}
 		$statement->execute();
 		$conexion=null;
@@ -189,9 +189,9 @@ class Inventario {
 	{//true->>busca por idProducto     //false busca por idProveedor
 		$conexion = Conexion::conectar();
 		if ($modo) {
-			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE productos_id_producto = $numeroDeConsulta AND `unidades` > 0 ORDER BY `inventario`.`precio_inventario` DESC");
+			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE `productos_id_producto` = $numeroDeConsulta AND `unidades` > 0 ORDER BY `inventario`.`precio_inventario` DESC");
 		}else{
-			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE productos_id_producto = $numeroDeConsulta AND `unidades` > 0 ORDER BY `inventario`.`precio_inventario` DESC");
+			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE `usuarios_id_usuario` = $numeroDeConsulta AND `unidades` > 0 ORDER BY `inventario`.`precio_inventario` DESC");
 		}
 		$statement->execute();
 		$conexion=null;

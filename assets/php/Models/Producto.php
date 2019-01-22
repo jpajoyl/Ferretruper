@@ -342,6 +342,19 @@
 		}
 
 		public function igualarPreciosInventario(){
+			$conexion = Conexion::conectar();
+			$statement=Inventario::obtenerInventarios($this->getIdProducto());
+			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+			$precioMayor=$this->obtenerPrecioMayorInventario();
+			while($resultado){
+				$inventario=Inventario::obtenerInventario($resultado['id_inventario']);
+				$result= $inventario->cambiarPrecio($precioMayor);
+				if ($result == ERROR){
+					return ERROR;
+				}
+				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+			}
+			return SUCCESS;
 
 		}
 
