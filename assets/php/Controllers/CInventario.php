@@ -7,6 +7,7 @@ if(!isset($include)){
 	include_once '../Models/Usuario.php';
 	include_once '../Models/Proveedor.php';
 	include_once '../Models/Producto.php';
+	include_once '../Models/FacturaCompra.php';
 	include_once '../Models/Compra.php';
 	include_once '../Models/ProductoXCompra.php';
 	$objectSession =new SesionEmpleado();
@@ -36,7 +37,7 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 					$fecha=getdate();
 					$fechaHoy=$fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'];
 					try {
-						$compra = new Compra($numeroFactura, $fechaHoy, 0, 0, $proveedor->getIdUsuario());
+						$compra = new Compra($numeroFactura, $fechaHoy, 0, 0, $idProveedor);
 						$data=array();
 						$data['response']=SUCCESS;
 						$data['nombre']=$proveedor->getNombre();
@@ -114,6 +115,26 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 			}
 		}else{
 			echo NOT_FOUND;
+		}
+	}else if(!strcmp($method,"abastecer")){
+		$arrayProductosxcompraUtilidad=$_POST['data'];
+		$arrayUtilidad=array();
+		foreach ($arrayProductosxcompraUtilidad as $productoxcompra) {
+			$arrayUtilidad[$productoxcompra["id_productoxcompra"]]=$productoxcompra["utilidad"];
+		}
+		if(isset($_COOKIE['compra'])){
+			$compra=unserialize($_COOKIE['compra']);
+			if($compra instanceof Compra){
+				try {
+					if($compra->abastecer($arrayUtilidad)==SUCCESS){
+						echo SUCCESS;
+					}else{
+						echo ERROR;
+					}
+				} catch (Exception $e) {
+					echo $e->getMessage();
+				}
+			}
 		}
 	}else if(!strcmp($method,"obtenerIva")){
 		echo IVA;

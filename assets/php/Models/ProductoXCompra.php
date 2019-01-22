@@ -143,7 +143,7 @@
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			if($resultado!=false){
 				$productoxcompra = new ProductoXCompra();
-				$productoxcompra->setIdProductoxCompra($idProductoxcompra);
+				$productoxcompra->setIdProductoxCompra($resultado['id_productoxcompra']);
 				$productoxcompra->setPrecioUnitario($resultado['precio_unitario']);
 				$productoxcompra->setNumeroUnidades($resultado['unidades']);
 

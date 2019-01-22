@@ -256,9 +256,9 @@ $(document).ready(function() {
                               '<td width="20%" class="nombre-producto-compra" id-productoxcompra="'+producto.id_productoxcompra+'">'+producto.nombre+'</td>'+
                               '<td width="15%"><input type="number" class="form-control input-compra input-pu" id-productoxcompra="'+producto.id_productoxcompra+'" placeholder="PU" autocomplete="off" required value="'+producto.precio_unitario+'"></td>'+
                               '<td width="11%"><input type="number" class="form-control input-compra input-uds" id-productoxcompra="'+producto.id_productoxcompra+'" placeholder="Uds" autocomplete="off" required value="'+producto.unidades+'"></td>'+
-                              '<td width="11%"><input type="number" class="form-control input-compra input-utilidad" id-productoxcompra="'+producto.id_productoxcompra+'" placeholder="Utilidad" autocomplete="off" required value="30"></td>'+
+                              '<td width="11%"><input type="text" class="form-control input-compra input-utilidad" id-productoxcompra="'+producto.id_productoxcompra+'" placeholder="Utilidad" autocomplete="off" required value="30"></td>'+
                               '<input type="hidden" class="input-iva" id-productoxcompra="'+producto.id_productoxcompra+'">'+
-                              '<td width="15%"><input type="number" class="form-control input-pv" id-productoxcompra="'+producto.id_productoxcompra+'" placeholder="PV" autocomplete="off" required value="'+obtenerPrecioVenta(producto.precio_unitario,30,false)+'" '+obtenerPrecioVenta(producto.precio_unitario,30,true)+'></td>'+
+                              '<td width="15%"><input type="text" class="form-control input-pv" id-productoxcompra="'+producto.id_productoxcompra+'" placeholder="PV" autocomplete="off" required value="'+obtenerPrecioVenta(producto.precio_unitario,30,false)+'" '+obtenerPrecioVenta(producto.precio_unitario,30,true)+'></td>'+
                               '<td width="5%"><button class="btn btn-danger btn-xs eliminar-producto" id-productoxcompra="'+producto.id_productoxcompra+'"><i class="fa fa-trash"></i></button></td>'+
                               '</tr>';
                             $("#table-productos-compra > tbody").append(tbody);
@@ -353,6 +353,30 @@ $(document).ready(function() {
         calcularValorVenta(idProductoxcompra);
       }
     }
+
+    $("#data-compra").submit(function(event){
+      event.preventDefault();
+      var data = [];
+      $("#table-productos-compra tbody tr").each(function(e){
+        $(this).children("td").each(function(e){
+          var input = $(this).find('.input-utilidad');
+          if (input[0]){
+            var producto = new Object();
+            producto.id_productoxcompra=input.attr("id-productoxcompra");
+            producto.utilidad=input.val();
+            data.push(producto);
+          }
+        });
+      });
+      $.ajax({
+          url: '../assets/php/Controllers/CInventario.php?method=abastecer',
+          type: 'POST',
+          data: {"data":data},
+          success:function(data){ 
+              console.log(data);
+          }   
+      });
+    });
 
     function getDataEditProducto(tbody,table){
         $(tbody).on("click", ".editar-producto", function(){
@@ -462,7 +486,6 @@ $(document).ready(function() {
             data: data,
             success:function(data){
               if(data!=""){
-                console.log(data);
                 if(data==1){
                     $("#modal-editar-producto").modal("hide");
                     setTimeout(function(){

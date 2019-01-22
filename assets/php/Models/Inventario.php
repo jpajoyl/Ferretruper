@@ -145,7 +145,7 @@ class Inventario {
 		//idProducto->True, idInventario->False
 		$conexion = Conexion::conectar();
 		if ($modo) {
-			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE  `PRODUCTOS_id_producto` = :numeroDeConsulta and `usuarios_id_usuario` = :id_usuario");
+			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE `productos_id_producto` = :numeroDeConsulta and `usuarios_id_usuario` = :id_usuario");
 			$statement->bindValue(":id_usuario", $id_usuario);
 		}else{
 			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE  `id_inventario` = :numeroDeConsulta");
@@ -157,7 +157,7 @@ class Inventario {
 		if($resultado!=false){
 			$inventario = new Inventario();
 			$inventario->setIdInventario($resultado['id_inventario']);
-			$inventario->setProducto($resultado['PRODUCTOS_id_producto']);
+			$inventario->setProducto($resultado['productos_id_producto']);
 			$inventario->setPrecioInventario($resultado['precio_inventario']);
 			$inventario->setUnidades($resultado['unidades']);
 			$inventario->setUnidadesDefectuosas($resultado['unidades_defectuosas']);
