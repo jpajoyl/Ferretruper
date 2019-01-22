@@ -231,7 +231,6 @@
 				$inventario=Inventario::obtenerInventario($id_producto,$id_proveedor,true);
 				if($inventario){
 					$unidades= $inventario->getUnidades() + $productosxcompra->getNumeroUnidades();
-					$conexion = Conexion::conectar();
 					$statement = $conexion->prepare(" UPDATE `inventario` SET `precio_inventario`=:precioInventario ,`unidades`=:unidades,`valor_utilidad`=:valorUtilidad WHERE `productos_id_producto`=:id_producto and `usuarios_id_usuario` = :id_usuario ");
 					$inventario->setUnidades($unidades,$statement);
 					$inventario->setPrecioInventario($precioFinal,$statement);
@@ -260,7 +259,8 @@
 		public function verProductosxCompra(){
 			$idCompra=$this->getIdCompra();
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("SELECT * FROM productos INNER JOIN `productoxcompra` ON productoxcompra.productos_id_producto = productos.id_producto WHERE productoxcompra.COMPRAS_id_compra = :idCompra");
+			$statement= $conexion->prepare("SELECT * FROM `productoxcompra` WHERE `COMPRAS_id_compra` = :idCompra"); 
+			//$statement = $conexion->prepare("SELECT * FROM productos INNER JOIN `productoxcompra` ON productoxcompra.productos_id_producto = productos.id_producto WHERE productoxcompra.COMPRAS_id_compra = :idCompra");
 			$statement->bindParam(':idCompra',$idCompra,PDO::PARAM_INT);
 			$statement->execute();
 			$conexion=null;
