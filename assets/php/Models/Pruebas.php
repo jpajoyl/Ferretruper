@@ -7,7 +7,7 @@ include 'Compra.php';
 include 'Empleado.php';
 include 'Proveedor.php';
 include 'Factura.php';
-
+include 'Abono.php';
 include 'FacturaCompra.php';
 include 'Venta.php';
 include 'TipoVenta.php';

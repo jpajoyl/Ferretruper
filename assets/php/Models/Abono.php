@@ -133,7 +133,7 @@
 	    public static function obtenerAbonos($idTipoVenta){
 	    	$conexion = Conexion::conectar();
 	    	$statement = $conexion->prepare("SELECT * FROM `abonos` WHERE TIPO_VENTA_id_tipo_venta = :idTipoVenta");
-	    	$statement->bindParam(":idTipoVenta";$idTipoVenta);
+	    	$statement->bindParam(":idTipoVenta",$idTipoVenta);
 	    	$statement->execute();
 	    	$conexion=null;
 	    	return $statement;

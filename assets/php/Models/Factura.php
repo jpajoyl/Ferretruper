@@ -294,12 +294,12 @@ class Factura {
 			$tieneIva = $item['tiene_iva'];
 
 			if ($tieneIva==1) {
-				$descuentoUnitarioSinIva=(($item['precio_venta']/1.19)*$descuento);
+				$descuentoUnitarioSinIva=(($item['precio_venta']/(1+IVA))*$descuento);
 				$descuentoTotalSinIva=$descuentoUnitarioSinIva*$item['unidades'];
 
-				$precioBrutoUnitario=($item['precio_venta']/1.19)-$descuentoUnitarioSinIva;
+				$precioBrutoUnitario=($item['precio_venta']/(1+IVA))-$descuentoUnitarioSinIva;
 				$totalBruto+=($precioBrutoUnitario)*$item['unidades'];
-				$totalFinal+=$precioBrutoUnitario *$item['unidades']* 1.19;
+				$totalFinal+=$precioBrutoUnitario *$item['unidades']* (1+IVA);
 				$totalDescuento+=$descuentoTotalSinIva;
 				$totalIva+=$precioBrutoUnitario*IVA*$item['unidades'];
 			}else{
@@ -320,31 +320,53 @@ class Factura {
 		$pdf->SetFont('Arial','',10);
 		$pdf->Cell(50,7, $tipoVenta->getTipoVenta(),0,0,'J',false);
 		$pdf->SetFont('Arial','B',10);
+		$pdf->setX(120);
 		$pdf->Cell(50,7, "Descuento: ",1,0,'J',false);
 		$pdf->SetFont('Arial','',10);
 		$pdf->Cell(30,7,number_format($totalDescuento,2),1,1,'R',false);
-		$pdf->Cell(110,7,"",0,0,'J',false);
+		$bool=false;
+		if ($tipoVenta->getTipoVenta()=="Credito") {
+			$plazo=$tipoVenta->getPlazo();
+			$statmentAbonos = Abono::obtenerAbonos($tipoVenta->getIdTipoVenta());
+			$arrayAbonos=array();
+			while ($abono = $statmentAbonos->fetch(PDO::FETCH_ASSOC)) {
+				$pdf->Cell(60,5,"Cuota:        ".$abono['fecha']."        $".number_format($abono['valor']),0,1,'J',false);
+			}
+		}
+		
+
+
+		// $pdf->MultiCell(110,4,"NIT: 900 307 086 - 7"."\n"."Carrera 51 # 40-74"."\n"."TEL:(4) 2327201"."\n".utf8_decode("Medellín - Colombia")."\n"."ferretrupersas@hotmail.com",0,"C",false);
+		$pdf->ln(-20);
+		
+		$pdf->setY(219);
+		$pdf->setX(120);
+		// $pdf->Cell(110,7,"",0,0,'J',false);
 		$pdf->SetFont('Arial','B',10);
+
 		$pdf->Cell(50,7, "Total Bruto: ",1,0,'J',false);
 		$pdf->SetFont('Arial','',10);
 		$pdf->Cell(30,7,number_format($totalBruto,2),1,1,'R',false);
-		$pdf->Cell(110,7,"",0,0,'J',false);
+		// $pdf->Cell(110,7,"",0,0,'J',false);
 		$pdf->SetFont('Arial','B',10);
+		$pdf->setX(120);
 		$pdf->Cell(50,7, "Iva: ",1,0,'J',false);
 		$pdf->SetFont('Arial','',10);
 		$pdf->Cell(30,7,number_format($totalIva,2),1,1,'R',false);
-		$pdf->Cell(110,7,"",0,0,'J',false);
+		// $pdf->Cell(110,7,"",0,0,'J',false);
 		$pdf->SetFont('Arial','B',10);
 		$retefuente=$venta->getRetefuente();
 		if ($retefuente==NULL) {
 			$retefuente=0;
 		}
+		$pdf->setX(120);
 		$pdf->Cell(50,7, "Retefuente ".$retefuente."% : ",1,0,'J',false);
 		$pdf->SetFont('Arial','',10);
 		$totalRetefuente = $totalBruto*($retefuente/100);
 		$pdf->Cell(30,7,number_format($totalRetefuente,2),1,1,'R',false);
-		$pdf->Cell(110,7,"",0,0,'J',false);
+		// $pdf->Cell(110,7,"",0,0,'J',false);
 		$pdf->SetFont('Arial','B',10);
+		$pdf->setX(120);
 		$pdf->Cell(50,7, "Total: ",1,0,'J',false);
 		$pdf->SetFont('Arial','',10);
 		$pdf->Cell(30,7,number_format($totalFinal-$totalRetefuente,2),1,1,'R',false);
@@ -354,9 +376,6 @@ class Factura {
 		$pdf->line(200,256,10,256);
 		$pdf->SetFont('Arial','',9);
 		$pdf->MultiCell(190,6, utf8_decode($this->getResolucion()),0,"J",false);
-
-
-
 
 		$pdf->Output('I',$archivo_de_salida,true);
 		header("Content-type:application/pdf");
@@ -370,6 +389,7 @@ class Factura {
 
 		//Eliminación del archivo en el servidor
 		unlink($archivo);
+		mkdir('hola');
 	}
 	public function imprimirFacturaPOS()
 	{
