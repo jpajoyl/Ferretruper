@@ -1,5 +1,6 @@
 <?php 
 
+
 	/**
 	 * 
 	 */
@@ -213,6 +214,7 @@
 				$productosxcompra[]= $productoxcompra;
 				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			}
+			$totalCompra=0;
 			foreach ($productosxcompra as $productoxcompra) {
 				$proveedor=$this->getProveedor();
 				$producto=$productoxcompra->getProducto();
@@ -229,6 +231,7 @@
 					$precioFinal = $precio;
 				}
 
+
 				$inventario=Inventario::obtenerInventario($idProducto,$idProveedor,true);
 				if($inventario){
 					$unidades= $inventario->getUnidades() + $productoxcompra->getNumeroUnidades();
@@ -243,18 +246,26 @@
 						throw new Exception("Error Processing Request", 1);
 						return ERROR;
 					}
-					$conexion=null;
 				}else{
-					$unidades= $productosxcompra->getNumeroUnidades();
-					$inventario = new Inventario($precioFinal,$productosxcompra->getPrecioUnitario(),$unidades,0,$idProducto,$idProveedor,$nuevaUtilidad);
-				}	
+					$unidades= $productoxcompra->getNumeroUnidades();
+					$inventario = new Inventario($precioFinal,$productoxcompra->getPrecioUnitario(),$unidades,0,$idProducto,$idProveedor,$nuevaUtilidad);
+				}
 
-				$facturaCompra = new FacturaCompra($this->getIdCompra());
-				$conexion = null;
-				$statement=null;
-				return SUCCESS;
+				$totalCompra+=($precioFinal*$unidades);
+				echo $totalCompra . "<br>";
+			}	
 
-			}
+			$facturaCompra = new FacturaCompra($this->getIdCompra());
+
+			$statement = $conexion->prepare(" UPDATE `compras` SET `total_compra`=:totalCompra WHERE `id_compra` = :idCompra ");
+			$this->setTotalCompra($totalCompra,$statement);
+			$statement->bindValue(":idCompra", $this->getIdCompra());
+			$statement->execute();
+			$statement = null;
+			$conexion = null;
+
+			return SUCCESS;
+
 		}
 
 		public function verProductosxCompra(){

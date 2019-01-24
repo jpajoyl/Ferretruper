@@ -23,7 +23,7 @@ class FacturaCompra {
 		$statement = $conexion->prepare("INSERT INTO `factura_compra` (`idfactura_compra`, `compras_id_compra`, `comprobantes_egreso_id_comprobante_egreso`) VALUES (NULL, :compra, NULL)");
 
 		$this->setCompra($compra,$statement);
-		$this->setComprobanteEgreso($comprobanteEgreso,$statement);
+
 		$statement->execute();
 		if(!$statement){
 			throw new Exception("Error Processing Request", 1);

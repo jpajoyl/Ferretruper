@@ -9,7 +9,7 @@ class Inventario {
 	private $precioInventario;
 	private $unidades;
 	private $unidadesDefectuosas;
-	private $valorUtilitad;
+	private $valorUtilidad;
 	private $proveedor;
 	private $precioCompra;
 
@@ -28,8 +28,8 @@ class Inventario {
 		$this->setPrecioInventario($precioInventario,$statement);
 		$this->setUnidades($unidades,$statement);
 		$this->setUnidadesDefectuosas($unidadesDefectuosas,$statement);
-		$this->setProducto($producto,$statement);
-		$this->setProveedor($proveedor,$statement);
+		$this->setProducto($id_producto,$statement);
+		$this->setProveedor($id_proveedor,$statement);
 		$this->setValorUtilidad($valorUtilidad,$statement);
 		$this->setPrecioCompra($precioCompra,$statement);
 		$statement->execute();
@@ -129,14 +129,14 @@ class Inventario {
 	}
 
 	public function getValorUtilidad(){
-		return $this->valorUtilitad;
+		return $this->valorUtilidad;
 	}
 
-	public function setValorUtilidad($valorUtilitad, $statement=NULL){
+	public function setValorUtilidad($valorUtilidad, $statement=NULL){
 		if($statement!=NULL){
-			$statement->bindParam(':valorUtilitad',$valorUtilitad,PDO::PARAM_INT);
+			$statement->bindParam(':valorUtilidad',$valorUtilidad,PDO::PARAM_INT);
 		}
-		$this->valorUtilitad = $valorUtilitad;
+		$this->valorUtilidad = $valorUtilidad;
 
 	}
 
