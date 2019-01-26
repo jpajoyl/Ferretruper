@@ -41,6 +41,9 @@
 								<li><a href="#"  id="añadir-cliente" data-target="#añadirCliente" data-toggle="modal">Añadir cliente</a></li>
                             </ul>
                     </li>
+                    <li class="submenu">
+                        <a <?php if(!strcmp(basename($_SERVER['PHP_SELF']),"comprobantesEgreso.php")){?> class="active" <?php } ?> href="comprobantesEgreso.php"><i class="fa fa-fw fa-user-plus"></i><span> Comprobantes de egreso </span> </a>
+                    </li>
 					
             </ul>
 
