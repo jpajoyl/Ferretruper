@@ -98,20 +98,39 @@ class FacturaCompra {
 	}
 
 	public function asociarComprobanteEgreso($idComprobanteEgreso){
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("UPDATE `factura_compra` SET `comprobantes_egreso_id_comprobante_egreso`=:idComprobanteEgreso WHERE `idfactura_compra` = :idFacturaCompra");
+			$idFacturaCompra= $this->getIdFacturaCompra();
+			$this->setComprobanteEgreso($idComprobanteEgreso,$statement);
+			$statement->bindParam(':idFacturaCompra',$idFacturaCompra,PDO::PARAM_INT);
+			$statement->execute();
+			$conexion=null;
+			if ($statement){
+				return SUCCESS;
+			}else{
+				return ERROR;
+			}
+
+		}
+	public static function obtenerFacturaCompraPorCompra ($idCompra){
 		$conexion = Conexion::conectar();
-		$statement = $conexion->prepare("UPDATE `factura_compra` SET `comprobantes_egreso_id_comprobante_egreso`=:idComprobanteEgreso WHERE `idfactura_compra` = :idFacturaCompra");
-		$idFacturaCompra= $this->getIdFacturaCompra();
-		$this->setComprobanteEgreso($idComprobanteEgreso,$statement);
-		$statement->bindParam(':idFacturaCompra',$idFacturaCompra,PDO::PARAM_INT);
+		$statement = $conexion->prepare("SELECT * FROM `factura_compra` WHERE `compras_id_compra` = :idCompra");
+		$statement->bindParam(':idCompra',$idCompra,PDO::PARAM_INT);
 		$statement->execute();
-		$conexion=null;
-		if ($statement){
-			return SUCCESS;
+		$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+		if($resultado){
+			$facturaCompra = new FacturaCompra();
+			$facturaCompra->setIdFacturaCompra($resutado['idfactura_compra']);
+			$facturaCompra->setCompra($resutado['compras_id_compra']);
+			$facturaCompra->setComprobanteEgreso($resultado['comprobantes_egreso_id_comprobante_egreso']);
+			$conexion=null;
+			$statement=null;
+			return $facturaCompra;
 		}else{
 			return ERROR;
 		}
-
-		}
+		
+	}
 }
 
 
