@@ -112,7 +112,7 @@ $(document).ready(function() {
                                                 }
                                             });
                                         },200);
-                                    }else{
+                                    }else if(data.response==1){
                                       $("#alert-informacion").fadeOut(100);
                                       $("#card-productos-proveedor").fadeIn(100);
                                       $("#card-productos-compra").fadeIn(100);
@@ -120,6 +120,12 @@ $(document).ready(function() {
                                       loadDataCompra();
                                       $(".nombre-proveedor").html(data.nombre);
                                       $("#input-id-proveedor").val(idProveedor);
+                                    }else if(data.response==0){
+                                      Swal(
+                                      'Error!',
+                                      'Parece que esta factura ya la habias finalizado. No podemos continuar',
+                                      'error'
+                                      );
                                     }
                                 }else{
                                     Swal(
@@ -404,8 +410,28 @@ $(document).ready(function() {
                   url: '../assets/php/Controllers/CInventario.php?method=abastecer',
                   type: 'POST',
                   data: {"data":data},
-                  success:function(data){ 
-                      console.log(data);
+                  success:function(data){
+                      if(data!=""){
+                        if(data==1){
+                          Swal({
+                            title: 'Satisfactorio!',
+                            text: "Se ha abastecido el inventario exitoxamente",
+                            type: 'success',
+                            confirmButtonColor: '#088A08',
+                            confirmButtonText: 'Terminar'
+                          }).then((result) => {
+                            if (result.value) {
+                              location.reload(true);
+                            }
+                          })
+                        }else if(data==0){
+                          Swal(
+                            'Error!',
+                            'Ha ocurrido un error, recargue la pagina y vuelva a intentar',
+                            'error'
+                            );
+                        }
+                      }
                   }   
               });
           }
@@ -477,7 +503,6 @@ $(document).ready(function() {
                           'error'
                           );
                         document.getElementById("form-añadirProducto").reset();
-                        loadDataCompra();  
                     },500);
                 }else if(data==2){
                     setTimeout(function(){

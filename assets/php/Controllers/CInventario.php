@@ -48,13 +48,16 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 					} catch (Exception $e) {
 						echo ERROR;
 					}
-				}else{
+				}else if($consultaCompra->getActiva()==1){
 					$data=array();
 					$data['response']=ALREADY_EXIST;
 					$data['nombre']=$proveedor->getNombre();
 					$data['id_compra']=$consultaCompra->getIdCompra();
 					$serializeCompra=serialize($consultaCompra);
 					setcookie("compra", $serializeCompra,time() + 3600, "/");
+					echo json_encode($data);
+				}else{
+					$data['response']=ERROR;
 					echo json_encode($data);
 				}
 			} catch (Exception $e) {

@@ -138,12 +138,12 @@ include_once '../assets/php/Controllers/GetSession.php';
 														<input type="hidden" id="input-id-proveedor"required>
 														<div class="form-row">
 															<div class="form-group col-md-6">
-																<label>Identificacion <span class="text-danger">*</span></label>
-																<input type="text" class="form-control" id="input-id-producto" placeholder="Identificacion" autocomplete="off" required>
-															</div>
-															<div class="form-group col-md-6">
 																<label>Nombre<span class="text-danger">*</span></label>
 																<input type="text" class="form-control" id="input-nombre-producto" placeholder="Nombre del producto" required>
+															</div>
+															<div class="form-group col-md-6">
+																<label>Identificacion <span class="text-danger">*</span></label>
+																<input type="text" class="form-control" id="input-id-producto" placeholder="Identificacion" autocomplete="off" required>
 															</div>
 														</div>
 														<div class="form-group">

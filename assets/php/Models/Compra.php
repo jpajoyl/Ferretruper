@@ -276,7 +276,7 @@
 				}
 
 				$totalCompra+=($precioVenta*$unidades);
-				echo $totalCompra . "<br>";
+
 			}	
 
 			$facturaCompra = new FacturaCompra($this->getIdCompra());
@@ -285,10 +285,13 @@
 			$this->setTotalCompra($totalCompra,$statement);
 			$statement->bindValue(":idCompra", $this->getIdCompra());
 			$statement->execute();
-			$statement = null;
 			$conexion = null;
 			if ($statement){
-				$this->desactivarCompra();
+				try {
+					$this->desactivarCompra();
+				} catch (Exception $e) {
+					return ERROR;
+				}
 			}else{
 				return ERROR;
 			}
