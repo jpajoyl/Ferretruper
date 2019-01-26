@@ -1,6 +1,5 @@
 <?php 
 
-
 	include_once '../Conexion.php';
 	include_once 'SesionEmpleado.php';
 	include_once "../Models/Usuario.php";

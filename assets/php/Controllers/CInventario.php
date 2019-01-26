@@ -120,7 +120,10 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		$arrayProductosxcompraUtilidad=$_POST['data'];
 		$arrayUtilidad=array();
 		foreach ($arrayProductosxcompraUtilidad as $productoxcompra) {
-			$arrayUtilidad[$productoxcompra["id_productoxcompra"]]=$productoxcompra["utilidad"];
+			$arrayUtilidad[$productoxcompra["id_productoxcompra"]]['precioUnitario']=$productoxcompra["precioUnitario"];
+			$arrayUtilidad[$productoxcompra["id_productoxcompra"]]['unidades']=$productoxcompra["unidades"];
+			$arrayUtilidad[$productoxcompra["id_productoxcompra"]]['utilidad']=$productoxcompra["utilidad"];
+			$arrayUtilidad[$productoxcompra["id_productoxcompra"]]['precioVenta']=$productoxcompra["precioVenta"];
 		}
 		if(isset($_COOKIE['compra'])){
 			$compra=unserialize($_COOKIE['compra']);

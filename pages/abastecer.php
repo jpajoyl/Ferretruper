@@ -35,6 +35,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 	<link href="../assets/css/customCSS/dataTableCollapse.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="../assets/css/dataTables.bootstrap4.min.css"/>
 	<link href="../assets/css/style.css" rel="stylesheet" type="text/css" />
+	<link href="../assets/css/customCSS/abastecer.css" rel="stylesheet" type="text/css" />
 	<!-- BEGIN CSS for this page -->
 
 	<!-- END CSS for this page -->
@@ -101,7 +102,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 								
 							</div><!-- end card-->													
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xl-5">					
+						<div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-xl-5" id="card-productos-proveedor">					
 							<div class="card mb-3">
 								<div class="card-header">
 									<h3><i class="fa fa-table"></i> Productos del proveedor <span class="nombre-proveedor"></span></h3>
@@ -257,7 +258,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 								</div>														
 							</div><!-- end card-->					
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 col-xl-7">						
+						<div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 col-xl-7" id="card-productos-compra">						
 							<div class="card mb-3">
 								<div class="card-header">
 									<h3><i class="fa fa-table"></i> Productos a abastecer</h3>
@@ -273,7 +274,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 													<th scope="col"><center>Uds</center></th>
 													<th scope="col"><center>Utilidad</center></th>
 													<th scope="col"><center>P Venta</center></th>
-													<th scope="col"><center>Iva: <span id="valor-iva"></span></center></th>
+													<th scope="col"><center></center></th>
 												</tr>
 											</thead>
 											<tbody>
@@ -284,7 +285,10 @@ include_once '../assets/php/Controllers/GetSession.php';
 									</form>
 								</div>							
 							</div><!-- end card-->					
-
+						</div>
+						<div class="alert alert-success" role="alert" id="alert-informacion">
+								  <h4 class="alert-heading">Ingresa los datos de la factura</h4>
+								  <p>Ingresa los datos de la factura del proveedor, luego selecciona los productos que deseas abastecer. En caso de que el producto sea nuevo puedes agregarlo con su respectiva información, ademas de editar la información de los que tiene. Aparecera en la parte derecha donde puedes seleccionar el precio de compra, las unidades compradas, el porcentaje de utilidad o modificar su precio de venta.</p>
 						</div>
 						<!-- MODALS -->
 						<?php include 'includes/modalAddCliente.php';?>
