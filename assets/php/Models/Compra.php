@@ -204,13 +204,25 @@
 			}
 
 		}
-		public function abastecer($arrayUtilidad){
+		public function abastecer($array){
 			$productosxcompra=array();
 			$conexion = Conexion::conectar();
 			$statement= $this->verProductosxCompra();
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			while($resultado){
-				$productoxcompra= ProductoXCompra::obtenerProductoXCompra($resultado["id_productoxcompra"]);
+				$idProductoxCompra= $resultado["id_productoxcompra"];
+				$nuevaUnidades= $array[$idProductoxCompra]["unidades"];
+				$precioUnitario = $array[$idProductoxCompra]["precioUnitario"];
+				
+				$statement2=$conexion->prepare("UPDATE `productoxcompra` SET `precio_unitario`=:precioUnitario,`unidades`=:nuevaUnidades WHERE `id_productoxcompra` = :idProductoxCompra");
+
+				$statement2->bindValue(":precioUnitario", $precioUnitario);
+				$statement2->bindValue(":nuevaUnidades", $nuevaUnidades);
+				$statement2->bindValue(":idProductoxCompra", $idProductoxCompra);
+				$statement2->execute();
+				$statement2 = null;
+
+				$productoxcompra= ProductoXCompra::obtenerProductoXCompra($idProductoxCompra);
 				$productosxcompra[]= $productoxcompra;
 				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			}
@@ -221,15 +233,9 @@
 				$idProveedor=$proveedor->getIdUsuario();
 				$idProducto=$producto->getIdProducto();
 				$idProductoxCompra =  $productoxcompra->getIdProductoxCompra();
-				$nuevaUtilidad= $arrayUtilidad[$idProductoxCompra];
-
-				$precio=(($nuevaUtilidad/100) * $productoxcompra->getPrecioUnitario()) + $productoxcompra->getPrecioUnitario();
-
-				if($producto->getTieneIva()){
-					$precioFinal= ($precio * IVA)+$precio;
-				}else{
-					$precioFinal = $precio;
-				}
+				
+				$nuevaUtilidad= $array[$idProductoxCompra]["utilidad"];
+				$precioVenta = $array[$idProductoxCompra]["precioVenta"]; 
 
 
 				$inventario=Inventario::obtenerInventario($idProducto,$idProveedor,true);
@@ -237,7 +243,7 @@
 					$unidades= $inventario->getUnidades() + $productoxcompra->getNumeroUnidades();
 					$statement = $conexion->prepare(" UPDATE `inventario` SET `precio_inventario`=:precioInventario ,`unidades`=:unidades,`valor_utilidad`=:valorUtilidad WHERE `productos_id_producto`=:idProducto and `usuarios_id_usuario` = :idUsuario ");
 					$inventario->setUnidades($unidades,$statement);
-					$inventario->setPrecioInventario($precioFinal,$statement);
+					$inventario->setPrecioInventario($precioVenta,$statement);
 					$statement->bindValue(":idProducto", $idProducto);
 					$statement->bindValue(":idUsuario", $idProveedor);
 					$statement->bindValue(":valorUtilidad", $nuevaUtilidad);
@@ -248,10 +254,10 @@
 					}
 				}else{
 					$unidades= $productoxcompra->getNumeroUnidades();
-					$inventario = new Inventario($precioFinal,$productoxcompra->getPrecioUnitario(),$unidades,0,$idProducto,$idProveedor,$nuevaUtilidad);
+					$inventario = new Inventario($precioVenta,$productoxcompra->getPrecioUnitario(),$unidades,0,$idProducto,$idProveedor,$nuevaUtilidad);
 				}
 
-				$totalCompra+=($precioFinal*$unidades);
+				$totalCompra+=($precioVenta*$unidades);
 				echo $totalCompra . "<br>";
 			}	
 
