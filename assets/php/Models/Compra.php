@@ -132,7 +132,7 @@
 		}
 
 
-		public function setActiva()
+		public function getActiva()
 		{
 			return $this->activa;
 		}
@@ -142,7 +142,7 @@
 			if($statement!=NULL){
 				$statement->bindParam(':activa',$activa,PDO::PARAM_INT);
 			}
-			$this->activa = Proveedor::obtenerProveedor($activa,false);
+			$this->activa = $activa;
 
 		}
 
