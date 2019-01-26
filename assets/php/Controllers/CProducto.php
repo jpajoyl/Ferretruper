@@ -28,7 +28,8 @@
 
 			$proveedor=Proveedor::obtenerProveedor($idProveedor,false);
 			if($proveedor!=false){
-				if(Producto::obtenerProducto($idProducto)==false){
+				$producto=Producto::obtenerProducto($idProducto);
+				if($producto==false){
 					try {
 						$producto = new Producto($idProducto, $nombre, $descripcion, $referenciaFabrica, $iva, $clasificacionTributaria, 1, $codigoDeBarras);
 						$productoxcompra = new ProductoXCompra($precioCompra, $numeroUnidades, $compra->getIdCompra(),$idProducto);
@@ -39,15 +40,30 @@
 						$statement=null;
 					}
 				}else{
-					if($proveedor->buscarProductoxproveedor($idProducto)!=false){
-						echo ALREADY_EXIST;
+					$inventariosProveedor=Inventario::obtenerInventarios($idProveedor,false);
+					if($inventariosProveedor->rowCount()>0){
+						$existencia=false;
+						while ($productoInventario = $inventariosProveedor->fetch(PDO::FETCH_ASSOC)) {
+							if($productoInventario['productos_id_producto']==$idProducto){
+								$existencia=true;
+								break;
+							}
+						}
+						if(!$existencia){
+							if($producto->getNombre()!=$nombre){
+								echo ERROR;
+							}else{
+								$producto->editarProducto($codigoDeBarras, $nombre, $descripcion, $referenciaFabrica, $iva, $clasificacionTributaria);
+								$productoxcompra = new ProductoXCompra($precioCompra, $numeroUnidades, $compra->getIdCompra(),$idProducto);
+								echo SUCCESS;
+							}
+
+						}else{
+							echo ALREADY_EXIST;
+						}
 					}else{
-						//VERIFICAR QUE SI SEA EL ID DEL PRODUCTO QUE QUIERE AGREGAR
-						$productoxproveedor=$proveedor->añadirInventarioxproveedor($idProducto);
-						echo SUCCESS;
-						//NO FUNCIONAAA!
+						echo ERROR;
 					}
-					
 				}
 			}else{
 				echo NOT_FOUND;

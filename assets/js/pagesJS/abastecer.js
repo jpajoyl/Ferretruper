@@ -455,7 +455,6 @@ $(document).ready(function() {
             success:function(data){ 
               if(data!=""){
                 if(data==1){
-                  console.log(data);
                     $("#añadirProducto").modal("hide");
                     setTimeout(function(){
                         Swal(
