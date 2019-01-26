@@ -113,10 +113,13 @@ $(document).ready(function() {
                                             });
                                         },200);
                                     }else{
-                                       loadDataProveedor(idProveedor);
-                                       loadDataCompra();
-                                       $(".nombre-proveedor").html(data.nombre);
-                                       $("#input-id-proveedor").val(idProveedor);
+                                      $("#alert-informacion").fadeOut(100);
+                                      $("#card-productos-proveedor").fadeIn(100);
+                                      $("#card-productos-compra").fadeIn(100);
+                                      loadDataProveedor(idProveedor);
+                                      loadDataCompra();
+                                      $(".nombre-proveedor").html(data.nombre);
+                                      $("#input-id-proveedor").val(idProveedor);
                                     }
                                 }else{
                                     Swal(
@@ -589,6 +592,10 @@ $(document).ready(function() {
             },100);      
         }
 
+    });
+
+    $("#añadir-producto").click(function(){
+      $("#input-id-producto").prop('disabled', false);
     });
 
     function buscarProductoAñadir(idProducto){
