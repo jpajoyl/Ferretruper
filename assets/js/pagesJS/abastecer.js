@@ -413,6 +413,9 @@ $(document).ready(function() {
                   success:function(data){
                       if(data!=""){
                         if(data==1){
+                          $("#card-productos-proveedor").fadeOut(100);
+                          $("#card-productos-compra").fadeOut(100);
+                          $("#alert-informacion").fadeIn(100); 
                           Swal({
                             title: 'Satisfactorio!',
                             text: "Se ha abastecido el inventario exitoxamente",
