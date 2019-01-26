@@ -13,7 +13,7 @@ include 'Venta.php';
 include 'TipoVenta.php';
 include '../Controllers/Response.php';
 $ce = Factura::obtenerFactura(1);
-$ce->imprimirFacturaCarta();
+$ce->imprimirFacturaPOS();
 // $r = FacturaCompra::facturaCompraPorComprobanteEgreso(3);
 
 /*if($r->rowCount()>0){
