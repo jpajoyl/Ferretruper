@@ -16,6 +16,7 @@
 		private $proveedor; //Objeto
 
 		private $productosxcompra; //Array
+		private $activa;
 
 
 		public function __construct(){
@@ -28,7 +29,7 @@
 
 		public function __construct0($numeroFactura, $fecha, $totalCompra, $descuento, $id_proveedor){
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("INSERT INTO `compras`(`id_compra`, `numero_factura`, `fecha_compra`, `total_compra`, `descuento_compra`, `USUARIOS_id_proveedor`) VALUES (null,:numeroFactura,:fecha,:totalCompra,:descuento,:id_proveedor)");
+			$statement = $conexion->prepare("INSERT INTO `compras`(`id_compra`, `numero_factura`, `fecha_compra`, `total_compra`, `descuento_compra`, `USUARIOS_id_proveedor`,`activa`) VALUES (null,:numeroFactura,:fecha,:totalCompra,:descuento,:id_proveedor,1)");
 
 			$this->setNumeroFactura($numeroFactura,$statement);
 			$this->setFecha($fecha,$statement);
@@ -130,6 +131,22 @@
 
 		}
 
+
+		public function setActiva()
+		{
+			return $this->activa;
+		}
+		
+		public function setActiva($activa, $statement=NULL)
+		{
+			if($statement!=NULL){
+				$statement->bindParam(':activa',$activa,PDO::PARAM_INT);
+			}
+			$this->activa = Proveedor::obtenerProveedor($activa,false);
+
+		}
+
+
 		public function pagarCompra(){
 			$fecha=getDate();
 			$comprobante= new comprobanteEgreso(($fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday']),$this);
@@ -153,7 +170,7 @@
 				$compra->setTotalCompra($resultado['total_compra']);
 				$compra->setDescuento($resultado['descuento_compra']);
 				$compra->setProveedor($resultado['USUARIOS_id_proveedor']);
-
+				$compra->setActiva($resultado['activa']);
 				$conexion=null;
 				$statement=null;
 				return $compra;
@@ -177,6 +194,7 @@
 				$compra->setTotalCompra($resultado['total_compra']);
 				$compra->setDescuento($resultado['descuento_compra']);
 				$compra->setProveedor($resultado['USUARIOS_id_proveedor']);
+				$compra->setActiva($resultado['activa']);
 
 				$conexion=null;
 				$statement=null;
@@ -269,7 +287,11 @@
 			$statement->execute();
 			$statement = null;
 			$conexion = null;
-
+			if ($statement){
+				$this->desactivarCompra();
+			}else{
+				return ERROR;
+			}
 			return SUCCESS;
 
 		}
@@ -282,6 +304,20 @@
 			$statement->execute();
 			$conexion=null;
 			return $statement;
+		}
+
+		public function desactivarCompra(){
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare(" UPDATE `compras` SET `activa`=:activa WHERE `id_compra` = :idCompra ");
+			$statement->bindValue(":idCompra", $this->getIdCompra());
+			$statement->bindValue(":activa", 0);
+			$statement->execute();
+			$conexion = null;
+			if ($statement){
+				return SUCCESS;
+			}else{
+				return ERROR;
+			}
 		}
 
 	}
