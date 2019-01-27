@@ -239,17 +239,17 @@
 					$resultado=$statement->fetch(PDO::FETCH_ASSOC);
 					}
 
-				$productoxventa = new ProductoXVenta($producto->getPrecioMayorInventario(), $numeroUnidades, $producto->getIdProducto(), $this->getIdVenta());
-				$total=$this->getTotal()+($numeroUnidades*$producto->getPrecioMayorInventario());
-				$this->setTotal($total);
-				$subtotalIva=$total;
-				if($producto->tieneIva()){
-					$subtotalIva = $total/(1+IVA);
-				}
-				$this->setSubtotal($this->getSubtotal()+$subtotalIva);
-				$conexion = null;
-				$productoxventa->setArrayDistribucion($arrayDistribucion);
-				return $productoxventa;	 //GUARDAR ESTO EN UN ARRAY;
+					$productoxventa = new ProductoXVenta($producto->getPrecioMayorInventario(), $numeroUnidades, $producto->getIdProducto(), $this->getIdVenta());
+					$total=$this->getTotal()+($numeroUnidades*$producto->getPrecioMayorInventario());
+					$this->setTotal($total);
+					$subtotalIva=$total;
+					if($producto->tieneIva()){
+						$subtotalIva = $total/(1+IVA);
+					}
+					$this->setSubtotal($this->getSubtotal()+$subtotalIva);
+					$conexion = null;
+					$productoxventa->setArrayDistribucion($arrayDistribucion);
+					return $productoxventa;	 //GUARDAR ESTO EN UN ARRAY;
 				}else{
 					return ERROR;
 				}
