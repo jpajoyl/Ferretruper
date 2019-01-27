@@ -19,12 +19,6 @@ $(document).ready(function() {
         $("#ver-papelera").fadeIn(0);
     });
 
-    function formatData (data) {
-       
-       contenido+=getDataTableInventario(data.id_producto)+'</tbody></table>';
-       return contenido;
-    }
-
 	function loadData(papelera){
         if(!papelera){
             window.table=$('#table-productos').DataTable({
