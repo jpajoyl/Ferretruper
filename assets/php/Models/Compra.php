@@ -277,6 +277,7 @@
 
 				$totalCompra+=($precioVenta*$unidades);
 				$producto->calcularUnidades();
+				$producto->obtenerPrecioMayorInventario();
 
 			}	
 
