@@ -237,7 +237,14 @@ $(document).ready(function() {
             tr.removeClass('shown');
         }
         else {
-            var contenido='<table id="table-inventarios-producto" class="table table-responsive-xl table-bordered">'+
+            $.ajax({
+                url: '../assets/php/Controllers/CInventario.php?method=verInventarios',
+                type: 'POST',
+                data: {"idProducto":row.data().id_producto},
+                success:function(data){
+                    if(data!=""){
+                        if(data!=3){
+                            var contenido='<table id="table-inventarios-producto" class="table table-responsive-xl table-bordered">'+
                             '<thead>'+
                                 '<tr>'+
                                     '<th scope="col">NIT</th>'+
@@ -248,13 +255,6 @@ $(document).ready(function() {
                                 '</tr>'+
                             '</thead>'+
                             '<tbody>';
-            $.ajax({
-                url: '../assets/php/Controllers/CInventario.php?method=verInventarios',
-                type: 'POST',
-                data: {"idProducto":row.data().id_producto},
-                success:function(data){
-                    if(data!=""){
-                        if(data!=3){
                             $.map($.parseJSON(data).inventarios, function(dataInventarios) {
                                 contenido+='<tr>'+
                                         '<td class="nit-proveedor-inventario">'+dataInventarios.numero_identificacion+'-'+dataInventarios.digito_de_verificacion+'</td>'+
@@ -264,11 +264,13 @@ $(document).ready(function() {
                                         '<td class="precio-venta-inventario">'+dataInventarios.precio_inventario+'</td>'+
                                         '</tr>';
                             });
+                            contenido+='</tbody></table>'
+                            row.child(contenido).show();
                         }else{
-                            contenido+="ERROR";
+                            var contenido='<div class="alert alert-danger" role="alert">Este producto no tiene ningun proveedor aun</div>';
+                            row.child(contenido).show();
                         }
-                        contenido+='</tbody></table>'
-                        row.child(contenido).show();
+                        
                     }  
                 }
             }).always(function(){
