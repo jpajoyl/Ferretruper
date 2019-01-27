@@ -21,14 +21,14 @@ $(document).ready(function() {
         window.table=$('#table-clientes').DataTable({
                 "ajax":{
                     "method":"POST",
-                    "url":"../assets/php/Controllers/CCliente.php?method=verClientes"
-                },
-                "dataSrc": function(dataReturn){
-                    if(dataReturn == 3){
-                        return [];
-                    }
-                    else {
-                        return dataReturn.data;
+                    "url":"../assets/php/Controllers/CCliente.php?method=verClientes",
+                    "dataSrc": function(dataReturn){
+                        if(dataReturn == 3){
+                            return [];
+                        }
+                        else {
+                            return dataReturn.data;
+                        }
                     }
                 },
                 "autoWidth": false,

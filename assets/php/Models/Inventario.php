@@ -176,14 +176,32 @@ class Inventario {
 	{//true->>busca por idProducto     //false busca por idProveedor
 		$conexion = Conexion::conectar();
 		if ($modo) {
-			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE `productos_id_producto` = $numeroDeConsulta");
+			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE `productos_id_producto` = :idProducto");
+			$statement->bindValue(":idProducto", $numeroDeConsulta);
 		}else{
-			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE `usuarios_id_usuario` = $numeroDeConsulta");
+			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE `usuarios_id_usuario` = :idProveedor");
+			$statement->bindValue(":idProveedor", $numeroDeConsulta);
 		}
 		$statement->execute();
 		$conexion=null;
 		return $statement;
 	}
+
+	public static function obtenerInventariosConProveedor($numeroDeConsulta, $modo=true)
+	{//true->>busca por idProducto     //false busca por idProveedor
+		$conexion = Conexion::conectar();
+		if ($modo) {
+			$statement = $conexion->prepare("SELECT * FROM `inventario` INNER JOIN `usuarios` ON inventario.usuarios_id_usuario = usuarios.id_usuario WHERE inventario.productos_id_producto = :idProducto");
+			$statement->bindValue(":idProducto", $numeroDeConsulta);
+		}else{
+			$statement = $conexion->prepare("SELECT * FROM `inventario` INNER JOIN `usuarios` ON inventario.usuarios_id_usuario = usuarios.id_usuario WHERE inventario.usuarios_id_usuario = :idProveedor");
+			$statement->bindValue(":idProveedor", $numeroDeConsulta);
+		}
+		$statement->execute();
+		$conexion=null;
+		return $statement;
+	}
+	//"
 
 		public static function obtenerInventariosParaVenta($numeroDeConsulta, $modo=true)
 	{//true->>busca por idProducto     //false busca por idProveedor

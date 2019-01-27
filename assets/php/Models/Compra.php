@@ -276,6 +276,7 @@
 				}
 
 				$totalCompra+=($precioVenta*$unidades);
+				$producto->calcularUnidades();
 
 			}	
 

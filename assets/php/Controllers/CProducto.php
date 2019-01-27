@@ -111,6 +111,19 @@
 			}else{
 				echo NOT_FOUND;
 			}
+		}else if(!strcmp($method,"reactivarProducto")){
+			$idProducto=$_POST['idProducto'];
+			$producto=Producto::obtenerProducto($idProducto,false,true);
+			if($producto!=false){
+				try {
+					$producto->desactivarProducto(false);
+					echo SUCCESS;
+				} catch (Exception $e) {
+					echo ERROR;
+				}
+			}else{
+				echo NOT_FOUND;
+			}
 		}else if(!strcmp($method,"buscarNombre")){
 			$nombre=$_POST['nombre'];
 			$productos=Producto::buscarPorNombre($nombre);
@@ -126,6 +139,38 @@
 			$producto=Producto::obtenerProducto($idProducto,true);
 			if($producto!=false){
 				echo json_encode($producto);
+			}
+		}else if(!strcmp($method,"verProductos")){
+			$listaProductos=Producto::verProductos();
+			if($listaProductos->rowCount()>0){
+				while ($producto = $listaProductos->fetch(PDO::FETCH_ASSOC)) {
+					$iva=$producto['tiene_iva'];
+					if($iva==1){
+						$producto['tiene_iva']="SI";
+					}else{
+						$producto['tiene_iva']="NO";
+					}
+					$array['productos'][]=$producto;
+				}
+				echo json_encode($array);
+			}else{
+				echo NOT_FOUND;
+			}
+		}else if(!strcmp($method,"verProductosDeshabilitados")){
+			$listaProductos=Producto::verProductos(false);
+			if($listaProductos->rowCount()>0){
+				while ($producto = $listaProductos->fetch(PDO::FETCH_ASSOC)) {
+					$iva=$producto['tiene_iva'];
+					if($iva==1){
+						$producto['tiene_iva']="SI";
+					}else{
+						$producto['tiene_iva']="NO";
+					}
+					$array['productos'][]=$producto;
+				}
+				echo json_encode($array);
+			}else{
+				echo NOT_FOUND;
 			}
 		}
 	}

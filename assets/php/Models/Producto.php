@@ -175,9 +175,13 @@
 		//metodos
 
 		//retorna un statement con todos los datos del inventario
-		public static function verProductos(){
+		public static function verProductos($modo=true){
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("SELECT * FROM `productos` and activa = 1");
+			if($modo){
+				$statement = $conexion->prepare("SELECT * FROM `productos` WHERE `activa` = 1");
+			}else{
+				$statement = $conexion->prepare("SELECT * FROM `productos` WHERE `activa` = 0");
+			}
 			$statement->execute();
 			$conexion=null;
 			return $statement;
@@ -189,10 +193,8 @@
 			$statement = Inventario::obtenerInventarios($this->getIdProducto());
 			$statement->execute();
 			if($statement->rowCount()>0){
-				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
-				while($resultado){
-					$unidadesTotalesContador+=$resultado['unidades'];
-					$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+				while($inventario = $statement->fetch(PDO::FETCH_ASSOC)){
+					$unidadesTotalesContador+=$inventario['unidades'];
 				}
 			}
 			$cambiarUnidades=$this->cambiarUnidadesTotales($unidadesTotalesContador);
@@ -260,9 +262,14 @@
 			}
 		}
 
-		public static function obtenerProducto($idProducto,$returnStatement=false){
+		public static function obtenerProducto($idProducto,$returnStatement=false,$deshabilitado=false){
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("SELECT * FROM `productos` WHERE  `id_producto` = :idProducto AND `activa` = 1");
+			if(!$deshabilitado){
+				$statement = $conexion->prepare("SELECT * FROM `productos` WHERE  `id_producto` = :idProducto AND `activa` = 1");
+			}else{
+				$statement = $conexion->prepare("SELECT * FROM `productos` WHERE  `id_producto` = :idProducto AND `activa` = 0");
+			}
+			
 			$statement->bindValue(":idProducto", $idProducto);
 			$statement->execute();
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
@@ -315,10 +322,14 @@
 
 		}
 
-		public function desactivarProducto(){
+		public function desactivarProducto($modo=true){
 			$conexion = Conexion::conectar();
 			$idProducto=$this->getIdProducto();
-			$statement = $conexion->prepare("UPDATE `productos` SET `activa` = '0' WHERE `productos`.`id_producto` = :idProducto");
+			if($modo){
+				$statement = $conexion->prepare("UPDATE `productos` SET `activa` = '0' WHERE `productos`.`id_producto` = :idProducto");
+			}else{
+				$statement = $conexion->prepare("UPDATE `productos` SET `activa` = '1' WHERE `productos`.`id_producto` = :idProducto");
+			}
 			$statement->bindValue(":idProducto", $idProducto);
 			$statement->execute();
 			if(!$statement){

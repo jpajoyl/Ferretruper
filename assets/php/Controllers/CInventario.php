@@ -16,11 +16,12 @@ if(!isset($include)){
 }
 include_once 'Response.php';	
 if($method!="" && $objectSession->getEmpleadoActual()!=null){
-	if(!strcmp($method,"verProductos")){
-		$listaProductos=Producto::verProductos();
-		if($listaProductos->rowCount()>0){
-			while ($producto = $listaProductos->fetch(PDO::FETCH_ASSOC)) {
-				$array['data'][]=$producto;
+	if(!strcmp($method,"verInventarios")){
+		$idProducto=$_POST['idProducto'];
+		$inventarios=Inventario::obtenerInventariosConProveedor($idProducto);
+		if($inventarios->rowCount()>0){
+			while ($inventarioProveedor = $inventarios->fetch(PDO::FETCH_ASSOC)) {
+				$array['inventarios'][]=$inventarioProveedor;
 			}
 			echo json_encode($array);
 		}else{

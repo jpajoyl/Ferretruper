@@ -40,14 +40,14 @@ function loadData(){
     window.table=$('#table-proveedores').DataTable({
         "ajax":{
             "method":"POST",
-            "url":"../assets/php/Controllers/CProveedor.php?method=verProveedores"
-        },
-        "dataSrc": function(dataReturn){
-            if(dataReturn == 3){
-                return [];
-            }
-            else {
-                return dataReturn.data;
+            "url":"../assets/php/Controllers/CProveedor.php?method=verProveedores",
+            "dataSrc": function(dataReturn){
+                if(dataReturn == 3){
+                    return [];
+                }
+                else {
+                    return dataReturn.data;
+                }
             }
         },
         "autoWidth": false,
@@ -65,8 +65,8 @@ function loadData(){
         {"data":"direccion"},
         {"data":"ciudad"},
         {"data":"telefono"},
-        {"defaultContent":"<button class='btn btn-primary btn-xs editar-proveedor'><i class='fa fa-pencil'></i></button>\
-        </button><button class='btn btn-danger btn-xs eliminar-proveedor'><i class='fa fa-trash-o'></i></button>"}
+        {"defaultContent":"<center><button class='btn btn-primary btn-xs editar-proveedor'><i class='fa fa-pencil'></i></button>\
+        </button><button class='btn btn-danger btn-xs eliminar-proveedor'><i class='fa fa-trash-o'></i></button></center>"}
         ],
         "destroy":true,
         "responsive":true,
@@ -130,14 +130,14 @@ function loadDataProveedor(){
             "data": {
                 "idProveedor": idProveedor
             },
-            "url":"../assets/php/Controllers/CProveedor.php?method=productosProveedor"
-        },
-        "dataSrc": function(dataReturn){
-            if(dataReturn == 3){
-                return [];
-            }
-            else {
-                return dataReturn.data;
+            "url":"../assets/php/Controllers/CProveedor.php?method=productosProveedor",
+            "dataSrc": function(dataReturn){
+                if(dataReturn == 3){
+                    return [];
+                }
+                else {
+                    return dataReturn.data;
+                }
             }
         },
         "autoWidth": false,
@@ -154,8 +154,8 @@ function loadDataProveedor(){
         {"data":"referencia_fabrica"},
         {"data":"clasificacion_tributaria"},
         {"data":"valor_utilidad"},
-        {"defaultContent":"<button class='btn btn-primary btn-xs editar-producto'><i class='fa fa-pencil'></i></button>\
-        </button><button class='btn btn-danger btn-xs eliminar-producto'><i class='fa fa-trash-o'></i></button>"}
+        {"defaultContent":"<center><button class='btn btn-primary btn-xs editar-producto'><i class='fa fa-pencil'></i></button>\
+        </button><button class='btn btn-danger btn-xs eliminar-producto'><i class='fa fa-trash-o'></i></button></center>"}
         ],
         "destroy":true,
         "responsive":true,
@@ -405,7 +405,6 @@ function getDataEditProducto(tbody,table){
         $("#input-nombre-producto-editar").val(data.nombre);
         $("#input-descripcion-producto-editar").val(data.descripcion);
         $("#input-referencia-fabrica-editar").val(data.referencia_fabrica);
-        $("#input-clasificacion-tributaria-editar").val(data.clasificacion_tributaria);
         $("#input-valor-utilidad-editar").val(data.valor_utilidad);
         $('input:radio[name=IVA]:checked').val(data.tiene_iva);
         $("#input-codigo-barras-editar").val(data.codigo_barras);         
@@ -486,8 +485,6 @@ $("#form-editarProducto").submit(function(event){
         "nombre" : $("#input-nombre-producto-editar").val(),
         "descripcion" : $("#input-descripcion-producto-editar").val(),
         "referenciaFabrica" : $("#input-referencia-fabrica-editar").val(),
-        "clasificacionTributaria" : $("#input-clasificacion-tributaria-editar").val(),
-        "utilidad" : $("#input-valor-utilidad-editar").val(),
         "iva" : $('input:radio[name=IVA-editar]:checked').val(),
         "CodigoDeBarras" : $("#input-codigo-barras-editar").val()
     } 

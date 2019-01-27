@@ -157,14 +157,14 @@ $(document).ready(function() {
                 "data": {
                     "idProveedor": idProveedor
                 },
-                "url":"../assets/php/Controllers/CProveedor.php?method=productosProveedor"
-            },
-            "dataSrc": function(dataReturn){
-                if(dataReturn == 3){
-                    return [];
-                }
-                else {
-                    return dataReturn.data;
+                "url":"../assets/php/Controllers/CProveedor.php?method=productosProveedor",
+                "dataSrc": function(dataReturn){
+                    if(dataReturn == 3){
+                        return [];
+                    }
+                    else {
+                        return dataReturn.data;
+                    }
                 }
             },
             "autoWidth": false,
@@ -486,6 +486,7 @@ $(document).ready(function() {
             data: data,
             success:function(data){ 
               if(data!=""){
+                console.log(data);
                 if(data==1){
                     $("#añadirProducto").modal("hide");
                     setTimeout(function(){

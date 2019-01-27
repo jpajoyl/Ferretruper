@@ -115,22 +115,14 @@ $proveedor=$servletRequest->getAtribute("proveedor");
 										</div>
 									</div>
 									<div class="form-group">
-										<label>Descripcion del producto<span class="text-danger">*</span></label>
-										<textarea required class="form-control" id="input-descripcion-producto-editar"></textarea>
+										<label>Descripcion del producto (Opcional)</label>
+										<textarea class="form-control" id="input-descripcion-producto-editar"></textarea>
 									</div>
 									<div class="form-group">
 										<label>Referencia de fabrica<span class="text-danger">*</span></label>
 										<input type="text" class="form-control" id="input-referencia-fabrica-editar" placeholder="Referencia de fabrica" required autocomplete="off">
 									</div>
-									<div class="form-group">
-										<label>Clasificacion Tributaria<span class="text-danger">*</span></label>
-										<input type="text" class="form-control" id="input-clasificacion-tributaria-editar" placeholder="Clasificacion Tributaria" required value="GRAVADO" autocomplete="off">
-									</div>
 									<div class="form-row">
-										<div class="form-group col-md-6">
-											<label>Valor de utilidad <span class="text-danger">*</span></label>
-											<input type="number" class="form-control" id="input-valor-utilidad-editar" placeholder="Valor Utilidad" value="30" required>
-										</div>
 										<div class="form-group col-md-6">
 											<label>Tiene IVA? <span class="text-danger">*</span></label>
 											<div class="form-check">
@@ -146,11 +138,11 @@ $proveedor=$servletRequest->getAtribute("proveedor");
 											  </label>
 											</div>
 										</div>
-									</div>	
-									<div class="form-group">
-										<label>Codigo de barras (Opcional)</label>
+										<div class="form-group col-md-6">
+											<label>Codigo de barras (Opcional)</label>
 										<input type="text" class="form-control" id="input-codigo-barras-editar" placeholder="Codigo de barras" autocomplete="off">
-									</div>
+										</div>
+									</div>	
 								</div>
 								<div class="modal-footer">
 									<button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelar-editarProducto">Cancelar</button>
