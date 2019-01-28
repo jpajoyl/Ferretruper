@@ -324,6 +324,14 @@
 				return ERROR;
 			}
 		}
+		public static function obtenerComprasPorNumeroFactura($numeroFactura){
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("SELECT * FROM `compras` WHERE  `numero_factura` = :numeroFactura");
+			$statement->bindParam(":numeroFactura",$numeroFactura,PDO::PARAM_INT);
+			$statement->execute();
+			$conexion = null;
+			return $statement;
+		}
 
 	}
 
