@@ -26,3 +26,7 @@
 .info-total-venta{
 	font-size: 1.1em;
 }
+
+#no-venta{
+	display: none;
+}

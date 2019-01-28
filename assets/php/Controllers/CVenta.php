@@ -24,8 +24,10 @@
 					$data['idVenta']=$venta->getIdVenta();
 					echo json_encode($data);
 				}else{
-					echo NOT_FOUND;
+					echo ERROR;
 				}
+			}else{
+				echo NOT_FOUND;
 			}
 		}
 	}

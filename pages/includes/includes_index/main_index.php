@@ -40,8 +40,8 @@
 						<td width="15%" id="td-id-producto"><input type="number" class="form-control" id="input-id-producto" placeholder="id producto" autocomplete="off"></td>
 					</form>
 				</tr> -->
-				<td colspan="6"><div class="alert alert-secondary mt" role="alert">
-				  Aun no se ha iniciado una compra. Seleccione un producto para iniciar
+				<td colspan="6" id="no-venta"><div class="alert alert-secondary mt" role="alert">
+				  Aun no se ha iniciado una venta. Seleccione un producto para iniciar
 				</div></td>
 			</tbody>
 		</table>
