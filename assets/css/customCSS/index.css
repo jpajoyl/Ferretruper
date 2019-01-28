@@ -6,3 +6,23 @@
 	background-color: rgba(64, 64, 64, 0.5);
 }
 
+.tr-head{
+	background-color: rgb(206, 74, 39);
+	color: #fff;
+	text-align: center;
+}
+
+#div-total-venta{
+	background-color: rgb(206, 74, 39);
+	color: #fff;
+}
+
+#table-venta, #div-total-venta{
+	margin-top: 1%;
+	margin-left: 1.4%;
+	width: 97.5%;
+}
+
+.info-total-venta{
+	font-size: 1.1em;
+}
