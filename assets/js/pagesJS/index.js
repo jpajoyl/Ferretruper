@@ -69,4 +69,17 @@ $(document).ready(function() {
     }
 });
     }
+
+    // $('#form-añadir-producto-venta').bind("keypress", function(e) { 
+    //     if (e.keyCode == 13) {    
+    //         $(this).submit();
+    //         return false; 
+    //     } 
+    // }); 
+
+    // $("#form-añadir-producto-venta").submit(function(event){
+    //     event.preventDefault();
+    //     var idProducto=$("#input-id-producto").val();
+
+    // });
 });
