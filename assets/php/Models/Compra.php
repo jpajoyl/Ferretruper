@@ -332,6 +332,19 @@
 			$conexion = null;
 			return $statement;
 		}
+		public static function obtenerComprasPorIdProveedor($idProveedor, $modo=true)
+		{//si modo es true, trae las que no estan pagadas. si modo es false, trae todas
+			$conexion = Conexion::conectar();
+			if ($modo) {
+				$statement = $conexion->prepare("SELECT * FROM compras INNER JOIN `factura_compra` ON factura_compra.compras_id_compra = compras.id_compra WHERE compras.USUARIOS_id_proveedor = :idProveedor AND factura_compra.comprobantes_egreso_id_comprobante_egreso IS NULL");
+			}else{
+				$statement = $conexion->prepare("SELECT * FROM compras INNER JOIN `factura_compra` ON factura_compra.compras_id_compra = compras.id_compra WHERE compras.USUARIOS_id_proveedor = :idProveedor");
+			}
+			$statement->bindParam(":idProveedor",$idProveedor,PDO::PARAM_INT);
+			$statement->execute();
+			$conexion = null;
+			return $statement;
+		}
 
 	}
 

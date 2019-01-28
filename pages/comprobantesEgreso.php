@@ -24,12 +24,16 @@ include_once '../assets/php/Controllers/GetSession.php';
 	<link href="../assets/plugins/switchery/switchery.min.css" rel="stylesheet" />
 
 	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="../assets/css/jquery-ui.css">
+
 	<link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 
 	<!-- Font Awesome CSS -->
 	<link href="../assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 
 	<!-- Custom CSS -->
+	<link href="../assets/css/customCSS/dataTableCollapse.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" type="text/css" href="../assets/css/dataTables.bootstrap4.min.css"/>
 	<link href="../assets/css/style.css" rel="stylesheet" type="text/css" />	
 
 	<!-- BEGIN CSS for this page -->
@@ -85,8 +89,8 @@ include_once '../assets/php/Controllers/GetSession.php';
 									<form autocomplete="off" action="#" id="form-factura-compra">
 										<div class="form-row">
 											<div class="form-group col-md-6">
-												<label>Numero factura a emitir comprobante<span class="text-danger">*</span></label>
-												<input type="number" class="form-control" id="input-numero-factura-compra" placeholder="Numero de factura" autocomplete="off" required>
+												<label>Nombre o nit proveedor<span class="text-danger">*</span></label>
+												<input type="text" class="form-control" id="input-proveedor" placeholder="Nombre" autocomplete="off" required>
 												<input type="hidden" id="id-proveedor">
 											</div>
 										</div>
@@ -126,6 +130,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 
 	<script src="../assets/js/detect.js"></script>
 	<script src="../assets/js/fastclick.js"></script>
+	<script src="../assets/js/jquery-ui.js"></script>
 	<script src="../assets/js/jquery.blockUI.js"></script>
 	<script src="../assets/js/jquery.nicescroll.js"></script>
 	<script src="../assets/js/jquery.scrollTo.min.js"></script>
