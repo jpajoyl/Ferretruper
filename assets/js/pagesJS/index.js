@@ -64,7 +64,7 @@ $(document).ready(function() {
           "language": {
             "lengthMenu": "Mostrar _MENU_ registros por pagina",
             "zeroRecords": "No se han encontrado registros",
-            "info": "(_MAX_ proveedores) Pagina _PAGE_ de _PAGES_",
+            "info": "(_MAX_ productos) Pagina _PAGE_ de _PAGES_",
             "search": "Buscar",
             "infoEmpty": "No hay registros disponibles",
             "infoFiltered": "(registros disponibles _MAX_)"
@@ -78,24 +78,22 @@ $(document).ready(function() {
             var data=table.row($(this).parents("tr")).data();
             if(!$("#añadir-producto-venta").length){
                 var tbody='<tr id="añadir-producto-venta">'+
-                            '<form autocomplete="off" action="#" id="form-añadir-producto-venta">'+
-                                '<td width="15%" id="td-id-producto">'+
-                                    data.id_producto+'<input type="hidden" id="input-id-producto" value="'+data.id_producto+'">'+
-                                '</td>'+
-                                '<td>'+
-                                    data.nombre+
-                                '</td>'+
-                                '<td width="15%">'+
-                                    data.precio_mayor_inventario+'<input type="hidden" id="input-precio-inventario-producto" value="'+data.precio_mayor_inventario+'">'+
-                                '</td>'+
-                                '<td width="15%" id="td-cantidad-producto">'+
-                                    '<input type="number" class="form-control" id="input-cantidad-producto" placeholder="cantidad" autocomplete="off">'+
-                                '</td>'+
-                                '<td width="15%" id="total-venta-producto"></td>'+
-                                '<td width="10%">'+
-                                    '<center><button class="btn btn-danger btn-xs eliminar-producto-no-seleccionado"><i class="fa fa-trash"></i></button>\
-                                    </button></center>'+
-                                '</td>';
+                            '<td width="15%" id="td-id-producto">'+
+                                data.id_producto+'<input type="hidden" id="input-id-producto" value="'+data.id_producto+'">'+
+                            '</td>'+
+                            '<td>'+
+                                data.nombre+
+                            '</td>'+
+                            '<td width="15%">'+
+                                data.precio_mayor_inventario+'<input type="hidden" id="input-precio-inventario-producto" value="'+data.precio_mayor_inventario+'">'+
+                            '</td>'+
+                            '<td width="15%" id="td-cantidad-producto">'+
+                                '<input type="number" class="form-control" id="input-cantidad-producto" placeholder="cantidad" autocomplete="off">'+
+                            '</td>'+
+                            '<td width="15%" id="total-venta-producto"></td>'+
+                            '<td width="10%">'+
+                                '<center><button class="btn btn-danger btn-xs eliminar-producto-no-seleccionado"><i class="fa fa-trash"></i></button></button></center>'+
+                            '</td></tr>';
                 $("#no-venta").fadeOut(0);
                 $("#body-table-venta").append(tbody);
                 setTimeout(function(){
@@ -109,16 +107,23 @@ $(document).ready(function() {
         });
     }
 
-    // $('#form-añadir-producto-venta').bind("keypress", function(e) { 
-    //     if (e.keyCode == 13) {    
-    //         $(this).submit();
-    //         return false; 
-    //     } 
-    // }); 
+    $(document).on("click", ".eliminar-producto-no-seleccionado", function(){
+        $(this).closest('tr').remove();
+        if($("#body-table-venta tr").length==1){
+            $("#no-venta").fadeIn(0);
+        }
+    });
 
-    // $("#form-añadir-producto-venta").submit(function(event){
-    //     event.preventDefault();
-    //     var idProducto=$("#input-id-producto").val();
+    $(document).on("keypress", "#form-añadir-producto-venta", function(event){
+        if (event.keyCode == 13) {    
+            $(this).submit();
+            return false; 
+        } 
+    });
 
-    // });
+    $(document).on("submit", "#form-añadir-producto-venta", function(event){
+        event.preventDefault();
+        var idProducto=$("#input-id-producto").val();
+        alert(idProducto);
+    });
 });

@@ -23,23 +23,25 @@
 
 			</tbody>
 		</table>
-		<table id="table-venta" class="table table-bordered table-responsive-xs table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl table-hover display">
-			<thead class="cf">
-				<tr class="tr-head">
-					<th>Id Producto</th>
-					<th>Nombre</th>
-					<th>Precio venta</th>
-					<th>Cantidad</th>
-					<th>Total</th>					
-					<th></th>
-				</tr>
-			</thead>
-			<tbody id="body-table-venta">
-				<td colspan="6" id="no-venta"><div class="alert alert-secondary mt" role="alert">
-				  Aun no se ha iniciado una venta. Seleccione un producto para iniciar
-				</div></td>
-			</tbody>
-		</table>
+		<form autocomplete="off" action="#" id="form-añadir-producto-venta">
+			<table id="table-venta" class="table table-bordered table-responsive-xs table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl table-hover display">
+				<thead class="cf">
+					<tr class="tr-head">
+						<th>Id Producto</th>
+						<th>Nombre</th>
+						<th>Precio venta</th>
+						<th>Cantidad</th>
+						<th>Total</th>					
+						<th></th>
+					</tr>
+				</thead>
+				<tbody id="body-table-venta">
+					<td colspan="6" id="no-venta"><div class="alert alert-secondary mt" role="alert">
+					  Aun no se ha iniciado una venta. Seleccione un producto para iniciar
+					</div></td>
+				</tbody>
+			</table>
+		</form>
 		<div class="row" id="div-total-venta">
 			<div class="col-xs-6 col-sm-6 col-md-8 col-lg-10 col-xl-10 mt mb">
 				<b class="info-total-venta float-right mr">Total de venta:</b>
