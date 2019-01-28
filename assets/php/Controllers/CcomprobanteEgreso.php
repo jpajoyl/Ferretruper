@@ -17,17 +17,18 @@ if(!isset($include)){
 include_once 'Response.php';
 if($method!="" && $objectSession->getEmpleadoActual()!=null){
 	if (!strcmp($method,"buscarFacturaCompra")) {
-		$numeroFactura=$_POST['numeroFactura'];
-		$listaCompras=Compra::obtenerComprasPorNumeroFactura($numeroFactura);
+		$idProveedor=$_POST['idProveedor'];
+		$listaCompras=Compra::obtenerComprasPorIdProveedor($idProveedor);
 			if($listaCompras->rowCount()>0){
 				while ($compras = $listaCompras->fetch(PDO::FETCH_ASSOC)) {
 					$array['data'][]=$compras;
-					
 				}
 				echo json_encode($array);
 			}else{
 				echo NOT_FOUND;
 			}
+	}elseif (!strcmp($method,"seleccionarFacturasCompra")) {
+		
 	}
 
 }
