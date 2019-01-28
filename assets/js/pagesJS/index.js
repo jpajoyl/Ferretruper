@@ -10,7 +10,6 @@ $(document).ready(function() {
             url: '../assets/php/Controllers/CVenta.php?method=obtenerVenta',
             type: 'POST',
             success:function(data){
-                console.log(data);
                 if(data!=3){
                     if(data.response==1){
                             //CARGAR DATOS VENTA
@@ -77,27 +76,36 @@ $(document).ready(function() {
     function añadirProducto(tbody,table){
         $(tbody).on("click", ".añadir-producto", function(){
             var data=table.row($(this).parents("tr")).data();
-            var tbody='<tr id="añadir-producto-venta">'+
-                        '<form autocomplete="off" action="#" id="form-añadir-producto-venta">'+
-                            '<td width="15%" id="td-id-producto">'+
-                                data.id_producto+'<input type="hidden" id="input-id-producto" value="'+data.id_producto+'">'+
-                            '</td>'+
-                            '<td>'+
-                                data.nombre+
-                            '</td>'+
-                            '<td width="15%">'+
-                                data.precio_mayor_inventario+'<input type="hidden" id="input-precio-inventario-producto" value="'+data.precio_mayor_inventario+'">'+
-                            '</td>'+
-                            '<td width="15%" id="td-cantidad-producto">'+
-                                '<input type="number" class="form-control" id="input-cantidad-producto" placeholder="cantidad" autocomplete="off">'+
-                            '</td>'+
-                            '<td width="15%" id="total-venta-producto"></td>'+
-                            '<td width="10%">'+
-                                '<center><button class="btn btn-danger btn-xs añadir-producto"><i class="fa fa-trash"></i></button>\
-                                </button></center>'+
-                            '</td>';
-            $("#no-venta").fadeOut(0);
-            $("#body-table-venta").append(tbody);
+            if(!$("#añadir-producto-venta").length){
+                var tbody='<tr id="añadir-producto-venta">'+
+                            '<form autocomplete="off" action="#" id="form-añadir-producto-venta">'+
+                                '<td width="15%" id="td-id-producto">'+
+                                    data.id_producto+'<input type="hidden" id="input-id-producto" value="'+data.id_producto+'">'+
+                                '</td>'+
+                                '<td>'+
+                                    data.nombre+
+                                '</td>'+
+                                '<td width="15%">'+
+                                    data.precio_mayor_inventario+'<input type="hidden" id="input-precio-inventario-producto" value="'+data.precio_mayor_inventario+'">'+
+                                '</td>'+
+                                '<td width="15%" id="td-cantidad-producto">'+
+                                    '<input type="number" class="form-control" id="input-cantidad-producto" placeholder="cantidad" autocomplete="off">'+
+                                '</td>'+
+                                '<td width="15%" id="total-venta-producto"></td>'+
+                                '<td width="10%">'+
+                                    '<center><button class="btn btn-danger btn-xs eliminar-producto-no-seleccionado"><i class="fa fa-trash"></i></button>\
+                                    </button></center>'+
+                                '</td>';
+                $("#no-venta").fadeOut(0);
+                $("#body-table-venta").append(tbody);
+                setTimeout(function(){
+                    $("#input-cantidad-producto").focus();
+                },50);
+            }else{
+               setTimeout(function(){
+                    $("#input-cantidad-producto").focus();
+                },50); 
+            }
         });
     }
 
