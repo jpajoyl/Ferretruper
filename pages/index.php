@@ -79,7 +79,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 				
 				<div class="row">
 						<div class="col-xl-12">
-								<?php include 'includes/includes_index/main_index.php';?>							
+								<?php include 'includes/includes_index/main_index.php';?>
 						  	 	<!-- MODALS -->
 						  	   	<?php include 'includes/modalAddCliente.php';?>
 						</div>

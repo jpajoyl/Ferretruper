@@ -28,6 +28,10 @@ a {
   margin-right: 5px !important;
 }
 
+.mb{
+  margin-bottom: 5px !important;
+}
+
 .small {
 	font-size: 0.7rem;
 }
