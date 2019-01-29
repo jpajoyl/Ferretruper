@@ -90,7 +90,9 @@ $(document).ready(function() {
                             '<td width="15%" id="td-cantidad-producto">'+
                                 '<input type="number" class="form-control" id="input-cantidad-producto" placeholder="cantidad" autocomplete="off">'+
                             '</td>'+
-                            '<td width="15%" id="total-venta-producto"></td>'+
+                            '<td width="15%" id="total-venta-producto">'+
+                                '<input type="number" class="form-control" id="input-total-venta" placeholder="total venta" autocomplete="off" disabled>'+
+                            '</td>'+
                             '<td width="10%">'+
                                 '<center><button class="btn btn-danger btn-xs eliminar-producto-no-seleccionado"><i class="fa fa-trash"></i></button></button></center>'+
                             '</td></tr>';
@@ -114,16 +116,43 @@ $(document).ready(function() {
         }
     });
 
-    $(document).on("keypress", "#form-añadir-producto-venta", function(event){
-        if (event.keyCode == 13) {    
-            $(this).submit();
-            return false; 
-        } 
+    $('#form-añadir-producto-venta').bind("keypress", function(e) {
+      if (e.keyCode == 13) {             
+        $("#form-añadir-producto-venta").submit();
+        return false;
+      }
     });
 
-    $(document).on("submit", "#form-añadir-producto-venta", function(event){
-        event.preventDefault();
-        var idProducto=$("#input-id-producto").val();
-        alert(idProducto);
+    $('#form-añadir-producto-venta').bind("keyup", function(e) {
+        var precio=parseInt($("#input-precio-inventario-producto").val());
+        var cantidad=parseInt($("#input-cantidad-producto").val());
+        var total=precio*cantidad;
+        if(total>0){
+            $("#input-total-venta").val(total);
+        }else{
+            $("#input-cantidad-producto").val("");
+            $("#input-total-venta").val("");
+        }
     });
+
+   $(document).on("click", "#total-venta-producto", function(){
+        swal({
+          title: "Authenicating for continuation",
+          text: "Test",
+          type: "input",
+          showCancelButton: true,
+          closeOnConfirm: false,
+          animation: "slide-from-top",
+          inputPlaceholder: "Write something"
+        }, function(inputValue) {
+          if (inputValue === false) return false;
+          if (inputValue === "") {
+            swal.showInputError("You need to write something!");
+            return false
+          }
+          // swal("Nice!", "You wrote: " + inputValue, "success");
+        });
+    });
+    
 });
+
