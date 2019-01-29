@@ -1,4 +1,7 @@
 $(document).ready(function() {
+	$(window).load(function(){
+		$("#no-factura").fadeIn(0);
+	});
 	$("#input-proveedor").autocomplete({
 		source: function(request,response){
 			$.ajax({
@@ -46,7 +49,7 @@ $(document).ready(function() {
 	});
 
 	function loadData(idProveedor){
-        window.facturas=$('#table-facturas-proveedor').DataTable({
+        window.table=$('#table-facturas-proveedor').DataTable({
             "ajax":{
                 "method":"POST",
                 "data": {
@@ -67,7 +70,7 @@ $(document).ready(function() {
             {"data":"idfactura_compra"},
             {"data":"numero_factura"},
             {"data":"fecha_compra"},
-            {"defaultContent":"<button class='btn btn-primary btn-xs editar-producto'><i class='fa fa-plus'></i></button>"}
+            {"defaultContent":"<button class='btn btn-primary btn-xs añadir-factura'><i class='fa fa-plus'></i></button>"}
             ],
             "destroy":true,
             "responsive":true,
@@ -80,9 +83,34 @@ $(document).ready(function() {
                 "infoFiltered": "(registros disponibles _MAX_)"
             }
         });
-        comprarProducto("#table-productos-proveedor tbody",tableProductos);
-        getDataEditProducto("#table-productos-proveedor tbody",tableProductos);
+        añadirFactura("#body-table-factura-compra", table);
     }
 
+    function añadirFactura(tbody,table){
+        $(tbody).on("click", ".añadir-factura", function(){
+            var data=table.row($(this).parents("tr")).data();
+        	var tbody='<tr id="añadir-factura-compra">'+
+        	            '<td width="15%" id="td-id-producto">'+
+        	                data.idfactura_compra+'<input type="hidden" id="input-id-factura-venta" value="'+data.idFactura_compra+'">'+
+        	            '</td>'+
+        	            '<td>'+
+        	                data.numero_factura+
+        	            '</td>'+
+        	            '<td>'+
+        	                data.fecha_compra+
+        	            '</td>'+
+        	            '<td>'+
+        	                '<center><button class="btn btn-danger btn-xs eliminar-factura-compra"><i class="fa fa-trash"></i></button></button></center>'+
+        	            '</td></tr>';
+        	$("#no-factura").fadeOut(0);
+            $("#body-table-comprobante-egreso").append(tbody);
+        });
+    }
+    $(document).on("click", ".eliminar-factura-compra", function(){
+        $(this).closest('tr').remove();
+        if($("#body-table-comprobante-egreso tr").length==1){
+            $("#no-factura").fadeIn(0);
+        }
+    });
 
 });

@@ -198,11 +198,9 @@
 
 		public function seleccionarProducto($idProducto, $numeroUnidades){
 			$arrayDistribucion=Array();
-
 			$producto = Producto::obtenerProducto($idProducto);
-			if($numeroUnidades< $producto-getUnidadesTotales()){
-
-				$conexion = Conexion::conectar();	
+			if($numeroUnidades<= $producto->getUnidadesTotales()){
+				$conexion = Conexion::conectar();
 				$statement= Inventario::obtenerInventariosParaVenta($idProducto);
 				$resultado=$statement->fetch(PDO::FETCH_ASSOC);
 				if($resultado){

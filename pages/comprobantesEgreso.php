@@ -32,6 +32,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 	<link href="../assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 
 	<!-- Custom CSS -->
+	<link href="../assets/css/customCSS/comprobante_egreso.css" rel="stylesheet" type="text/css" />
 	<link href="../assets/css/customCSS/dataTableCollapse.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="../assets/css/dataTables.bootstrap4.min.css"/>
 	<link href="../assets/css/style.css" rel="stylesheet" type="text/css" />	
