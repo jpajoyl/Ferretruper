@@ -136,22 +136,7 @@ $(document).ready(function() {
     });
 
    $(document).on("click", "#total-venta-producto", function(){
-        swal({
-          title: "Authenicating for continuation",
-          text: "Test",
-          type: "input",
-          showCancelButton: true,
-          closeOnConfirm: false,
-          animation: "slide-from-top",
-          inputPlaceholder: "Write something"
-        }, function(inputValue) {
-          if (inputValue === false) return false;
-          if (inputValue === "") {
-            swal.showInputError("You need to write something!");
-            return false
-          }
-          // swal("Nice!", "You wrote: " + inputValue, "success");
-        });
+        
     });
     
 });
