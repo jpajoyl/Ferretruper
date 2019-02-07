@@ -89,21 +89,29 @@ $(document).ready(function() {
     function añadirFactura(tbody,table){
         $(tbody).on("click", ".añadir-factura", function(){
             var data=table.row($(this).parents("tr")).data();
-        	var tbody='<tr id="añadir-factura-compra">'+
-        	            '<td width="15%" id="td-id-producto">'+
-        	                data.idfactura_compra+'<input type="hidden" id="input-id-factura-venta" value="'+data.idFactura_compra+'">'+
-        	            '</td>'+
-        	            '<td>'+
-        	                data.numero_factura+
-        	            '</td>'+
-        	            '<td>'+
-        	                data.fecha_compra+
-        	            '</td>'+
-        	            '<td>'+
-        	                '<center><button class="btn btn-danger btn-xs eliminar-factura-compra"><i class="fa fa-trash"></i></button></button></center>'+
-        	            '</td></tr>';
-        	$("#no-factura").fadeOut(0);
-            $("#body-table-comprobante-egreso").append(tbody);
+            var añadirFactura=true;
+            $("#table-venta tbody tr").each(function(){
+                if($(this).attr("id-factura")==data.idfactura_compra){
+                    añadirFactura=false;
+                }
+            });
+            if(añadirFactura){
+                var tbody='<tr id="añadir-factura-compra" id-factura="'+data.idfactura_compra+'">'+
+                        '<td width="15%" id="td-id-producto">'+
+                            data.idfactura_compra+'<input type="hidden" id="input-id-factura-venta" value="'+data.idFactura_compra+'">'+
+                        '</td>'+
+                        '<td>'+
+                            data.numero_factura+
+                        '</td>'+
+                        '<td>'+
+                            data.fecha_compra+
+                        '</td>'+
+                        '<td>'+
+                            '<center><button class="btn btn-danger btn-xs eliminar-factura-compra"><i class="fa fa-trash"></i></button></button></center>'+
+                        '</td></tr>';
+                $("#no-factura").fadeOut(0);
+                $("#body-table-comprobante-egreso").append(tbody);
+            }
         });
     }
     $(document).on("click", ".eliminar-factura-compra", function(){
