@@ -88,6 +88,7 @@ $(document).ready(function() {
 
     function añadirFactura(tbody,table){
         $(tbody).on("click", ".añadir-factura", function(){
+        	var totalFacturas=0;
             var data=table.row($(this).parents("tr")).data();
             var añadirFactura=true;
             $("#table-venta tbody tr").each(function(){
@@ -112,6 +113,8 @@ $(document).ready(function() {
                 $("#no-factura").fadeOut(0);
                 $("#body-table-comprobante-egreso").append(tbody);
             }
+            totalFacturas+=data.total_compra;
+            document.getElementById("total-preCompra").innerHTML = numberWithCommas(totalFacturas);
         });
     }
     $(document).on("click", ".eliminar-factura-compra", function(){
@@ -120,5 +123,8 @@ $(document).ready(function() {
             $("#no-factura").fadeIn(0);
         }
     });
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
 });
