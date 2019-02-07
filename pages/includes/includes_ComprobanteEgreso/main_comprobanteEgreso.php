@@ -20,7 +20,7 @@
 
 			</tbody>
 		</table>
-		<table id="table-venta" class="table table-bordered table-responsive-xs table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl table-hover display">
+		<table id="table-venta" class="table table-bordered table-responsive-xs table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl table-hover display mt">
 			<thead class="cf">
 				<tr class="tr-head">
 					<th>Id factura de Compra</th>
@@ -43,6 +43,9 @@
 			</div>
 			<div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 col-xl-2 mt mb">
 				<b class="info-total-venta">$<span id="total-preCompra"></span></b>
+			</div>
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+				<a role="button" href="#" id="enviar-factura-compra" class="btn btn-info float-right mr">Enviar<span class="btn-label btn-label-right"><i class="fa fa-pencil"></i></span></a>
 			</div>
 		</div>
 		<!-- Modal -->
