@@ -134,7 +134,7 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 			if($compra instanceof Compra){
 				try {
 					if($compra->abastecer($arrayUtilidad)==SUCCESS){
-						unset($_COOKIE ["compra"];
+						unset($_COOKIE["compra"]);;
 						echo SUCCESS;
 					}else{
 						echo ERROR;
