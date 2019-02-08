@@ -5,7 +5,7 @@
 	 * 
 	 */
 	class ProductoXVenta {
-		private $arrayDistribucion = Array();
+		
 
 		//atributos
 		private $idProductoxventa;
@@ -98,19 +98,32 @@
 			$this->venta = Venta::obtenerVenta($id_venta);
 		}
 
-		public function getArrayDistribucion(){
-			return $this->arrayDistribucion;
-		}
-		
-		public function setArrayDistribucion($ArrayDistribucion){
-			$this->arrayDistribucion = $ArrayDistribucion;
-		}	
+
 
 		//methods
 
-		public static function obtenerProductoXVentaPorIdVenta($idVenta)
+		public static function obtenerProductoXVenta($idProductoxventa)
 		{
-			# code...
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("SELECT * FROM `productoxventa` WHERE `id_productoxventa` = :idProductoxventa");
+			$statement->bindValue(":idProductoxventa", $idProductoxventa);
+			$statement->execute();
+			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+			if($resultado!=false){
+				$productoxventa = new ProductoXVenta();
+				$productoxventa->setIdProductoxventa($idProductoxventa);
+				$productoxventa->setNumeroUnidades($resultado['unidades']);
+				$productoxventa->setPrecioVenta($resultado['precio_venta']);
+
+				$productoxventa->setProducto($resultado['PRODUCTOS_id_producto']);
+				$productoxventa->setVenta($resultado['VENTAS_id_venta']);
+
+				$conexion=null;
+				$statement=null;
+				return $productoxventa;
+			}else{
+				return false;
+			}
 		}
 
 	}

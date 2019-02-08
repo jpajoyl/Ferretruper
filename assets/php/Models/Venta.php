@@ -5,6 +5,7 @@
 	 */
 	date_default_timezone_set("America/Bogota");
 	class Venta {
+		private $arrayDistribucion = Array();
 		
 
 		//atributos
@@ -170,6 +171,14 @@
 			return $this;
 		}
 
+		public function getArrayDistribucion(){
+			return $this->arrayDistribucion;
+		}
+		
+		public function setArrayDistribucion($ArrayDistribucion){
+			$this->arrayDistribucion = $ArrayDistribucion;
+		}	
+
 		public static function obtenerVenta($idVenta){
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("SELECT * FROM `ventas` WHERE  `id_venta` = :idVenta");
@@ -197,9 +206,11 @@
 		}
 
 		public function seleccionarProducto($idProducto, $numeroUnidades){
-			$arrayDistribucion=Array();
+			$arrayDistribucion=$this->getArrayDistribucion();
 			$producto = Producto::obtenerProducto($idProducto);
 			if($numeroUnidades<= $producto->getUnidadesTotales()){
+				$productoxventa = new ProductoXVenta($producto->getPrecioMayorInventario(), $numeroUnidades, $producto->getIdProducto(), $this->getIdVenta());
+				$idProductoXVenta=$productoxventa->getIdProductoxventa();
 				$conexion = Conexion::conectar();
 				$statement= Inventario::obtenerInventariosParaVenta($idProducto);
 				$resultado=$statement->fetch(PDO::FETCH_ASSOC);
@@ -229,7 +240,7 @@
 						}
 
 						if($statement){
-							$arrayDistribucion[$idInventario]=$unidadesInventario-$unidadesRestantes;
+							$arrayDistribucion[$idProductoXVenta][$idInventario]=$unidadesInventario-$unidadesRestantes;
 						}else{
 							return Error;
 						}
@@ -237,7 +248,7 @@
 					$resultado=$statement->fetch(PDO::FETCH_ASSOC);
 					}
 
-					$productoxventa = new ProductoXVenta($producto->getPrecioMayorInventario(), $numeroUnidades, $producto->getIdProducto(), $this->getIdVenta());
+
 					$total=$this->getTotal()+($numeroUnidades*$producto->getPrecioMayorInventario());
 					$this->setTotal($total);
 					$subtotalIva=$total;
@@ -246,25 +257,28 @@
 					}
 					$this->setSubtotal($this->getSubtotal()+$subtotalIva);
 					$conexion = null;
-					$productoxventa->setArrayDistribucion($arrayDistribucion);
-					return $productoxventa;	 //GUARDAR ESTO EN UN ARRAY;
+					$this->setArrayDistribucion($arrayDistribucion);
+					return SUCCESS;	 //GUARDAR ESTO EN UN ARRAY;
 				}else{
 					return ERROR;
 				}
 
 
+			}else{
+				return NOT_FOUND;
 			}
 
 		}
 
-		public function desseleccionarProducto($productoXVenta){ //OBJETO PRODUCTO X VENTA;
+		public function desseleccionarProducto($idProductoXVenta){ //OBJETO PRODUCTO X VENTA;
 			$conexion = Conexion::conectar();
+			$productoxventa = ProductoXVenta::obtenerProductoXVenta($idProductoXVenta);
 			$producto = $productoXVenta->getProducto();
 			$unidades = $productoXVenta->getNumeroUnidades();
 			$precio = $productoXVenta->getPrecioVenta();
-			$arrayDistribucion = $productoXVenta->getArrayDistribucion();
+			$arrayDistribucion = $this->getArrayDistribucion();
 
-			foreach ($arrayDistribucion as $idInventario => $unidadesRestadas) {
+			foreach ($arrayDistribucion[$idProductoXVenta] as $idInventario => $unidadesRestadas) {
 			 	$statement = null;
 			 	$inventario= Inventario::obtenerInventario($idInventario);
 			 	$unidadesNuevas = $inventario->getUnidades() + $unidadesRestadas; 
@@ -297,10 +311,12 @@
 		}
 
 
-		public function cancelarVenta($productosxVenta){ //ARRAY CON LOS PRODUCTOS X VENTA;
-			foreach ($productosxVenta as $productoxVenta) {
-				$this->desseleccionarProducto($productoxVenta);
+		public function cancelarVenta(){ //Probar , no se si funcione;
+			$arrayDistribucion = $this->getArrayDistribucion();
+			foreach ($productosxVenta as $key => $value) {
+				$this->desseleccionarProducto($key);
 			}
+
 			$conexion = Conexion::conectar();
 			$conexion->prepare("DELETE FROM `ventas` WHERE `id_venta` = :idVenta");
 			$statement->bindValue(":idVenta", $this->getIdVenta());
@@ -332,26 +348,30 @@
 			$statement->bindParam(':idVenta',$this->getIdVenta(),PDO::PARAM_INT);
 			$statement->execute();
 
-			$statement = null;
-			$resultado= null;
-			$fecha=getDate();
-			$resolucion=$this->getResolucion();
-			$statement = $conexion->prepare("SELECT * FROM `resoluciones` WHERE `id_resolucion` = :idResolucion ");
-			$statement->bindParam(':idResolucion',$resolucion,PDO::PARAM_INT);
-			$statement->execute();
-			$resultado=$statement->fetch(PDO::FETCH_ASSOC);
-			if($resultado){
-				$numeroDian = $resultado['numero_dian']+ 1;
-				$factura = new factura($total,($fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday']),$resolucion,$this->getIdVenta(),$resolucion,$numeroDian);
+			if ( $statement ){
+				$statement = null;
+				$resultado= null;
+				$fecha=getDate();
+				$resolucion=$this->getResolucion();
+				$statement = $conexion->prepare("SELECT * FROM `resoluciones` WHERE `id_resolucion` = :idResolucion ");
+				$statement->bindParam(':idResolucion',$resolucion,PDO::PARAM_INT);
+				$statement->execute();
+				$resultado=$statement->fetch(PDO::FETCH_ASSOC);
+				if($resultado){
+					$numeroDian = $resultado['numero_dian']+ 1;
+					$factura = new factura($total,($fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday']),$resolucion,$this->getIdVenta(),$resolucion,$numeroDian);
 
-				if($factura){
-					$statement=null;
-					$resultado=null;
-					$numeroNuevoDian = $numeroDian;
-					$statement=$conexion->prepare("UPDATE `resoluciones` SET `numero_dian`=:numeroNuevoDian WHERE `id_resolucion` = :idResolucion ");
-					$statement->bindParam(':idResolucion',$resolucion,PDO::PARAM_INT);
-					$statement->bindParam(':numeroNuevoDian',$numeroNuevoDian,PDO::PARAM_INT);
-					$statement->execute();
+					if($factura){
+						$statement=null;
+						$resultado=null;
+						$numeroNuevoDian = $numeroDian;
+						$statement=$conexion->prepare("UPDATE `resoluciones` SET `numero_dian`=:numeroNuevoDian WHERE `id_resolucion` = :idResolucion ");
+						$statement->bindParam(':idResolucion',$resolucion,PDO::PARAM_INT);
+						$statement->bindParam(':numeroNuevoDian',$numeroNuevoDian,PDO::PARAM_INT);
+						$statement->execute();
+					}else{
+						return ERROR;
+					}
 				}else{
 					return ERROR;
 				}
