@@ -21,6 +21,10 @@ $(document).ready(function() {
         });
 	}
 
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
 	function loadData(){
         window.table=$('#table-productos').DataTable({
             "ajax":{
@@ -41,15 +45,17 @@ $(document).ready(function() {
             {"data":"referencia_fabrica"},
             {"data":"codigo_barras"},
             {"data":"unidades_totales"},
-            {"data":"precio_mayor_inventario"},
             {"data":function (data, type, row){
-            	if(parseInt(data.unidades_totales)>=0) {
+                return numberWithCommas(data.precio_mayor_inventario);
+            }},
+            {"data":function (data, type, row){
+            	if(parseInt(data.unidades_totales)>0) {
             		return "<center><button class='btn btn-success btn-xs añadir-producto'><i class='fa fa-plus-circle'></i></button>\
                     </button></center>";
                 }else{
                   return "";
               }
-          }}
+            }}
           ],
           "createdRow":function (row, data, index){
              if(parseInt(data.unidades_totales) == 0){
@@ -85,13 +91,13 @@ $(document).ready(function() {
                                 data.nombre+
                             '</td>'+
                             '<td width="15%">'+
-                                data.precio_mayor_inventario+'<input type="hidden" id="input-precio-inventario-producto" value="'+data.precio_mayor_inventario+'">'+
+                                numberWithCommas(data.precio_mayor_inventario)+'<input type="hidden" id="input-precio-inventario-producto" value="'+data.precio_mayor_inventario+'">'+
                             '</td>'+
                             '<td width="15%" id="td-cantidad-producto">'+
                                 '<input type="number" class="form-control" id="input-cantidad-producto" placeholder="cantidad" autocomplete="off">'+
                             '</td>'+
                             '<td width="15%" id="total-venta-producto">'+
-                                '<input type="number" class="form-control" id="input-total-venta" placeholder="total venta" autocomplete="off" disabled>'+
+                                '<input type="text" class="form-control" id="input-total-venta" placeholder="total venta" autocomplete="off" disabled>'+
                             '</td>'+
                             '<td width="10%">'+
                                 '<center><button class="btn btn-danger btn-xs eliminar-producto-no-seleccionado"><i class="fa fa-trash"></i></button></button></center>'+
@@ -123,12 +129,12 @@ $(document).ready(function() {
       }
     });
 
-    $('#form-añadir-producto-venta').bind("keyup", function(e) {
+    $('#form-añadir-producto-venta').bind("change keyup", function(e) {
         var precio=parseInt($("#input-precio-inventario-producto").val());
         var cantidad=parseInt($("#input-cantidad-producto").val());
         var total=precio*cantidad;
         if(total>0){
-            $("#input-total-venta").val(total);
+            $("#input-total-venta").val(numberWithCommas(total.toString()));
         }else{
             $("#input-cantidad-producto").val("");
             $("#input-total-venta").val("");
@@ -136,7 +142,26 @@ $(document).ready(function() {
     });
 
    $(document).on("click", "#total-venta-producto", function(){
-        
+        var input='<div class="form-group">'+
+                        '<input type="text" class="form-control" id="input-usuario" placeholder="Usuario" required autocomplete="off">'+
+                    '</div>'+
+                    '<div class="form-group">'+
+                        '<input type="text" class="form-control" id="input-password" placeholder="Contraseña" required autocomplete="off">'+
+                    '</div>';
+                    
+        swal({
+          title: 'Funcion bloqueada',
+          html: input,
+          showCancelButton: true,
+          confirmButtonColor: '#22C13C',
+          cancelButtonColor: '#9A9A9A',
+          confirmButtonText: 'Comprobar!',
+          cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.value) {
+                
+            }
+        });
     });
     
 });
