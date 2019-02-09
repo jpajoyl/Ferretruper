@@ -159,7 +159,32 @@ $(document).ready(function() {
           cancelButtonText: "Cancelar"
         }).then((result) => {
             if (result.value) {
-                
+                var data={
+                    'usuario':$("#input-usuario").val(),
+                    'password':$("#input-password").val()
+                }
+                $.ajax({
+                    url: '../assets/php/Controllers/CAdministracion.php?method=comprobarAdministrador',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: data,
+                    success:function(data){
+                        if(data!=0){
+                            if(data==1){
+                                $("#input-total-venta").prop('disabled', false);
+                                $("#input-total-venta").focus();
+                            }else if(data==3){
+                                setTimeout(function(){
+                                    Swal(
+                                      'Error!',
+                                      'El usuario y/o contraseña son incorrectos',
+                                      'error'
+                                    );
+                                },100);  
+                            }
+                        }
+                    }
+                });
             }
         });
     });

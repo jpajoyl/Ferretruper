@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`usuarios` (
   `clasificacion` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_usuario`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 48
+AUTO_INCREMENT = 55
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -55,7 +55,6 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`ventas` (
   `fecha_anulada` DATE NULL DEFAULT NULL,
   PRIMARY KEY (`id_venta`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -90,7 +89,6 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`tipo_venta` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -110,7 +108,6 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`abonos` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -133,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`compras` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 33
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -154,9 +151,10 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`credenciales_de_acceso` (
   `id_credencial` INT(11) NOT NULL AUTO_INCREMENT,
+  `USUARIOS_id_usuario` INT(11) NOT NULL,
   `usuario` VARCHAR(45) NOT NULL,
   `password` VARCHAR(100) NOT NULL,
-  `USUARIOS_id_usuario` INT(11) NOT NULL,
+  `permiso` TINYINT(1) NOT NULL,
   PRIMARY KEY (`id_credencial`),
   INDEX `fk_CREDENCIALES_DE_ACCESO_USUARIOS1_idx` (`USUARIOS_id_usuario` ASC),
   CONSTRAINT `fk_CREDENCIALES_DE_ACCESO_USUARIOS1`
@@ -165,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`credenciales_de_acceso` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 5
+AUTO_INCREMENT = 6
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -190,6 +188,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`factura_compra` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
+AUTO_INCREMENT = 24
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -252,7 +251,6 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`facturas` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -328,6 +326,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`inventario` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
+AUTO_INCREMENT = 16
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -355,6 +354,7 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`productoxcompra` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
+AUTO_INCREMENT = 28
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -381,7 +381,6 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`productoxventa` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8;
 
 

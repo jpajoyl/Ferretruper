@@ -2,7 +2,7 @@
 
         <!-- LOGO -->
         <div class="headerbar-left">
-            <a href="index.php" class="logo"><img alt="Logo" src="../assets/images/LOGOFERRETRUPER.png" /></a>
+            <a href="index.php" class="logo"><img alt="Logo" src="../assets/images/WAM.png" /></a>
         </div>
 
         <nav class="navbar-custom">

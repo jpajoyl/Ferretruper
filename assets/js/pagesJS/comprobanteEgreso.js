@@ -144,15 +144,15 @@ $(document).ready(function() {
     	    if (result.value) {
     	        var facturas = [];
     	        $("#table-venta tbody tr").each(function(){
-    	               facturas.push($(this).attr("id-factura"));
+                    if($(this).attr("id-factura")){
+                        facturas.push(parseInt($(this).attr("id-factura")));
+                    }      
     	        });
-    	        console.log(facturas);
     	        $.ajax({
     	            url: '../assets/php/Controllers/CComprobanteEgreso.php?method=emitirComprobante',
     	            type: 'POST',
     	            data: {"data":facturas},
     	            success:function(data){
-    	            	alert(data);
     	            	console.log(data);
     	                if(data!=""){
     	                  if(data==1){
