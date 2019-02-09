@@ -39,7 +39,7 @@ class Empleado extends Usuario {
         $resultado = Usuario::buscarDatosUsuario($numeroDeIdentificacion);
         $id_usuario= $resultado['id_usuario'];
         
-        $statement = $conexion->prepare("INSERT INTO `credenciales_de_acceso`(`id_credencial`, `usuario`, `password`, `permiso`, `USUARIOS_id_usuario`) VALUES (NULL,:usuario,:password,:permiso,:id_usuario)");
+        $statement = $conexion->prepare("INSERT INTO `credenciales_de_acceso`(`id_credencial`, `USUARIOS_id_usuario`, `usuario`, `password`, `permiso`) VALUES (NULL,:id_usuario,:usuario,:password,:permiso)");
         $this->setUsuario($usuario,$statement);
         $this->setPassword($password,$statement);
         $this->setPermiso($permiso,$statement);
