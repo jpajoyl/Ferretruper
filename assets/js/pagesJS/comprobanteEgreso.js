@@ -132,45 +132,28 @@ $(document).ready(function() {
     $("#enviar-factura-compra").click(function(){
     	event.preventDefault();
     	Swal({
-    	  title:'Abastecer',
-    	  text: "Al aceptar confirma que los datos de compra son correctos. ¿Esta seguro que desea abastecer?",
+    	  title:'Comprobante de egreso',
+    	  text: "Al aceptar confirma que los datos de compra son correctos. ¿Esta seguro que desea emitir el comprobante?",
     	  type: 'warning',
     	  showCancelButton: true,
     	  confirmButtonColor: '#3085d6',
     	  cancelButtonColor: '#d33',  
-    	  confirmButtonText: 'Si, abastecer!',
+    	  confirmButtonText: 'Si, enviar!',
     	  cancelButtonText: "No"
     	}).then((result) => {
     	    if (result.value) {
-    	        var data = [];
-    	        $("#table-productos-compra tbody tr").each(function(e){
-    	          var producto = new Object();
-    	          producto.id_productoxcompra=$(this).attr("id-productoxcompra");
-    	          $(this).children("td").each(function(e){
-    	            var inputPU = $(this).find('.input-pu');
-    	            var inputUds = $(this).find('.input-uds');
-    	            var inputUtilidad = $(this).find('.input-utilidad');
-    	            var inputPV = $(this).find('.input-pv');
-    	            if (inputPU[0]){
-    	              producto.precioUnitario=inputPU.val();
-    	            }
-    	            if (inputUds[0]){
-    	              producto.unidades=inputUds.val();
-    	            }
-    	            if (inputUtilidad[0]){
-    	              producto.utilidad=inputUtilidad.val();
-    	            }
-    	            if (inputPV[0]){
-    	              producto.precioVenta=inputPV.val();
-    	            }
-    	          });
-    	          data.push(producto);
+    	        var facturas = [];
+    	        $("#table-venta tbody tr").each(function(){
+    	               facturas.push($(this).attr("id-factura"));
     	        });
+    	        console.log(facturas);
     	        $.ajax({
-    	            url: '../assets/php/Controllers/CInventario.php?method=abastecer',
+    	            url: '../assets/php/Controllers/CComprobanteEgreso.php?method=emitirComprobante',
     	            type: 'POST',
-    	            data: {"data":data},
+    	            data: {"data":facturas},
     	            success:function(data){
+    	            	alert(data);
+    	            	console.log(data);
     	                if(data!=""){
     	                  if(data==1){
     	                    $("#card-productos-proveedor").fadeOut(100);

@@ -145,7 +145,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 	<script src="../assets/js/dataTables.buttons.min.js"></script>
 	<script src="../assets/js/dataTables.bootstrap4.min.js"></script>
 	<script src="../assets/js/addCliente.js"></script>
-	<script src="../assets/js/pagesJS/ComprobanteEgreso.js"></script>
+	<script src="../assets/js/pagesJS/comprobanteEgreso.js"></script>
 	<!-- END Java Script for this page -->
 
 </body>

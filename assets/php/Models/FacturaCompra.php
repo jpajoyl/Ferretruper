@@ -120,8 +120,8 @@ class FacturaCompra {
 		$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 		if($resultado){
 			$facturaCompra = new FacturaCompra();
-			$facturaCompra->setIdFacturaCompra($resutado['idfactura_compra']);
-			$facturaCompra->setCompra($resutado['compras_id_compra']);
+			$facturaCompra->setIdFacturaCompra($resultado['idfactura_compra']);
+			$facturaCompra->setCompra($resultado['compras_id_compra']);
 			$facturaCompra->setComprobanteEgreso($resultado['comprobantes_egreso_id_comprobante_egreso']);
 			$conexion=null;
 			$statement=null;
@@ -130,6 +130,24 @@ class FacturaCompra {
 			return ERROR;
 		}
 		
+	}
+	public static function obtenerFacturaCompraPorIdFacturaCompra($idFacturaCompra){
+		$conexion = Conexion::conectar();
+		$statement = $conexion->prepare("SELECT * FROM `factura_compra` WHERE `idfactura_compra` = :idFacturaCompra");
+		$statement->bindParam(':idFacturaCompra',$idFacturaCompra,PDO::PARAM_INT);
+		$statement->execute();
+		$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+		if($resultado){
+			$facturaCompra = new FacturaCompra();
+			$facturaCompra->setIdFacturaCompra($resultado['idfactura_compra']);
+			$facturaCompra->setCompra($resultado['compras_id_compra']);
+			$facturaCompra->setComprobanteEgreso($resultado['comprobantes_egreso_id_comprobante_egreso']);
+			$conexion=null;
+			$statement=null;
+			return $facturaCompra;
+		}else{
+			return ERROR;
+		}
 	}
 }
 
