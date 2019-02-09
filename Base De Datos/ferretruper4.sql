@@ -64,7 +64,7 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`tipo_venta` (
   `id_tipo_venta` INT(11) NOT NULL AUTO_INCREMENT,
   `tipo_venta` VARCHAR(45) NOT NULL,
-  `estado` VARCHAR(45) NOT NULL,
+  `estado` TINYINT(1) NOT NULL,
   `plazo` INT(11) NULL DEFAULT NULL,
   `USUARIOS_id_cliente` INT(11) NOT NULL,
   `USUARIOS_id_empleado` INT(11) NOT NULL,

@@ -6,6 +6,7 @@
 class Empleado extends Usuario {
     private $usuario;
     private $password;
+    private $permiso;
     public function __construct(){
         $params = func_get_args();
         $num_params = func_num_args();
@@ -14,7 +15,7 @@ class Empleado extends Usuario {
         }
     }
 
-    public function __construct0($usuario,$password,$tipoDeIdentificacion, $numeroDeIdentificacion, $nombre, $direccion, $ciudad, $telefono, $clasificacion='', $digitoDeVerificacion=NULL, $email="", $celular=""){
+    public function __construct0($usuario,$password,$permiso,$tipoDeIdentificacion, $numeroDeIdentificacion, $nombre, $direccion, $ciudad, $telefono, $clasificacion='', $digitoDeVerificacion=NULL, $email="", $celular=""){
         $conexion = Conexion::conectar();
         $statement = $conexion->prepare("INSERT INTO `usuarios` (`id_usuario`, `tipo_usuario`, `tipo_identificacion`, `numero_identificacion`, `digito_de_verificacion`, `nombre`, `direccion`, `email`, `ciudad`, `celular`, `telefono`, `activa`, `clasificacion`) VALUES (NULL, 'empleado', :tipoDeIdentificacion, :numeroDeIdentificacion, :digitoDeVerificacion, :nombre, :direccion, :email, :ciudad, :celular, :telefono, '1', :clasificacion)");
         $this->setNumeroDeIdentificacion($numeroDeIdentificacion,$statement);
@@ -38,9 +39,10 @@ class Empleado extends Usuario {
         $resultado = Usuario::buscarDatosUsuario($numeroDeIdentificacion);
         $id_usuario= $resultado['id_usuario'];
         
-        $statement = $conexion->prepare("INSERT INTO `credenciales_de_acceso`(`id_credencial`, `usuario`, `password`, `USUARIOS_id_usuario`) VALUES (NULL,:usuario,:password,:id_usuario)");
+        $statement = $conexion->prepare("INSERT INTO `credenciales_de_acceso`(`id_credencial`, `usuario`, `password`, `permiso`, `USUARIOS_id_usuario`) VALUES (NULL,:usuario,:password,:permiso,:id_usuario)");
         $this->setUsuario($usuario,$statement);
         $this->setPassword($password,$statement);
+        $this->setPermiso($permiso,$statement);
         $statement->bindParam(':id_usuario',$id_usuario,PDO::PARAM_INT);
         $statement->execute();
         
@@ -79,6 +81,18 @@ class Empleado extends Usuario {
     	}
     	$this->password = $password;
     	return $this;
+    }
+
+    public function getPermiso() {
+        return $this->permiso;
+    }
+
+    public function setPermiso($permiso, $statement=NULL) {
+        if($statement!=NULL){
+            $statement->bindParam(':permiso',$permiso,PDO::PARAM_STR,45);
+        }
+        $this->permiso = $permiso;
+        return $this;
     }
 
     public function login($usuario, $password) {
