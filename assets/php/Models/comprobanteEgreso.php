@@ -175,7 +175,7 @@
 
 
 
-			$pdf->Output('I',$archivo_de_salida,true);
+			$pdf->Output('D',$archivo_de_salida,true);
 			header("Content-type:application/pdf");
 			//Creacion de las cabeceras que generarán el archivo pdf
 			header ("Content-Type: application/download");

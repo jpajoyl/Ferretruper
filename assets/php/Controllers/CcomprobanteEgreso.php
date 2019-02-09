@@ -34,12 +34,10 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		if (count($arrayIdFacturaCompra)>0) {
 			$comprobanteEgreso=new ComprobanteEgreso(date('Y-m-d'));
 			for ($i=0; $i <count($arrayIdFacturaCompra) ; $i++) {
-				//$factura=FacturaCompra::obtenerFacturaCompraPorIdFacturaCompra($arrayIdFacturaCompra[$i]);
-				//echo $arrayIdFacturaCompra[1];
-				//echo $factura;
-				//$factura->asociarComprobanteEgreso($comprobanteEgreso->getNumeroConsecutivo());
+				$factura=FacturaCompra::obtenerFacturaCompraPorIdFacturaCompra($arrayIdFacturaCompra[$i]);
+				$factura->asociarComprobanteEgreso($comprobanteEgreso->getNumeroConsecutivo());
 			}
-			//$comprobanteEgreso->imprimirComprobante(false);
+			$comprobanteEgreso->imprimirComprobante(false);
 			echo SUCCESS;
 		}else{
 			echo ERROR;
