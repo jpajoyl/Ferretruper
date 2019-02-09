@@ -10,8 +10,10 @@
 	}
 	include_once 'Response.php';	
 	if($method!="" && $objectSession->getEmpleadoActual()!=null){
-		if(!strcmp($method,"verInventarios")){
-
+		if(!strcmp($method,"comprobarAdministrador")){
+			$usuario=$_POST['usuario'];
+			$password=$_POST['password'];
+			
 		}
 	}
  ?>
