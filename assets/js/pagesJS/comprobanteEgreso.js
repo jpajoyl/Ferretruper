@@ -1,3 +1,4 @@
+var totalFacturas=0;
 $(document).ready(function() {
 	$(window).load(function(){
 		$("#no-factura").fadeIn(0);
@@ -88,7 +89,6 @@ $(document).ready(function() {
 
     function añadirFactura(tbody,table){
         $(tbody).on("click", ".añadir-factura", function(){
-        	var totalFacturas=0;
             var data=table.row($(this).parents("tr")).data();
             var añadirFactura=true;
             $("#table-venta tbody tr").each(function(){
@@ -108,13 +108,13 @@ $(document).ready(function() {
                             data.fecha_compra+
                         '</td>'+
                         '<td>'+
-                            '<center><button class="btn btn-danger btn-xs eliminar-factura-compra"><i class="fa fa-trash"></i></button></button></center>'+
+                            '<center><button class="btn btn-danger btn-xs eliminar-factura-compra" valor="'+data.total_compra+'"><i class="fa fa-trash"></i></button></button></center>'+
                         '</td></tr>';
                 $("#no-factura").fadeOut(0);
                 $("#body-table-comprobante-egreso").append(tbody);
+                totalFacturas+=data.total_compra;
+                document.getElementById("total-preCompra").innerHTML = numberWithCommas(totalFacturas);
             }
-            totalFacturas+=data.total_compra;
-            document.getElementById("total-preCompra").innerHTML = numberWithCommas(totalFacturas);
         });
     }
     $(document).on("click", ".eliminar-factura-compra", function(){
@@ -122,9 +122,83 @@ $(document).ready(function() {
         if($("#body-table-comprobante-egreso tr").length==1){
             $("#no-factura").fadeIn(0);
         }
+        var valor=$(this).attr("valor");
+        totalFacturas-=valor;
+        document.getElementById("total-preCompra").innerHTML = numberWithCommas(totalFacturas);
     });
     function numberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
+    $("#enviar-factura-compra").click(function(){
+    	event.preventDefault();
+    	Swal({
+    	  title:'Abastecer',
+    	  text: "Al aceptar confirma que los datos de compra son correctos. ¿Esta seguro que desea abastecer?",
+    	  type: 'warning',
+    	  showCancelButton: true,
+    	  confirmButtonColor: '#3085d6',
+    	  cancelButtonColor: '#d33',  
+    	  confirmButtonText: 'Si, abastecer!',
+    	  cancelButtonText: "No"
+    	}).then((result) => {
+    	    if (result.value) {
+    	        var data = [];
+    	        $("#table-productos-compra tbody tr").each(function(e){
+    	          var producto = new Object();
+    	          producto.id_productoxcompra=$(this).attr("id-productoxcompra");
+    	          $(this).children("td").each(function(e){
+    	            var inputPU = $(this).find('.input-pu');
+    	            var inputUds = $(this).find('.input-uds');
+    	            var inputUtilidad = $(this).find('.input-utilidad');
+    	            var inputPV = $(this).find('.input-pv');
+    	            if (inputPU[0]){
+    	              producto.precioUnitario=inputPU.val();
+    	            }
+    	            if (inputUds[0]){
+    	              producto.unidades=inputUds.val();
+    	            }
+    	            if (inputUtilidad[0]){
+    	              producto.utilidad=inputUtilidad.val();
+    	            }
+    	            if (inputPV[0]){
+    	              producto.precioVenta=inputPV.val();
+    	            }
+    	          });
+    	          data.push(producto);
+    	        });
+    	        $.ajax({
+    	            url: '../assets/php/Controllers/CInventario.php?method=abastecer',
+    	            type: 'POST',
+    	            data: {"data":data},
+    	            success:function(data){
+    	                if(data!=""){
+    	                  if(data==1){
+    	                    $("#card-productos-proveedor").fadeOut(100);
+    	                    $("#card-productos-compra").fadeOut(100);
+    	                    $("#alert-informacion").fadeIn(100); 
+    	                    Swal({
+    	                      title: 'Satisfactorio!',
+    	                      text: "Se ha abastecido el inventario exitoxamente",
+    	                      type: 'success',
+    	                      confirmButtonColor: '#088A08',
+    	                      confirmButtonText: 'Terminar'
+    	                    }).then((result) => {
+    	                      if (result.value) {
+    	                        location.reload(true);
+    	                      }
+    	                    })
+    	                  }else if(data==0){
+    	                    Swal(
+    	                      'Error!',
+    	                      'Ha ocurrido un error, recargue la pagina y vuelva a intentar',
+    	                      'error'
+    	                      );
+    	                  }
+    	                }
+    	            }   
+    	        });
+    	    }
+    	});
+    });
 
 });

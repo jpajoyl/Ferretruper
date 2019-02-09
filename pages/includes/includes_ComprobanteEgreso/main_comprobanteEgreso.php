@@ -45,7 +45,7 @@
 				<b class="info-total-venta">$<span id="total-preCompra"></span></b>
 			</div>
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-				<a role="button" href="#" id="enviar-factura-compra" class="btn btn-info float-right mr">Enviar<span class="btn-label btn-label-right"><i class="fa fa-pencil"></i></span></a>
+				<a role="button" href="#" id="enviar-factura-compra" class="btn btn-info float-right mr">Enviar</a>
 			</div>
 		</div>
 		<!-- Modal -->
