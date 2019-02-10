@@ -447,14 +447,43 @@
 				while($resultado){
 					$id_producto = $resultado['PRODUCTOS_id_producto'];
 					$unidades = $resultado['unidades'];
-					$statement = null;
-					$statement = $conexion->prepare("SELECT * FROM `productoxventa` WHERE `VENTAS_id_venta` = :idVenta");
-					$statement->bindValue(":idVenta", $idVenta);
-					$statement->execute();
+					$statement2 = null;
+					$statement2 = $conexion->prepare("SELECT * FROM `inventario` WHERE `productos_id_producto` = :idProducto ORDER BY `inventario`.`precio_inventario` DESC");
+					$statement2->bindValue(":idProducto", $id_producto);
+					$statement2->execute();
+					$resultado2 =  $statement->fetch(PDO::FETCH_ASSOC);
+					if($resultado2){
+						$id_inventario = $resultado2['id_inventario'];
+						$unidades = $resultado2['unidades'] + $unidades;
+						$statement2 = null;
+						$statement2 = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidades WHERE 1");
+						$statement2->bindValue(":unidades", $unidades);
+						$statement2->execute();
+
+						if(!$statement2){
+							return ERROR;
+						}
+
+					}else{
+						return ERROR;
+					}
 
 					$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 				}
+
+			$statement = null;
+			$statement = $conexion->prepare("UPDATE `ventas` SET `anulada`= 1,`fecha_anulada`=:fechaAnulada WHERE 1");
+			$fechaAnulada = date('Y-m-d');
+			$statement->bindValue(":fechaAnulada", $fechaAnulada);
+			$statement->execute();
+			$statement = null;
+			$conexion = null;
+			return SUCCESS;
+
+			}else{
+				return ERROR;
 			}
+
 		}
 	}
 
