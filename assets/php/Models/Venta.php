@@ -73,7 +73,6 @@
 				$statement->bindParam(':subtotal',$subtotal,PDO::PARAM_INT);
 			}
 			$this->subtotal = $subtotal;
-			return $this;
 		}
 
 		public function getIva(){
@@ -109,7 +108,7 @@
 				$statement->bindParam(':total',$total,PDO::PARAM_INT);
 			}
 			$this->total = $total;
-			return $this;
+	
 		}
 
 		public function getDescuento(){
@@ -133,7 +132,6 @@
 				$statement->bindParam(':fecha',$fecha,PDO::PARAM_STR,45);
 			}
 			$this->fecha = $fecha;
-			return $this;
 		}
 
 		public function getAnulada(){
@@ -250,7 +248,8 @@
 					if($producto->getTieneIva()){
 						$subtotalIva = $total/(1+IVA);
 					}
-					$this->setSubtotal($this->getSubtotal()+$subtotalIva);
+					$subtotal=$this->getSubtotal()+$subtotalIva;
+					$this->setSubtotal();
 					$conexion = null;
 					$this->setArrayDistribucion($arrayDistribucion);
 					return SUCCESS;	 //GUARDAR ESTO EN UN ARRAY;
