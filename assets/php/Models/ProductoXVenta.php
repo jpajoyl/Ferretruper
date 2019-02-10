@@ -27,7 +27,7 @@
 			$statement = $conexion->prepare("INSERT INTO `productoxventa` (`id_productoxventa`, `precio_venta`, `unidades`, `PRODUCTOS_id_producto`, `VENTAS_id_venta`) VALUES (NULL, :precioVenta, :numeroUnidades, :id_producto, :id_venta)");
 
 			$this->setPrecioVenta($precioVenta,$statement);
-			$this->setNumeroUnidades($numeroUnidades,$statement);
+			$this->setNumeroUnidades($unidades,$statement);
 			$this->setProducto($id_producto,$statement);
 			$this->setVenta($id_venta,$statement);
 			$statement->execute();

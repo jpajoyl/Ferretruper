@@ -29,6 +29,38 @@
 			}else{
 				echo NOT_FOUND;
 			}
+		}else if(!strcmp($method,"seleccionarProducto")){
+			if(isset($_COOKIE['venta'])){
+				$venta=unserialize($_COOKIE['venta']);
+				if($venta instanceof Venta){
+					$idProducto=$_POST['idProducto'];
+					$unidades=$_POST['unidades'];
+					$totalVenta = isset($_POST['totalVenta'])?$_POST['totalVenta']:0;
+					$seleccionarProducto=$venta->seleccionarProducto($idProducto,$unidades);
+					if($seleccionarProducto==SUCCESS){
+						$data['data']=SUCCESS;
+					}
+					$data['subtotal']=$venta->getSubtotal();
+					echo json_encode($data);
+				}
+			}else{
+				try {
+					$venta = new Venta(date('Y-m-d'));
+					$serializeVenta=serialize($venta);
+					setcookie("venta", $serializeVenta,time() + 3600, "/");
+					$idProducto=$_POST['idProducto'];
+					$unidades=$_POST['unidades'];
+					$totalVenta = isset($_POST['totalVenta'])?$_POST['totalVenta']:0;
+					$seleccionarProducto=$venta->seleccionarProducto($idProducto,$unidades);
+					if($seleccionarProducto==SUCCESS){
+						$data['data']=SUCCESS;
+					}
+					$data['subtotal']=$venta->getSubtotal();
+					echo json_encode($data);
+				} catch (Exception $e) {
+					echo ERROR;
+				}
+			}
 		}
 	}
  ?>

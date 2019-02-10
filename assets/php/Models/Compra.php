@@ -259,8 +259,9 @@
 				$inventario=Inventario::obtenerInventario($idProducto,$idProveedor,true);
 				if($inventario){
 					$unidades= $inventario->getUnidades() + $productoxcompra->getNumeroUnidades();
-					$statement = $conexion->prepare(" UPDATE `inventario` SET `precio_inventario`=:precioInventario ,`unidades`=:unidades,`valor_utilidad`=:valorUtilidad WHERE `productos_id_producto`=:idProducto and `usuarios_id_usuario` = :idUsuario ");
+					$statement = $conexion->prepare(" UPDATE `inventario` SET `precio_inventario`=:precioInventario ,`precio_compra`=:precioCompra, `unidades`=:unidades,`valor_utilidad`=:valorUtilidad WHERE `productos_id_producto`=:idProducto and `usuarios_id_usuario` = :idUsuario ");
 					$inventario->setUnidades($unidades,$statement);
+					$inventario->setPrecioCompra($array[$idProductoxCompra]["precioUnitario"],$statement);
 					$inventario->setPrecioInventario($precioVenta,$statement);
 					$statement->bindValue(":idProducto", $idProducto);
 					$statement->bindValue(":idUsuario", $idProveedor);

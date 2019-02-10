@@ -29,23 +29,22 @@
 
 		public function __construct0($fecha, $subtotal = 0, $total = 0, $id_resolucion = 0, $retefuente=null, $descuento=null, $anulada = 0, $fechaanulada=null){
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("INSERT INTO `ventas` (`id_venta`, `subtotal`, `iva`, `retefuente`, `descuento`, `total`, `fecha`, `anulada`, `fecha_anulada`, `RESOLUCIONES_id_resolucion`) VALUES (NULL, :subtotal, :iva, :retefuente, :descuento, :total, :fecha, :anulada, :fechaAnulada, :resolucion)");
+			$statement = $conexion->prepare("INSERT INTO `ventas` (`id_venta`, `subtotal`, `iva`, `retefuente`, `descuento`, `total`, `fecha`, `anulada`, `fecha_anulada`) VALUES (NULL, :subtotal, :iva, :retefuente, :descuento, :total, :fecha, :anulada, :fechaAnulada)");
 
 			$this->setSubtotal($subtotal,$statement);
-			$this->setIva($iva,$statement);
+			$this->setIva(IVA,$statement);
 			$this->setRetefuente($retefuente,$statement);
 			$this->setDescuento($descuento,$statement);
 			$this->setTotal($total,$statement);
 			$this->setFecha($fecha,$statement);
 			$this->setAnulada($anulada,$statement);
-			$this->setFechaAnulada($fechaAnulada,$statement);
-			$this->setResolucion($resolucion,$statement);
+			$this->setFechaAnulada($fechaanulada,$statement);
 			$statement->execute();
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
 
 			}
-			$idVenta = $conexion->lastInsertId()
+			$idVenta = $conexion->lastInsertId();
 			$this->setIdVenta($idVenta);
 			$conexion = NULL;
 			$statement = NULL;
@@ -161,17 +160,6 @@
 			return $this;
 		}
 
-		public function getResolucion(){
-			return $this->resolucion;
-		}
-
-		public function setResolucion($resolucion, $statement=NULL){
-			if($statement!=NULL){
-				$statement->bindParam(':resolucion',$resolucion,PDO::PARAM_INT);
-			}
-			$this->resolucion = $resolucion;
-			return $this;
-		}
 
 		public function getArrayDistribucion(){
 			return $this->arrayDistribucion;
@@ -259,7 +247,7 @@
 					$total=$this->getTotal()+($numeroUnidades*$precioVentaUnitario);
 					$this->setTotal($total);
 					$subtotalIva=$total;
-					if($producto->tieneIva()){
+					if($producto->getTieneIva()){
 						$subtotalIva = $total/(1+IVA);
 					}
 					$this->setSubtotal($this->getSubtotal()+$subtotalIva);
@@ -307,7 +295,7 @@
 			$this->setTotal($total);
 			$subtotalIva=$total;
 
-			if($producto->tieneIva()){
+			if($producto->getTieneIva()){
 				$subtotalIva = $total/(1+IVA);
 			}
 			$this->setSubtotal($this->getSubtotal()-$subtotalIva);

@@ -129,6 +129,26 @@ class Empleado extends Usuario {
         $empleado->cerrarSesion();
     }
 
+    public function verificarCredenciales($usuario,$password){
+        $conexion = Conexion::conectar();
+        $statement = $conexion->prepare('SELECT * FROM `credenciales_de_acceso` WHERE usuario=:usuario AND password=:password');
+        $statement->execute(['usuario' => $usuario, 'password' => $password]);
+        if($statement->rowCount()>0){
+            $credenciales=$statement->fetch(PDO::FETCH_ASSOC);
+            if($credenciales['permiso']==1){
+                $conexion=null;
+                return SUCCESS;
+            }else{
+                $conexion=null;
+                return ERROR;
+            }
+        }else{
+            $conexion=null;
+            return NOT_FOUND;
+        }
+
+    }
+
     public static function obtenerEmpleado($numeroConsulta,$modo=true) {
         try {
 

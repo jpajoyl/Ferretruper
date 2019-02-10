@@ -3,6 +3,7 @@
 		include_once '../Conexion.php';
 		include_once 'SesionEmpleado.php';
 		include_once '../Models/Usuario.php';
+		include_once '../Models/Empleado.php';
 
 		$objectSession =new SesionEmpleado();
 		$method = isset($_GET['method'])?$_GET['method']:"";
@@ -13,7 +14,8 @@
 		if(!strcmp($method,"comprobarAdministrador")){
 			$usuario=$_POST['usuario'];
 			$password=$_POST['password'];
-			
+			$empleado = new Empleado();
+			echo $empleado->verificarCredenciales($usuario,$password);
 		}
 	}
  ?>
