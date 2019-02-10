@@ -248,8 +248,8 @@
 					if($producto->getTieneIva()){
 						$subtotalIva = $total/(1+IVA);
 					}
-					$subtotal=$this->getSubtotal()+$subtotalIva;
-					$this->setSubtotal();
+					$subtotal=$this->getSubtotal();
+					$this->setSubtotal($subtotal+$subtotalIva);
 					$conexion = null;
 					$this->setArrayDistribucion($arrayDistribucion);
 					return SUCCESS;	 //GUARDAR ESTO EN UN ARRAY;
