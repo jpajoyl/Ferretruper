@@ -55,7 +55,7 @@
 					if($seleccionarProducto==SUCCESS){
 						$data['data']=SUCCESS;
 					}
-					$data['subtotal']=$venta->getSubtotal();
+					$data['subtotal']=$venta->getTotal();
 					echo json_encode($data);
 				} catch (Exception $e) {
 					echo ERROR;

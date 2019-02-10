@@ -231,11 +231,12 @@ $(document).ready(function() {
                 type: 'POST',
                 data: data,
                 success:function(data){
-                    data=$.parseJSON(data);
                     console.log(data);
+                    data=$.parseJSON(data);
                     if(data.data==1){
                         var unidadesTotales=parseInt($("#body-table-Productos tr[id-producto-inventario="+idProducto+"] .unidades-totales").text());
                         $("#body-table-Productos tr[id-producto-inventario="+idProducto+"] .unidades-totales").html(unidadesTotales-cantidad);
+                        $("#total-preCompra").html(numberWithCommas(data.subtotal));
                     }else{
                         Swal(
                           'Error!',
