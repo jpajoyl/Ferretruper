@@ -1,5 +1,10 @@
 <?php 
-
+	/*include "../Conexion.php";
+	include "../Controllers/Response.php";
+	include "Producto.php";
+	include "Inventario.php";
+	include "Factura.php";
+	include "ProductoXVenta.php";*/d
 	/**
 	 * 
 	 */
@@ -165,7 +170,14 @@
 
 		public function setArrayDistribucion($ArrayDistribucion){
 			$this->arrayDistribucion = $ArrayDistribucion;
-		}	
+		}
+
+		public function setSumaTotal($sumaTotal){
+			$this->total = $this->total + $sumaTotal;
+		}
+		public function setSumaSubTotal($sumaSubTotal){
+			$this->subtotal = $this->subtotal + $sumaSubTotal;
+		}
 
 		public static function obtenerVenta($idVenta){
 			$conexion = Conexion::conectar();
@@ -242,14 +254,13 @@
 					}
 
 
-					$total=$this->getTotal()+($numeroUnidades*$precioVentaUnitario);
-					$this->setTotal($total);
+					$total=($numeroUnidades*$precioVentaUnitario);
+					$this->setSumaTotal($total);
 					$subtotalIva=$total;
 					if($producto->getTieneIva()){
 						$subtotalIva = $total/(1+IVA);
 					}
-					$subtotal=$this->getSubtotal();
-					$this->setSubtotal($subtotal+$subtotalIva);
+					$this->setSumaSubTotal($subtotalIva);
 					$conexion = null;
 					$this->setArrayDistribucion($arrayDistribucion);
 					return SUCCESS;	 //GUARDAR ESTO EN UN ARRAY;
@@ -473,8 +484,13 @@
 
 		}
 	}
-
-
-
+	/*$fecha = date('Y-m-d');
+	$venta = new Venta($fecha);
+	$venta->seleccionarProducto(1,10);
+	echo "Total 1 : " . $venta->getTotal();
+	echo "<br>SubTotal 1 : " . $venta->getSubtotal();
+	$venta->seleccionarProducto(1,10);
+	echo "<br>Total 2 : " . $venta->getTotal();
+	echo "<br>SubTotal 2 : " . $venta->getSubtotal();*/
 
 	?>
