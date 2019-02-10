@@ -236,7 +236,7 @@ $(document).ready(function() {
                     if(data.data==1){
                         var unidadesTotales=parseInt($("#body-table-Productos tr[id-producto-inventario="+idProducto+"] .unidades-totales").text());
                         $("#body-table-Productos tr[id-producto-inventario="+idProducto+"] .unidades-totales").html(unidadesTotales-cantidad);
-                        $("#total-preCompra").html(numberWithCommas(data.subtotal));
+                        $("#total-preCompra").html(numberWithCommas(data.totalVenta));
                     }else{
                         Swal(
                           'Error!',
