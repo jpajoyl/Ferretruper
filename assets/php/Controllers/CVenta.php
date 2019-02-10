@@ -21,7 +21,14 @@
 				$venta=unserialize($_COOKIE['venta']);
 				if($venta instanceof Venta){
 					$data['response']=SUCCESS;
-					$data['idVenta']=$venta->getIdVenta();
+					$productosxventa=$venta->verProductosxVenta();
+					if($productosxventa->rowCount()>0){
+						while ($productoxventa = $productosxventa->fetch(PDO::FETCH_ASSOC)) {
+							$data['productosxventa'][]=$productoxventa;
+						}
+					}else{
+						$data['productosxventa']=NOT_FOUND;
+					}
 					echo json_encode($data);
 				}else{
 					echo ERROR;
