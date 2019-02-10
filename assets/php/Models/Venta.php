@@ -27,7 +27,7 @@
 			}
 		}
 
-		public function __construct0($subtotal, $iva, $total, $fecha, $id_resolucion = null, $retefuente=null, $descuento=null, $anulada = 0, $fechaanulada=null){
+		public function __construct0($fecha, $subtotal = 0, $total = 0, $id_resolucion = 0, $retefuente=null, $descuento=null, $anulada = 0, $fechaanulada=null){
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("INSERT INTO `ventas` (`id_venta`, `subtotal`, `iva`, `retefuente`, `descuento`, `total`, `fecha`, `anulada`, `fecha_anulada`, `RESOLUCIONES_id_resolucion`) VALUES (NULL, :subtotal, :iva, :retefuente, :descuento, :total, :fecha, :anulada, :fechaAnulada, :resolucion)");
 
@@ -43,13 +43,13 @@
 			$statement->execute();
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
-				$idVenta = $conexion->lastInsertId()
-				$this->setIdVenta($idVenta);
 
-
-				$conexion = NULL;
-				$statement = NULL;
 			}
+			$idVenta = $conexion->lastInsertId()
+			$this->setIdVenta($idVenta);
+			$conexion = NULL;
+			$statement = NULL;
+		
 		}
 
 		//get & set
@@ -446,6 +446,11 @@
 			if($resultado){
 				while($resultado){
 					$id_producto = $resultado['PRODUCTOS_id_producto'];
+					$unidades = $resultado['unidades'];
+					$statement = null;
+					$statement = $conexion->prepare("SELECT * FROM `productoxventa` WHERE `VENTAS_id_venta` = :idVenta");
+					$statement->bindValue(":idVenta", $idVenta);
+					$statement->execute();
 
 					$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 				}
