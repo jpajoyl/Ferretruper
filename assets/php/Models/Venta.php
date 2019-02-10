@@ -17,8 +17,7 @@
 		private $descuento;
 		private $fecha;
 		private $anulada;//bool
-		private $fechaAnulada;
-		private $resolucion;	
+		private $fechaAnulada;	
 
 		public function __construct(){
 			$params = func_get_args();
@@ -28,7 +27,7 @@
 			}
 		}
 
-		public function __construct0($subtotal, $iva, $total, $fecha, $RESOLUCIONES_id_resolucion, $retefuente=null, $descuento=null, $anulada = 0, $fechaanulada=null){
+		public function __construct0($subtotal, $iva, $total, $fecha, $id_resolucion = null, $retefuente=null, $descuento=null, $anulada = 0, $fechaanulada=null){
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("INSERT INTO `ventas` (`id_venta`, `subtotal`, `iva`, `retefuente`, `descuento`, `total`, `fecha`, `anulada`, `fecha_anulada`, `RESOLUCIONES_id_resolucion`) VALUES (NULL, :subtotal, :iva, :retefuente, :descuento, :total, :fecha, :anulada, :fechaAnulada, :resolucion)");
 
@@ -44,10 +43,13 @@
 			$statement->execute();
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
+				$idVenta = $conexion->lastInsertId()
+				$this->setIdVenta($idVenta);
+
+
+				$conexion = NULL;
+				$statement = NULL;
 			}
-			$this->setIdVenta($conexion->lastInsertId());
-			$conexion = NULL;
-			$statement = NULL;
 		}
 
 		//get & set
@@ -174,7 +176,7 @@
 		public function getArrayDistribucion(){
 			return $this->arrayDistribucion;
 		}
-		
+
 		public function setArrayDistribucion($ArrayDistribucion){
 			$this->arrayDistribucion = $ArrayDistribucion;
 		}	
@@ -205,11 +207,16 @@
 
 		}
 
-		public function seleccionarProducto($idProducto, $numeroUnidades){
+		public function seleccionarProducto($idProducto, $numeroUnidades, $precioVenta = 0){
 			$arrayDistribucion=$this->getArrayDistribucion();
 			$producto = Producto::obtenerProducto($idProducto);
 			if($numeroUnidades<= $producto->getUnidadesTotales()){
-				$productoxventa = new ProductoXVenta($producto->getPrecioMayorInventario(), $numeroUnidades, $producto->getIdProducto(), $this->getIdVenta());
+				if ($precioVenta != 0){
+					$precioVentaUnitario= $precioVenta/$numeroUnidades;
+				}else{
+					$precioVentaUnitario= $producto->getPrecioMayorInventario();
+				}
+				$productoxventa = new ProductoXVenta($precioVentaUnitario, $numeroUnidades, $producto->getIdProducto(), $this->getIdVenta());
 				$idProductoXVenta=$productoxventa->getIdProductoxventa();
 				$conexion = Conexion::conectar();
 				$statement= Inventario::obtenerInventariosParaVenta($idProducto);
@@ -245,11 +252,11 @@
 							return Error;
 						}
 
-					$resultado=$statement->fetch(PDO::FETCH_ASSOC);
+						$resultado=$statement->fetch(PDO::FETCH_ASSOC);
 					}
 
 
-					$total=$this->getTotal()+($numeroUnidades*$producto->getPrecioMayorInventario());
+					$total=$this->getTotal()+($numeroUnidades*$precioVentaUnitario);
 					$this->setTotal($total);
 					$subtotalIva=$total;
 					if($producto->tieneIva()){
@@ -279,18 +286,18 @@
 			$arrayDistribucion = $this->getArrayDistribucion();
 
 			foreach ($arrayDistribucion[$idProductoXVenta] as $idInventario => $unidadesRestadas) {
-			 	$statement = null;
-			 	$inventario= Inventario::obtenerInventario($idInventario);
-			 	$unidadesNuevas = $inventario->getUnidades() + $unidadesRestadas; 
-			 	$statement = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidadesNuevas WHERE `id_inventario` = :idInventario");
-			 	$statement->bindValue(":unidadesNuevas", $unidadesNuevas);
-			 	$statement->bindValue(":idInventario", $idInventario);
-			 	$statement->execute();
-			 	if(!$statement){
-			 		return ERROR;
-			 	}
+				$statement = null;
+				$inventario= Inventario::obtenerInventario($idInventario);
+				$unidadesNuevas = $inventario->getUnidades() + $unidadesRestadas; 
+				$statement = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidadesNuevas WHERE `id_inventario` = :idInventario");
+				$statement->bindValue(":unidadesNuevas", $unidadesNuevas);
+				$statement->bindValue(":idInventario", $idInventario);
+				$statement->execute();
+				if(!$statement){
+					return ERROR;
+				}
 
-			 }
+			}
 			$statement = $conexion->prepare("DELETE FROM `productoxventa` WHERE `id_productoxventa` = :idProductoXVenta ");
 			$statement->bindValue(":idProductoXVenta", $productoXVenta->getIdProductoxventa());
 			$statement->execute();
@@ -339,7 +346,7 @@
 			return $statement;
 		}
 
-		public function efectuarVenta(){ //Factura
+		public function efectuarVenta($resolucion,$idEmpleado, $tipoVenta = "Efectivo", $idCliente = 1){ //Factura
 			$total=$this->getTotal();
 			$conexion = Conexion::conectar();
 			$statement= prepare("UPDATE `ventas` SET `subtotal`=:subtotal,`total`=:total WHERE `id_venta` = :idVenta");
@@ -352,7 +359,6 @@
 				$statement = null;
 				$resultado= null;
 				$fecha=getDate();
-				$resolucion=$this->getResolucion();
 				$statement = $conexion->prepare("SELECT * FROM `resoluciones` WHERE `id_resolucion` = :idResolucion ");
 				$statement->bindParam(':idResolucion',$resolucion,PDO::PARAM_INT);
 				$statement->execute();
@@ -362,6 +368,7 @@
 					$factura = new factura($total,($fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday']),$resolucion,$this->getIdVenta(),$resolucion,$numeroDian);
 
 					if($factura){
+						$this-asociarTipoVenta($idEmpleado,$tipoVenta,$idCliente);
 						$statement=null;
 						$resultado=null;
 						$numeroNuevoDian = $numeroDian;
@@ -369,6 +376,7 @@
 						$statement->bindParam(':idResolucion',$resolucion,PDO::PARAM_INT);
 						$statement->bindParam(':numeroNuevoDian',$numeroNuevoDian,PDO::PARAM_INT);
 						$statement->execute();
+
 					}else{
 						return ERROR;
 					}
@@ -393,8 +401,59 @@
 			return $statement;
 		}
 
+		public static function verVentas(){
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("SELECT * FROM `ventas` WHERE 1 ORDER BY `ventas`.`id_venta` DESC ");
+			$statement->execute();
+			$conexion=null;
+			return $statement;
+		}
 
+		public static function verVentasDelDia(){
+			$conexion = Conexion::conectar();
+			$fechaHoy=date('Y-m-d');
+			$statement = $conexion->prepare("SELECT * FROM `ventas` WHERE `fecha` = :fechaHoy ORDER BY `ventas`.`id_venta` DESC ");
+			$statement->bindValue(":fechaHoy", $fechaHoy);
+			$statement->execute();
+			$conexion=null;
+			return $statement;
+		}
+
+		public function asociarTipoVenta($idEmpleado, $tipoVenta = "Efectivo", $idCliente = 1){
+			$tipoVenta = new TipoVenta ($idCliente,$idEmpleado,$this->getIdVenta(),$tipoVenta);
+
+		}
+
+		public static function verCreditosActivos(){
+			$tipoVenta= "Credito";
+			$conexion = Conexion::conectar();
+			$statement= $conexion->prepare("SELECT * FROM `ventas` INNER JOIN `tipo_venta` ON tipo_venta.VENTAS_id_venta = ventas.id_venta WHERE tipo_venta.estado = :estado and tipo_venta.tipo_venta = :tipoVenta"); 
+			$statement->bindValue(":estado", 0);
+			$statement->bindValue(":tipoVenta", $tipoVenta);
+			$statement->execute();
+			$conexion=null;
+			return $statement;
+		}
+
+		public static function anularVenta($idVenta){
+			$factura = Factura::obtenerFactura($this->getIdVenta(),false);
+			$factura ->anularFactura();
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("SELECT * FROM `productoxventa` WHERE `VENTAS_id_venta` = :idVenta");
+			$statement->bindValue(":idVenta", $idVenta);
+			$statement->execute();
+			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+			if($resultado){
+				while($resultado){
+					$id_producto = $resultado['PRODUCTOS_id_producto'];
+
+					$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+				}
+			}
+		}
 	}
+
+
 
 
 	?>

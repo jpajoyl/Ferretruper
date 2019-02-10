@@ -216,10 +216,12 @@ class Factura {
 	}
 
 	public function anularFactura(){
+		$fechaAnulada = date('Y-m-d');
 		$idFactura=$this->getidFactura();
 		$conexion = Conexion::conectar();
-		$statement = $conexion->prepare("UPDATE `facturas` SET `anulada` = '1' WHERE `facturas`.`id_factura` = :idFactura");
+		$statement = $conexion->prepare("UPDATE `facturas` SET `anulada` = '1' , `fecha_anulada` = :fechaAnulada WHERE `facturas`.`id_factura` = :idFactura");
 		$statement->bindParam(':idFactura',$idFactura,PDO::PARAM_INT);
+		$statement->bindValue(":fechaAnulada", $fechaAnulada);
 		$statement->execute();
 		$this->setAnulada(1);
 		$conexion=null;

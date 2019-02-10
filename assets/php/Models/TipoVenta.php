@@ -6,7 +6,7 @@
 class TipoVenta{
 	private $idTipoVenta;
 	private $tipoVenta; //Efectivo o Credito
-	private $estado;
+	private $estado; // 0 no pagado ,1 pagado
 	private $plazo;
 
 	private $cliente;
@@ -21,20 +21,23 @@ class TipoVenta{
 		}
 	}
 
-	public function __construct0($id_cliente, $id_empleado, $id_venta, $tipoVenta="Efectivo", $estado="", $plazo=0){
+	public function __construct0($id_cliente, $id_empleado, $id_venta, $tipoVenta, $plazo=0){
+        $estado = 1;
+        if ($tipoVenta = "Credito"){
+             $estado = 0 ;
+             if ($plazo = 0){
+                return ERROR;
+             }
+        }
 		$conexion = Conexion::conectar();
 		$statement = $conexion->prepare("INSERT INTO `tipo_venta`(`id_tipo_venta`, `tipo_venta`, `estado`, `plazo`, `USUARIOS_id_cliente`, `USUARIOS_id_empleado`, `VENTAS_id_venta`) VALUES (null,:tipoVenta,:estado,:plazo,:id_cliente,:id_empleado,:id_venta)");
-		$this->setNumeroDeIdentificacion($numeroDeIdentificacion,$statement);
-		$this->setTipoDeIdentificacion($tipoDeIdentificacion,$statement);
-		$this->setDigitoDeVerificacion($digitoDeVerificacion,$statement);
-		$this->setNombre($nombre,$statement);
-		$this->setDireccion($direccion,$statement);
-		$this->setCiudad($ciudad,$statement);
-		$this->setEmail($email,$statement);
-		$this->setCelular($celular,$statement);
-		$this->setTelefono($telefono,$statement);
-		$this->setClasificacion($clasificacion,$statement);
-        $this->setCliente($cliente,$statement);
+		$this->setTipoVenta($tipoVenta,$statement);
+		$this->setEstado($estado,$statement);
+		$this->setPlazo($plazo,$statement);
+		$this->setCliente($id_cliente,$statement);
+		$this->setEmpleado($id_empleado,$statement);
+		$this->setVenta($id_venta,$statement);
+
 		$statement->execute();
 		if(!$statement){
 			throw new Exception("Error Processing Request", 1);
@@ -101,7 +104,7 @@ class TipoVenta{
     	if($statement!=NULL){
     		$statement->bindParam(':id_cliente',$id_cliente,PDO::PARAM_INT);
     	}
-    	$this->cliente = Cliente::obtenerCliente($id_cliente,false);
+    	$this->cliente = $id_cliente;
     }
 
 
@@ -114,7 +117,7 @@ class TipoVenta{
     	if($statement!=NULL){
     		$statement->bindParam(':id_empleado',$id_empleado,PDO::PARAM_INT);
     	}
-    	$this->empleado = Empleado::obtenerEmpleado($id_empleado,false);
+    	$this->empleado = $id_empleado,false;
     	return $this;
     }
 
@@ -128,12 +131,12 @@ class TipoVenta{
     	if($statement!=NULL){
     		$statement->bindParam(':id_venta',$id_venta,PDO::PARAM_INT);
     	}
-    	$this->venta = Venta::obtenerVenta($id_venta);
-    	return $this;
+    	$this->venta = $id_venta;
+
     }
 
 
-    public static function obtenerTipoVenta($idVenta){ 
+    public static function obtenerTipoVenta($idVenta){
     	$conexion = Conexion::conectar();
     	$statement = $conexion->prepare("SELECT * FROM `tipo_venta` WHERE  `VENTAS_id_venta`= :idVenta");
     	$statement->bindParam(":idVenta", $idVenta);
@@ -172,24 +175,43 @@ class TipoVenta{
 
     }
 
-    public function cambiarTipoVenta(){
-    	if($this->getTipoVenta()== "Efectivo"){
-    		$tipoVenta="Credito";
-    	}else if ($this->getTipoVenta() == "Credito"){
-    		$tipoVenta="Efectivo";
-    	}
-		$conexion = Conexion::conectar();
-		$statement = $conexion->prepare("UPDATE `tipo_venta` SET `tipo_venta`=:tipo_venta WHERE `id_tipo_venta` = :id_tipoVenta");
+    public function cambiarACredito($plazo = 30){
+        $conexion = Conexion::conectar();
+    	$tipoVenta="Credito";
+        $statement = $conexion->prepare("UPDATE `tipo_venta` SET `tipo_venta`=:tipo_venta ,`estado`=:estado ,`plazo`= :plazo WHERE `id_tipo_venta` = :id_tipoVenta");
+
 		$id_tipoVenta= $this->getIdTipoVenta();
 		$statement->bindValue(":id_tipoVenta", $id_tipoVenta);
 		$statement->bindValue(":tipo_venta", $tipoVenta);
+        $statement->bindValue(":estado", 0);
+        $statement->bindValue(":plazo", $plazo);
 		$statement->execute();
+        $conexion = null;
 
 		if($statement){
 			return SUCCESS;
-		}
+		}else{
+            return ERROR;
+        }
+        
 
 
+    }
+
+    public function cambiarAEfectivo(){
+        $conexion = Conexion::conectar();
+        $tipoVenta="Efectivo";
+        $statement = $conexion->prepare("UPDATE `tipo_venta` SET `tipo_venta`=:tipo_venta WHERE `id_tipo_venta` = :id_tipoVenta");
+                $id_tipoVenta= $this->getIdTipoVenta();
+        $statement->bindValue(":id_tipoVenta", $id_tipoVenta);
+        $statement->bindValue(":tipo_venta", $tipoVenta);
+        $statement->execute();
+        $conexion = null;
+        if($statement){
+            return SUCCESS;
+        }else{
+            return ERROR;
+        }
     }
 
 
