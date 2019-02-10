@@ -48,6 +48,10 @@
 						$data['data']=SUCCESS;
 					}
 					$data['totalVenta']=$venta->getTotal();
+					unset($_COOKIE["venta"]);
+					setcookie("venta", "",time() - 3600, "/");
+					$serializeVenta=serialize($venta);
+					setcookie("venta", $serializeVenta,time() + 3600, "/");
 					echo json_encode($data);
 				}
 			}else{

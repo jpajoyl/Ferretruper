@@ -13,18 +13,20 @@ $(document).ready(function() {
                 data=$.parseJSON(data);
                 if(data!=3){
                     if(data.response==1){
-                        $("#table-venta > tbody").html("");
-                       $.map(data.productosxventa, function(producto) {
-                        var tbody='<tr id-productosxventa="'+producto.id_productoxventa+'">'+
-                          '<td width="15%" id="td-id-producto">'+producto.id_producto+'</td>'+
-                          '<td>'+producto.nombre+'</td>'+
-                          '<td width="15%">'+numberWithCommas(producto.precio_mayor_inventario)+'</td>'+
-                          '<td width="15%">'+producto.unidades+'</td>'+
-                          '<td width="15%">'+numberWithCommas(producto.precio_venta)+'</td>'+
-                          '<td width="15%"><center><button class="btn btn-danger btn-xs eliminar-producto-seleccionado"><i class="fa fa-trash"></i></button></button></center></td>'+
-                          '</tr>';
-                        $("#table-venta > tbody").prepend(tbody);
-                       }); 
+                        if(data.productosxventa!=3){
+                             $("#table-venta > tbody").html("");
+                            $.map(data.productosxventa, function(producto) {
+                             var tbody='<tr id-productosxventa="'+producto.id_productoxventa+'">'+
+                               '<td width="15%" id="td-id-producto">'+producto.id_producto+'</td>'+
+                               '<td>'+producto.nombre+'</td>'+
+                               '<td width="15%">'+numberWithCommas(producto.precio_mayor_inventario)+'</td>'+
+                               '<td width="15%">'+producto.unidades+'</td>'+
+                               '<td width="15%">'+numberWithCommas(producto.precio_venta*producto.unidades)+'</td>'+
+                               '<td width="15%"><center><button class="btn btn-danger btn-xs eliminar-producto-seleccionado"><i class="fa fa-trash"></i></button></button></center></td>'+
+                               '</tr>';
+                             $("#table-venta > tbody").prepend(tbody);
+                            }); 
+                        }
                     }
                 }else{
                     $("#no-venta").fadeIn(0);
