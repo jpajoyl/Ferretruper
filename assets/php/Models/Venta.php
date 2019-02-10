@@ -4,7 +4,7 @@
 	include "Producto.php";
 	include "Inventario.php";
 	include "Factura.php";
-	include "ProductoXVenta.php";*/d
+	include "ProductoXVenta.php";*/
 	/**
 	 * 
 	 */
