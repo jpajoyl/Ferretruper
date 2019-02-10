@@ -29,12 +29,14 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 				echo NOT_FOUND;
 			}
 	}elseif (!strcmp($method,"emitirComprobante")) {
-		$arrayIdFacturaCompra=$_POST['data'];
-		echo json_encode($arrayIdFacturaCompra);
-		if (count($arrayIdFacturaCompra)>0) {
+		$arrayIdFacturaCompra=$_GET['id-facturas'];
+		$ids = preg_split('[-]', $arrayIdFacturaCompra);
+		array_pop( $ids );
+		if (count($ids)>0) {
 			$comprobanteEgreso=new ComprobanteEgreso(date('Y-m-d'));
-			for ($i=0; $i <count($arrayIdFacturaCompra) ; $i++) {
-				$factura=FacturaCompra::obtenerFacturaCompraPorIdFacturaCompra($arrayIdFacturaCompra[$i]);
+			for ($i=0; $i <count($ids) ; $i++) {
+				$factura=FacturaCompra::obtenerFacturaCompraPorIdFacturaCompra($ids[$i]);
+				echo gettype($factura);
 				$factura->asociarComprobanteEgreso($comprobanteEgreso->getNumeroConsecutivo());
 			}
 			$comprobanteEgreso->imprimirComprobante(false);

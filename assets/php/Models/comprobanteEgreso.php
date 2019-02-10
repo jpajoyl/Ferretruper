@@ -109,6 +109,7 @@
 		public function imprimirComprobante($manual){//manual es bool, true->si decripcion manual, false->si descripcion automatica
 			include_once '../Controllers/CifrasEnLetras.php';
 			require('../fpdf/fpdf.php');
+			ob_start ();
 			$pdf=new FPDF();  //crea el objeto
 			$pdf->AddPage();  //añadimos una página. Origen coordenadas, esquina superior izquierda, posición por defeto a 1 cm de los bordes.
 			$pdf->Image('../../images/LOGO FERRETRUPER.jpg' , 7 , 7 , 40 , 10,'JPG');
@@ -161,9 +162,9 @@
 					$pdf->ln(0.7);
 				}
 			}
-			$pdf->Rect(10, 63, 190, count($arrayCompra)*9);
+			$pdf->Rect(10, 63, 190, 55);
 
-			$pdf->ln();
+			$pdf->ln(45);
 
 			// $pdf->SetXY(10, 70);
 			$pdf->SetFont('Arial','',10);
@@ -176,6 +177,7 @@
 
 
 			$pdf->Output('D',$archivo_de_salida,true);
+			ob_end_flush();
 			header("Content-type:application/pdf");
 			//Creacion de las cabeceras que generarán el archivo pdf
 			header ("Content-Type: application/download");
