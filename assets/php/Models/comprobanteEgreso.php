@@ -159,14 +159,14 @@
 					$descripcion =utf8_decode("Cancelación Factura #"). $compra->getNumeroFactura();
 					$pdf->Cell(140,5, $descripcion,0,0,'J',false);//HHHHHHHHHHHHHHHHHHH
 					$pdf->Cell(190,5, number_format($compra->getTotalCompra()),0,1,'L',false);
-					$pdf->ln(0.7);
+					$pdf->ln(0.01);
 				}
 			}
 			$pdf->Rect(10, 63, 190, 55);
 
 			$pdf->ln(45);
 
-			// $pdf->SetXY(10, 70);
+			$pdf->SetXY(10, 120);
 			$pdf->SetFont('Arial','',10);
 			$pdf->Cell(70,10, "$                ".strval(number_format($totalCompra)),1,0,'L',false);//HHHHHHHHHHHHHHHHHHHHHHHH
 			$pdf->Cell(30,10, "Efectivo: si | no",1,1,'C',false);//HHHHHHHHHHHHHHHHHHH

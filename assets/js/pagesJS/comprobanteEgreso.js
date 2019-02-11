@@ -122,6 +122,7 @@ $(document).ready(function() {
 		$(this).closest('tr').remove();
 		if($("#body-table-comprobante-egreso tr").length==1){
 			$("#no-factura").fadeIn(0);
+			$("#enviar-factura-compra").fadeOut(0);
 		}
 		var valor=$(this).attr("valor");
 		totalFacturas-=valor;

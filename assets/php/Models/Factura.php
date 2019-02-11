@@ -230,6 +230,7 @@ class Factura {
 	public function imprimirFacturaCarta(){
 		include_once '../Controllers/CifrasEnLetras.php';
 		require('../fpdf/fpdf.php');
+		ob_start ();
 		$pdf=new FPDF();  //crea el objeto
 		$pdf->AddPage();  //añadimos una página. Origen coordenadas, esquina superior izquierda, posición por defeto a 1 cm de los bordes.
 		$pdf->SetFillColor(215, 205, 203);
@@ -380,6 +381,7 @@ class Factura {
 		$pdf->MultiCell(190,6, utf8_decode($this->getResolucion()),0,"J",false);
 
 		$pdf->Output('I',$archivo_de_salida,true);
+		ob_end_flush();
 		header("Content-type:application/pdf");
 		//Creacion de las cabeceras que generarán el archivo pdf
 		header ("Content-Type: application/download");

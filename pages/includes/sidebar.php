@@ -26,7 +26,7 @@
                     <li class="submenu">
                         <a href="#"><i class="fa fa-fw fa-shopping-cart"></i> <span> Ventas </span> <span class="menu-arrow"></span></a>
                             <ul class="list-unstyled">
-                                <li><a href="#">Ver ventas</a></li>
+                                <li><a <?php if(!strcmp(basename($_SERVER['PHP_SELF']),"verVentas.php")){?> class="active" <?php } ?> href="verVentas.php">Ver ventas</a></li>
                                 <li><a href="#">Ventas del dia</a></li>
                                 <li><a href="#">Garantia</a></li>
                                 <li><a href="#">Creditos activos</a></li>
