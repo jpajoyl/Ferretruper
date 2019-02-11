@@ -135,6 +135,14 @@ class TipoVenta{
 
     }
 
+    public static function obtenerTipoVentas(){
+            $conexion = Conexion::conectar();
+            $statement= $conexion->prepare("SELECT * FROM `ventas` INNER JOIN `tipo_venta` ON tipo_venta.VENTAS_id_venta = ventas.id_venta WHERE tipo_venta.estado = :estado"); 
+            $statement->bindValue(":estado", 1);
+            $statement->execute();
+            $conexion=null;
+            return $statement;
+    }
 
     public static function obtenerTipoVenta($idVenta){
     	$conexion = Conexion::conectar();
@@ -202,7 +210,7 @@ class TipoVenta{
         $conexion = Conexion::conectar();
         $tipoVenta="Efectivo";
         $statement = $conexion->prepare("UPDATE `tipo_venta` SET `tipo_venta`=:tipo_venta WHERE `id_tipo_venta` = :id_tipoVenta");
-                $id_tipoVenta= $this->getIdTipoVenta();
+        $id_tipoVenta= $this->getIdTipoVenta();
         $statement->bindValue(":id_tipoVenta", $id_tipoVenta);
         $statement->bindValue(":tipo_venta", $tipoVenta);
         $statement->execute();
@@ -212,6 +220,26 @@ class TipoVenta{
         }else{
             return ERROR;
         }
+    }
+
+    public function pagarCredito(){
+        $tipo_venta = $this->getTipoVenta();
+        if ($tipo_venta == "Credito"){
+            $idTipoVenta = $this->getIdTipoVenta();
+            $statement = $conexion->prepare("UPDATE `tipo_venta` SET `estado`= :estado WHERE `id_tipo_venta` = :idTipoVenta");
+            $statement->bindValue(":estado", 1);
+            $statement->bindValue(":idTipoVenta", $idTipoVenta);
+            $statement->execute();
+            if($statement){
+                return SUCCESS;
+            }else{
+                return ERROR;
+            }
+            
+        }else{
+            return ERROR;
+        }
+
     }
 
 

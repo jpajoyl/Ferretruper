@@ -1,16 +1,16 @@
 <?php 
-	/*include "../Conexion.php";
+	include "../Conexion.php";
 	include "../Controllers/Response.php";
 	include "Producto.php";
 	include "Inventario.php";
 	include "Factura.php";
-	include "ProductoXVenta.php";*/
+	include "ProductoXVenta.php";
 	/**
 	 * 
 	 */
 	date_default_timezone_set("America/Bogota");
 	class Venta {
-		private $arrayDistribucion = Array();
+		private $arrayDistribucion = array();
 		
 
 		//atributos
@@ -221,38 +221,37 @@
 				$resultado=$statement->fetch(PDO::FETCH_ASSOC);
 				if($resultado){
 					$unidadesSumadas=0;
+					$arrayDistribucionInventario = array();
 					while($resultado){
 						$idInventario=$resultado['id_inventario'];
-						$unidadesInventario=$resultado['unidades'];
+						$unidadesInventario=intval($resultado['unidades']);
 						$unidadesSumadas+=$unidadesInventario;
 						if($unidadesSumadas< $numeroUnidades){
-							$statement = null;
-							$statement = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidades WHERE `id_inventario` = :idInventario");
+							$statement2 = null;
 							$unidadesRestantes=0;
-							$statement->bindValue(":unidades", $unidadesRestantes);
-							$statement->bindValue(":idInventario", $idInventario);
-							$statement->execute();
+							$statement2 = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidades WHERE `id_inventario` = :idInventario");
+							$statement2->bindValue(":unidades", $unidadesRestantes);
+							$statement2->bindValue(":idInventario", $idInventario);
+							$statement2->execute();
+							$arrayDistribucionInventario[strval($idInventario)] = $unidadesInventario-$unidadesRestantes;
 
 						}else if ($unidadesSumadas >= $numeroUnidades) {
 							$unidadesRestantes= $unidadesSumadas-$numeroUnidades;
-							$statement = null;
-							$statement = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidades WHERE `id_inventario` = :idInventario");
-
-							$statement->bindValue(":unidades", $unidadesRestantes);
-							$statement->bindValue(":idInventario", $idInventario);
-							$statement->execute();
+							$statement2 = null;
+							$statement2 = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidades WHERE `id_inventario` = :idInventario");
+							$statement2->bindValue(":unidades", $unidadesRestantes);
+							$statement2->bindValue(":idInventario", $idInventario);
+							$statement2->execute();
+							$arrayDistribucionInventario[strval($idInventario)] = $unidadesInventario-$unidadesRestantes;
 							break;
 						}
 
-						if($statement){
-							$arrayDistribucion[$idProductoXVenta][$idInventario]=$unidadesInventario-$unidadesRestantes;
-						}else{
-							return Error;
-						}
-
+						
 						$resultado=$statement->fetch(PDO::FETCH_ASSOC);
+
 					}
 
+					$arrayDistribucion[strval($idProductoXVenta)] = $arrayDistribucionInventario;
 
 					$total=($numeroUnidades*$precioVentaUnitario);
 					$this->setSumaTotal($total);
@@ -261,9 +260,10 @@
 						$subtotalIva = $total/(1+IVA);
 					}
 					$this->setSumaSubTotal($subtotalIva);
-					$conexion = null;
 					$this->setArrayDistribucion($arrayDistribucion);
 					$producto->calcularUnidades();
+					$conexion = null;
+					$statement=null;
 					return SUCCESS;	 //GUARDAR ESTO EN UN ARRAY;
 				}else{
 					return ERROR;
@@ -301,13 +301,14 @@
 
 
 			$total=$this->getTotal()-($unidades*$precio);
-			$this->setTotal($total);
 			$subtotalIva=$total;
 
 			if($producto->getTieneIva()){
 				$subtotalIva = $total/(1+IVA);
 			}
-			$this->setSubtotal($this->getSubtotal()-$subtotalIva);
+			$subtotal = $this->getSubtotal()-$subtotalIva
+			$this->setTotal($total);
+			$this->setSubtotal($subtotal );
 
 			$conexion = null;
 			return SUCCESS;
@@ -483,13 +484,18 @@
 
 		}
 	}
-	/*$fecha = date('Y-m-d');
+	$fecha = date('Y-m-d');
 	$venta = new Venta($fecha);
-	$venta->seleccionarProducto(1,10);
+	$venta->seleccionarProducto(1,1);
 	echo "Total 1 : " . $venta->getTotal();
 	echo "<br>SubTotal 1 : " . $venta->getSubtotal();
-	$venta->seleccionarProducto(1,10);
+	$venta->seleccionarProducto(1,200);
 	echo "<br>Total 2 : " . $venta->getTotal();
-	echo "<br>SubTotal 2 : " . $venta->getSubtotal();*/
+	echo "<br>SubTotal 2 : " . $venta->getSubtotal();
+	echo "<br>";
+	$array = $venta-> getArrayDistribucion();
+	var_dump($array);
+
+	$array = $venta->
 
 	?>
