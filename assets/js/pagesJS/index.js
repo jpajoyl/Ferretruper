@@ -27,6 +27,7 @@ $(document).ready(function() {
                              $("#table-venta > tbody").prepend(tbody);
                             }); 
                         }
+                        $("#total-preCompra").html(numberWithCommas(data.totalVenta));
                     }
                 }else{
                     $("#no-venta").fadeIn(0);
@@ -52,6 +53,7 @@ $(document).ready(function() {
                     }
                 }
             },
+            "destroy":true,
             "autoWidth": false,
             "columns":[
             {"data":"id_producto"},
@@ -62,7 +64,7 @@ $(document).ready(function() {
             {"data":function (data, type, row){
                 return numberWithCommas(data.precio_mayor_inventario);
             }},
-            {"data":function (data, type, row){
+            {className:"button-añadir-producto","data":function (data, type, row){
             	if(parseInt(data.unidades_totales)>0) {
             		return "<center><button class='btn btn-success btn-xs añadir-producto'><i class='fa fa-plus-circle'></i></button>\
                     </button></center>";
@@ -80,7 +82,6 @@ $(document).ready(function() {
                   $(row).toggleClass('tr-locked');
             }
           },
-          "destroy":true,
           "responsive":true,
           "language": {
             "lengthMenu": "Mostrar _MENU_ registros por pagina",
@@ -245,13 +246,18 @@ $(document).ready(function() {
                 type: 'POST',
                 data: data,
                 success:function(data){
-                    console.log(data);
                     data=$.parseJSON(data);
                     if(data.data==1){
-                        var unidadesTotales=parseInt($("#body-table-Productos tr[id-producto-inventario="+idProducto+"] .unidades-totales").text());
-                        $("#body-table-Productos tr[id-producto-inventario="+idProducto+"] .unidades-totales").html(unidadesTotales-cantidad);
-                        $("#total-preCompra").html(numberWithCommas(data.totalVenta));
-                        getVenta();
+                        var tr_unidades=$("#body-table-Productos tr[id-producto-inventario="+idProducto+"] .unidades-totales");
+                        var unidadesTotales=parseInt(tr_unidades.text());
+                        tr_unidades.html(unidadesTotales-cantidad);
+                        if(unidadesTotales-cantidad==0){
+                           $("#body-table-Productos tr[id-producto-inventario="+idProducto+"]").addClass("tr-warning");
+                           $("#body-table-Productos tr[id-producto-inventario="+idProducto+"] .button-añadir-producto").html("");
+                        }
+                        setTimeout(function(){
+                            getVenta();
+                        },50);
                     }else{
                         Swal(
                           'Error!',
@@ -263,10 +269,6 @@ $(document).ready(function() {
             });
         }
    });
-
-   function sumarTotalVenta(totalProducto){
-
-   }
     
 });
 

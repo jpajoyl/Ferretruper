@@ -18,6 +18,8 @@
 	if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		if(!strcmp($method,"obtenerVenta")){
 			if(isset($_COOKIE['venta'])){
+				// unset($_COOKIE["venta"]);
+				// setcookie("venta", "",time() - 3600, "/");
 				$venta=unserialize($_COOKIE['venta']);
 				if($venta instanceof Venta){
 					$data['response']=SUCCESS;
@@ -29,6 +31,7 @@
 					}else{
 						$data['productosxventa']=NOT_FOUND;
 					}
+					$data['totalVenta']=$venta->getTotal();
 					echo json_encode($data);
 				}else{
 					echo ERROR;
@@ -47,7 +50,6 @@
 					if($seleccionarProducto==SUCCESS){
 						$data['data']=SUCCESS;
 					}
-					$data['totalVenta']=$venta->getTotal();
 					unset($_COOKIE["venta"]);
 					setcookie("venta", "",time() - 3600, "/");
 					$serializeVenta=serialize($venta);
@@ -66,7 +68,6 @@
 					if($seleccionarProducto==SUCCESS){
 						$data['data']=SUCCESS;
 					}
-					$data['totalVenta']=$venta->getTotal();
 					echo json_encode($data);
 				} catch (Exception $e) {
 					echo ERROR;

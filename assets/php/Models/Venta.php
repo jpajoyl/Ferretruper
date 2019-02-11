@@ -233,7 +233,7 @@
 							$statement->bindValue(":idInventario", $idInventario);
 							$statement->execute();
 
-						}elseif ($unidadesSumadas >= $numeroUnidades) {
+						}else if ($unidadesSumadas >= $numeroUnidades) {
 							$unidadesRestantes= $unidadesSumadas-$numeroUnidades;
 							$statement = null;
 							$statement = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidades WHERE `id_inventario` = :idInventario");
@@ -263,12 +263,11 @@
 					$this->setSumaSubTotal($subtotalIva);
 					$conexion = null;
 					$this->setArrayDistribucion($arrayDistribucion);
+					$producto->calcularUnidades();
 					return SUCCESS;	 //GUARDAR ESTO EN UN ARRAY;
 				}else{
 					return ERROR;
 				}
-
-
 			}else{
 				return NOT_FOUND;
 			}
