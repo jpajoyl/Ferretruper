@@ -306,7 +306,7 @@
 			if($producto->getTieneIva()){
 				$subtotalIva = $total/(1+IVA);
 			}
-			$subtotal = $this->getSubtotal()-$subtotalIva
+			$subtotal = $this->getSubtotal()-$subtotalIva;
 			$this->setTotal($total);
 			$this->setSubtotal($subtotal );
 
