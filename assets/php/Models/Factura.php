@@ -235,6 +235,9 @@ class Factura {
 		$pdf->AddPage();  //añadimos una página. Origen coordenadas, esquina superior izquierda, posición por defeto a 1 cm de los bordes.
 		$pdf->SetFillColor(215, 205, 203);
 		$pdf->Image('../../images/LOGO FERRETRUPER.jpg' , 7 , 7 , 40 , 10,'JPG');
+		if ($this->getAnulada()==1) {
+			$pdf->Image('../../images/anulado.png' , 25 , 50 , 160 , 160,'PNG');
+		}
 		$numeroDian = $this->getNumeroDian();
 		$archivo="FacturaCarta-$numeroDian.pdf";
 		$archivo_de_salida=$archivo;
@@ -250,7 +253,7 @@ class Factura {
 		$venta = $this->getVenta();
 		$idVenta = $venta->getIdVenta();
 		$tipoVenta = TipoVenta::obtenerTipoVenta($idVenta);
-		$cliente = $tipoVenta->getCliente();
+		$cliente = Cliente::obtenerCliente($tipoVenta->getCliente(),false);
 		$pdf->SetFont('Arial','',11);
 		$pdf->Cell(85,7, utf8_decode("SEÑORES:"),0,0,'J',true);
 		$pdf->Cell(105,7, utf8_decode($cliente->getNombre()),1,1,'J',false);
