@@ -117,7 +117,7 @@ class TipoVenta{
     	if($statement!=NULL){
     		$statement->bindParam(':id_empleado',$id_empleado,PDO::PARAM_INT);
     	}
-    	$this->empleado = $id_empleado,false;
+    	$this->empleado = $id_empleado;
     	return $this;
     }
 
