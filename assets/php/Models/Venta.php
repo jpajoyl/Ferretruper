@@ -277,12 +277,12 @@
 		public function desseleccionarProducto($idProductoXVenta){ //OBJETO PRODUCTO X VENTA;
 			$conexion = Conexion::conectar();
 			$productoxventa = ProductoXVenta::obtenerProductoXVenta($idProductoXVenta);
-			$producto = $productoXVenta->getProducto();
-			$unidades = $productoXVenta->getNumeroUnidades();
-			$precio = $productoXVenta->getPrecioVenta();
+			$producto = $productoxventa->getProducto();
+			$unidades = $productoxventa->getNumeroUnidades();
+			$precio = $productoxventa->getPrecioVenta();
 			$arrayDistribucion = $this->getArrayDistribucion();
-
-			foreach ($arrayDistribucion[$idProductoXVenta] as $idInventario => $unidadesRestadas) {
+			$arrayDistribucionxProducto = $arrayDistribucion[$idProductoXVenta];
+			foreach ($arrayDistribucionxProducto as $idInventario => $unidadesRestadas) {
 				$statement = null;
 				$inventario= Inventario::obtenerInventario($idInventario);
 				$unidadesNuevas = $inventario->getUnidades() + $unidadesRestadas; 

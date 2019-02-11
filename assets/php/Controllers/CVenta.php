@@ -47,31 +47,40 @@
 					$unidades=$_POST['unidades'];
 					$totalVenta = isset($_POST['totalVenta'])?$_POST['totalVenta']:0;
 					$seleccionarProducto=$venta->seleccionarProducto($idProducto,$unidades);
-					if($seleccionarProducto==SUCCESS){
-						$data['data']=SUCCESS;
-					}
 					unset($_COOKIE["venta"]);
 					setcookie("venta", "",time() - 3600, "/");
 					$serializeVenta=serialize($venta);
 					setcookie("venta", $serializeVenta,time() + 3600, "/");
-					echo json_encode($data);
+					echo $seleccionarProducto;
 				}
 			}else{
 				try {
 					$venta = new Venta(date('Y-m-d'));
-					$serializeVenta=serialize($venta);
-					setcookie("venta", $serializeVenta,time() + 3600, "/");
 					$idProducto=$_POST['idProducto'];
 					$unidades=$_POST['unidades'];
 					$totalVenta = isset($_POST['totalVenta'])?$_POST['totalVenta']:0;
 					$seleccionarProducto=$venta->seleccionarProducto($idProducto,$unidades);
-					if($seleccionarProducto==SUCCESS){
-						$data['data']=SUCCESS;
-					}
-					echo json_encode($data);
+					$serializeVenta=serialize($venta);
+					setcookie("venta", $serializeVenta,time() + 3600, "/");
+					echo $seleccionarProducto;
 				} catch (Exception $e) {
 					echo ERROR;
 				}
+			}
+		}else if(!strcmp($method,"deseleccionarProducto")){
+			if(isset($_COOKIE['venta'])){
+				$venta=unserialize($_COOKIE['venta']);
+				if($venta instanceof Venta){
+					$idProductoXVenta=$_POST['idProductoXVenta'];
+					$deseleccionarProducto=$venta->desseleccionarProducto($idProductoXVenta);
+					unset($_COOKIE["venta"]);
+					setcookie("venta", "",time() - 3600, "/");
+					$serializeVenta=serialize($venta);
+					setcookie("venta", $serializeVenta,time() + 3600, "/");
+					echo $deseleccionarProducto;
+				}
+			}else{
+				echo ERROR;
 			}
 		}
 	}

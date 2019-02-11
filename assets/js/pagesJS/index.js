@@ -246,8 +246,7 @@ $(document).ready(function() {
                 type: 'POST',
                 data: data,
                 success:function(data){
-                    data=$.parseJSON(data);
-                    if(data.data==1){
+                    if(data==1){
                         var tr_unidades=$("#body-table-Productos tr[id-producto-inventario="+idProducto+"] .unidades-totales");
                         var unidadesTotales=parseInt(tr_unidades.text());
                         tr_unidades.html(unidadesTotales-cantidad);
@@ -269,6 +268,37 @@ $(document).ready(function() {
             });
         }
    });
+
+   $(document).on("click", ".eliminar-producto-seleccionado", function(){
+        var idProductoXVenta=$(this).closest('tr').attr("id-productosxventa");
+        if($("#body-table-venta tr").length==1){
+            $("#no-venta").fadeIn(0);
+        }
+        $.ajax({
+            url: '../assets/php/Controllers/CVenta.php?method=deseleccionarProducto',
+            type: 'POST',
+            data: {"idProductoXVenta":idProductoXVenta},
+            success:function(data){
+                console.log(data);
+                if(data==1){
+                    Swal(
+                      'Error!',
+                      'Deseleccionado satisfactoriamente!',
+                      'error'
+                    );
+                    setTimeout(function(){
+                        getVenta();
+                    },50);
+                }else{
+                    Swal(
+                      'Error!',
+                      'Tenemos un error, recarga y vuelve a intentar!',
+                      'error'
+                    );
+                }
+            }
+        });
+    });
     
 });
 
