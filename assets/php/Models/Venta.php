@@ -1,10 +1,10 @@
 <?php 
-	include "../Conexion.php";
+	/*include "../Conexion.php";
 	include "../Controllers/Response.php";
 	include "Producto.php";
 	include "Inventario.php";
 	include "Factura.php";
-	include "ProductoXVenta.php";
+	include "ProductoXVenta.php";*/
 	/**
 	 * 
 	 */
@@ -484,7 +484,7 @@
 
 		}
 	}
-	$fecha = date('Y-m-d');
+	/*$fecha = date('Y-m-d');
 	$venta = new Venta($fecha);
 	$venta->seleccionarProducto(1,1);
 	echo "Total 1 : " . $venta->getTotal();
@@ -496,6 +496,6 @@
 	$array = $venta-> getArrayDistribucion();
 	var_dump($array);
 
-	$array = $venta->
+	$array = $venta->*/
 
 	?>
