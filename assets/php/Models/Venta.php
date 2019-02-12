@@ -7,6 +7,7 @@
 	include "Inventario.php";
 	include "Factura.php";
 	include "ProductoXVenta.php";
+	include "TipoVenta.php";
 	/**
 	 * 
 	 */
@@ -68,7 +69,6 @@
 				$statement->bindParam(':idVenta',$idVenta,PDO::PARAM_INT);
 			}
 			$this->idVenta = $idVenta;
-			return $this;
 		}
 
 		public function getSubtotal(){
@@ -266,7 +266,7 @@
 					$producto->calcularUnidades();
 					$conexion = null;
 					$statement=null;
-					return SUCCESS;	 //GUARDAR ESTO EN UN ARRAY;
+					return SUCCESS;	 
 				}else{
 					return ERROR;
 				}
@@ -276,7 +276,7 @@
 
 		}
 
-		public function desseleccionarProducto($idProductoXVenta){ //OBJETO PRODUCTO X VENTA;
+		public function desseleccionarProducto($idProductoXVenta){ 
 			$conexion = Conexion::conectar();
 			$productoxventa = ProductoXVenta::obtenerProductoXVenta($idProductoXVenta);
 			if($productoxventa){
@@ -317,22 +317,22 @@
 				$conexion = null;
 				return SUCCESS;
 			}else{
-				echo "NO HAY PRODUCTO X VENTA";
 				return ERROR;
 			}
 
 		}
 
 
-		public function cancelarVenta(){ //Probar , no se si funcione;
+		public function cancelarVenta(){ 
+			$idVenta=$this->getIdVenta();
 			$arrayDistribucion = $this->getArrayDistribucion();
-			foreach ($productosxVenta as $key => $value) {
+			foreach ($arrayDistribucion as $key => $value) {
 				$this->desseleccionarProducto($key);
 			}
 
 			$conexion = Conexion::conectar();
-			$conexion->prepare("DELETE FROM `ventas` WHERE `id_venta` = :idVenta");
-			$statement->bindValue(":idVenta", $this->getIdVenta());
+			$statement= $conexion->prepare("DELETE FROM `ventas` WHERE `id_venta` = :idVenta");
+			$statement->bindValue(":idVenta",$idVenta);
 			$statement->execute();
 
 			if(!$statement){
@@ -358,26 +358,28 @@
 		public function efectuarVenta($resolucion,$idEmpleado, $tipoVenta = "Efectivo", $idCliente = 1){ //Factura
 			$total=$this->getTotal();
 			$conexion = Conexion::conectar();
-			$statement= prepare("UPDATE `ventas` SET `subtotal`=:subtotal,`total`=:total WHERE `id_venta` = :idVenta");
-			$statement->bindParam(':subtotal',$this->getSubtotal(),PDO::PARAM_INT);
-			$statement->bindParam(':total',$total,PDO::PARAM_INT);
-			$statement->bindParam(':idVenta',$this->getIdVenta(),PDO::PARAM_INT);
+			$statement=$conexion->prepare("UPDATE `ventas` SET `subtotal`=:subtotal,`total`=:total WHERE `id_venta` = :idVenta");
+			$subototal=$this->getSubtotal();
+			$idVenta = $this->getIdVenta();
+			$statement->bindValue(':subtotal',$subototal);
+			$statement->bindValue(':total',$total);
+			$statement->bindValue(':idVenta',$idVenta);
 			$statement->execute();
 
 			if ( $statement ){
 				$statement = null;
 				$resultado= null;
-				$fecha=getDate();
+				$fecha = date('Y-m-d');
 				$statement = $conexion->prepare("SELECT * FROM `resoluciones` WHERE `id_resolucion` = :idResolucion ");
 				$statement->bindParam(':idResolucion',$resolucion,PDO::PARAM_INT);
 				$statement->execute();
 				$resultado=$statement->fetch(PDO::FETCH_ASSOC);
 				if($resultado){
 					$numeroDian = $resultado['numero_dian']+ 1;
-					$factura = new factura($total,($fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday']),$resolucion,$this->getIdVenta(),$resolucion,$numeroDian);
-
+					//$factura = new factura($total,$fecha,$resolucion,$idVenta,$resolucion,$numeroDian); Hay un error.
+					$factura = true;
 					if($factura){
-						$this-asociarTipoVenta($idEmpleado,$tipoVenta,$idCliente);
+						$this->asociarTipoVenta($idEmpleado,$tipoVenta,$idCliente);
 						$statement=null;
 						$resultado=null;
 						$numeroNuevoDian = $numeroDian;
@@ -510,11 +512,8 @@
 	echo "<br>";
 	$array = $venta-> getArrayDistribucion();
 	var_dump($array);
-	$venta->desseleccionarProducto(77);
+	$venta->efectuarVenta(1,63,"Efectivo",61);
 
-
-	echo "Total 3: " . $venta->getTotal();
-	echo "<br>SubTotal 3 : " . $venta->getSubtotal();
 
 
 	?>
