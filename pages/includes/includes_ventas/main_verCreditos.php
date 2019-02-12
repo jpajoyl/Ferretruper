@@ -2,10 +2,10 @@
 	<div class="card-header">
 		<div class="row">
 			<div class="col-xs-6 col-sm-6 col-md-8 col-lg-10 col-xl-10">
-				<h3><i class="fa fa-users"></i> Credito actual</h3>
+				<h3><i class="fa fa-users"></i> Creditos</h3>
 			</div>
 			<div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 col-xl-2">
-				<a role="button" href="#" id="ver-pagados" class="btn btn-danger float-right mr">Pagados<span class="btn-label btn-label-right"><i class="fa fa-trash"></i></span></a>
+				<a role="button" href="#" id="ver-pagados" class="btn btn-success float-right mr">Pagados<span class="btn-label btn-label-right"><i class="fa fa-credit-card"></i></span></a>
 				<a role="button" href="#" id="volver-principal" class="btn btn-info float-right mr">Regresar<span class="btn-label btn-label-right"><i class="fa fa-backward"></i></span></a>
 			</div>
 		</div>
@@ -15,11 +15,12 @@
 			<thead class="cf">
 				<tr>
 					<th></th>
+					<th></th>
 					<th>Id venta</th>
 					<th>Id cliente</th>
-					<th>Plazo</th>
+					<th>Valor</th>
+					<th>Fecha ini/fin</th>
 					<th>Estado</th>
-					<th>Abonos</th>
 					<th></th>
 				</tr>
 			</thead>

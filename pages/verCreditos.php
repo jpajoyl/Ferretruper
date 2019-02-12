@@ -32,7 +32,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 	<link href="../assets/css/customCSS/dataTableCollapse.css" rel="stylesheet" type="text/css" />
 	<link href="../assets/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
 	<link href="../assets/css/style.css" rel="stylesheet" type="text/css" />
-	<link href="../assets/css/customCSS/inventario.css" rel="stylesheet" type="text/css" />		
+	<link href="../assets/css/customCSS/credito.css" rel="stylesheet" type="text/css" />		
 
 	<!-- BEGIN CSS for this page -->
 	<link rel="stylesheet" type="text/css" href="../assets/css/dataTables.bootstrap4.min.css"/>
@@ -77,7 +77,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 					<!-- end row -->
 					<div class="row">
 						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">									
-							<?php include 'includes/includes_ventas/verCreditos.php';?>
+							<?php include 'includes/includes_ventas/main_verCreditos.php';?>
 							<!-- MODALS -->
 							<?php include 'includes/modalAddCliente.php';?>
 						</div>
@@ -120,7 +120,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 	<script src="../assets/js/dataTables.buttons.min.js"></script>
 	<script src="../assets/js/dataTables.bootstrap4.min.js"></script>
 	<script src="../assets/js/addCliente.js"></script>
-	<script src="../assets/js/pagesJS/inventario.js"></script>
+	<script src="../assets/js/pagesJS/credito.js"></script>
 	<!-- END Java Script for this page -->
 
 </body>

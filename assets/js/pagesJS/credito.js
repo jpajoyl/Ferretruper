@@ -2,10 +2,10 @@ $(document).ready(function() {
 
 	$(window).load(function(){
 	 	loadData(false);
-        $("#ver-papelera").fadeIn(0);
+        $("#ver-pagados").fadeIn(0);
 	});
 
-    $("#ver-papelera").click(function(event){
+    $("#ver-pagados").click(function(event){
         event.preventDefault();
         $(this).fadeOut(0);
         loadData(true);
@@ -16,15 +16,15 @@ $(document).ready(function() {
         event.preventDefault();
         $(this).fadeOut(0);
         loadData(false);
-        $("#ver-papelera").fadeIn(0);
+        $("#ver-pagados").fadeIn(0);
     });
 
-	function loadData(papelera){
-        if(!papelera){
+	function loadData(pagados){
+        if(!pagados){
             window.table=$('#table-creditos').DataTable({
                 "ajax":{
                     "method":"POST",
-                    "url":"../assets/php/Controllers/CCredito.php?method=vercreditos",
+                    "url":"../assets/php/Controllers/CCredito.php?method=verCreditos",
                     "dataSrc": function(data){
                         if(data == 3){
                             return [];
@@ -36,20 +36,26 @@ $(document).ready(function() {
                 "autoWidth": false,
                 "columns":[
                 {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": 0,
+                            "data":           null
+                },
+                {
                     "className":      'details-control',
                     "orderable":      false,
                     "data":           null,
                     "defaultContent": ''
                 },
-                {"data":"id_producto"},
-                {"data":"nombre"},
-                {"data":"referencia_fabrica"},
-                {"data":"codigo_barras"},
-                {"data":"unidades_totales"},
-                {"data":"precio_mayor_inventario"},
+                {"data":"VENTAS_id_venta"},
+                {"data":"USUARIOS_id_cliente"},
+                {"data":"total"},
+                {"data":"fecha"},//FECHA
+                {"data":"estado"},
                 {"defaultContent":"<center><button class='btn btn-primary btn-xs editar-producto'><i class='fa fa-pencil'></i></button>\
                 </button><button class='btn btn-danger btn-xs eliminar-producto'><i class='fa fa-trash-o'></i></button></center>"}
                 ],
+                "order": [[ 1, 'asc' ]],
                 "destroy":true,
                 "responsive":true,
                 "language": {
@@ -61,6 +67,13 @@ $(document).ready(function() {
                     "infoFiltered": "(registros disponibles _MAX_)"
                 }
             });
+
+            table.on( 'order.dt search.dt', function () {
+                    table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                        cell.innerHTML = i+1;
+                    } );
+                } ).draw();
+
             desactivarProducto("#table-creditos tbody",table);
         }else{
             window.table=$('#table-creditos').DataTable({
