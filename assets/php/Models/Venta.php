@@ -1,5 +1,5 @@
 <?php 
-	include "../Conexion.php";
+/*	include "../Conexion.php";
 	include "../Controllers/Response.php";
 	include "Usuario.php";
 	include "Proveedor.php";
@@ -7,7 +7,7 @@
 	include "Inventario.php";
 	include "Factura.php";
 	include "ProductoXVenta.php";
-	include "TipoVenta.php";
+	include "TipoVenta.php";*/
 	/**
 	 * 
 	 */
@@ -501,7 +501,7 @@
 
 		}
 	}
-	$fecha = date('Y-m-d');
+/*	$fecha = date('Y-m-d');
 	$venta = new Venta($fecha);
 	$venta->seleccionarProducto(1,1);
 	echo "Total 1 : " . $venta->getTotal();
@@ -512,7 +512,7 @@
 	echo "<br>";
 	$array = $venta-> getArrayDistribucion();
 	var_dump($array);
-	$venta->efectuarVenta(1,63,"Efectivo",61);
+	$venta->efectuarVenta(1,63,"Efectivo",61);*/
 
 
 
