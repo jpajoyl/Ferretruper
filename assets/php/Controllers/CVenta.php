@@ -9,6 +9,7 @@
 		include_once '../Models/Factura.php';
 		include_once '../Models/Venta.php';
 		include_once '../Models/ProductoXVenta.php';
+		include_once '../Models/TipoVenta.php';
 
 		$objectSession =new SesionEmpleado();
 		$method = isset($_GET['method'])?$_GET['method']:"";
@@ -82,6 +83,24 @@
 			}else{
 				echo ERROR;
 			}
+		}elseif (!strcmp($method,"verVentas")) {
+			$listaVentas=TipoVenta::obtenerTipoVentas();
+			if($listaVentas->rowCount()>0){
+				while ($venta = $listaVentas->fetch(PDO::FETCH_ASSOC)) {
+					$idVenta = $venta['id_venta'];
+					$factura = Factura::obtenerFactura($idVenta,false);
+					$numeroDian = $factura->getNumeroDian();
+					$venta['numero_dian'] = $numeroDian;
+					$array['ventas'][]=$venta;
+				}
+				echo json_encode($array);
+			}else{
+				echo NOT_FOUND;
+			}
+		}elseif (!strcmp($method,"anularVenta")) {
+			$idVenta = $_POST['idVenta'];
+			$var = Venta::anularVenta($idVenta);
+			
 		}
 	}
  ?>

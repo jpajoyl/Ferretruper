@@ -10,17 +10,17 @@
 		</div>
 	</div>											
 	<div class="card-body">
-		<table id="table-productos" class="table table-bordered table-responsive-xl table-hover display">
+		<table id="table-ventas" class="table table-bordered table-responsive-xl table-hover display">
 			<thead class="cf">
 				<tr>
-					<th></th>
 					<th>Id Venta</th>
 					<th>Fecha</th>
 					<th>Total</th>
-					<th></th>
+					<th># factura</th>
+					<th>ANULAR FACTURA</th>
 				</tr>
 			</thead>
-			<tbody id="body-table-Productos">
+			<tbody id="body-table-ventas">
 
 			</tbody>
 		</table>
