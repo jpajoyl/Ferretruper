@@ -29,7 +29,12 @@ include_once '../assets/php/Controllers/GetSession.php';
 	<link href="../assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 
 	<!-- Custom CSS -->
-	<link href="../assets/css/style.css" rel="stylesheet" type="text/css" />	
+	<link href="../assets/css/customCSS/dataTableCollapse.css" rel="stylesheet" type="text/css" />
+	<link href="../assets/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
+	<link href="../assets/css/style.css" rel="stylesheet" type="text/css" />
+<!--<link href="../assets/css/customCSS/verVentas.css" rel="stylesheet" type="text/css" />-->
+	<!-- BEGIN CSS for this page -->
+	<link rel="stylesheet" type="text/css" href="../assets/css/dataTables.bootstrap4.min.css"/>	
 
 	<!-- BEGIN CSS for this page -->
 
@@ -90,6 +95,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 		<?php include("includes/footer.php"); ?>
 	</div>
 	<!-- END main -->
+
 	<script src="../assets/js/sweetalert2.min.js"></script>
 	<script src="../assets/js/modernizr.min.js"></script>
 	<script src="../assets/js/jquery.min.js"></script>
@@ -109,7 +115,11 @@ include_once '../assets/php/Controllers/GetSession.php';
 	<script src="../assets/js/pikeadmin.js"></script>
 
 	<!-- BEGIN Java Script for this page -->
+	<script src="../assets/js/jquery.dataTables.min.js"></script>
+	<script src="../assets/js/dataTables.buttons.min.js"></script>
+	<script src="../assets/js/dataTables.bootstrap4.min.js"></script>
 	<script src="../assets/js/addCliente.js"></script>
+	<script src="../assets/js/pagesJS/verVentas.js"></script>
 	<!-- END Java Script for this page -->
 
 </body>

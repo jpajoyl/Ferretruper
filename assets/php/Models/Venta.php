@@ -1,10 +1,12 @@
 <?php 
-	/*include "../Conexion.php";
+	include "../Conexion.php";
 	include "../Controllers/Response.php";
+	include "Usuario.php";
+	include "Proveedor.php";
 	include "Producto.php";
 	include "Inventario.php";
 	include "Factura.php";
-	include "ProductoXVenta.php";*/
+	include "ProductoXVenta.php";
 	/**
 	 * 
 	 */
@@ -277,41 +279,47 @@
 		public function desseleccionarProducto($idProductoXVenta){ //OBJETO PRODUCTO X VENTA;
 			$conexion = Conexion::conectar();
 			$productoxventa = ProductoXVenta::obtenerProductoXVenta($idProductoXVenta);
-			$producto = $productoxventa->getProducto();
-			$unidades = $productoxventa->getNumeroUnidades();
-			$precio = $productoxventa->getPrecioVenta();
-			$arrayDistribucion = $this->getArrayDistribucion();
-			$arrayDistribucionxProducto = $arrayDistribucion[$idProductoXVenta];
-			foreach ($arrayDistribucionxProducto as $idInventario => $unidadesRestadas) {
-				$statement = null;
-				$inventario= Inventario::obtenerInventario($idInventario);
-				$unidadesNuevas = $inventario->getUnidades() + $unidadesRestadas; 
-				$statement = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidadesNuevas WHERE `id_inventario` = :idInventario");
-				$statement->bindValue(":unidadesNuevas", $unidadesNuevas);
-				$statement->bindValue(":idInventario", $idInventario);
-				$statement->execute();
-				if(!$statement){
-					return ERROR;
+			if($productoxventa){
+				$producto = $productoxventa->getProducto();
+				$unidades = $productoxventa->getNumeroUnidades();
+				$precio = $productoxventa->getPrecioVenta();
+				$arrayDistribucion = $this->getArrayDistribucion();
+				$arrayDistribucionxProducto = $arrayDistribucion[$idProductoXVenta];
+
+				foreach ($arrayDistribucionxProducto as $idInventario => $unidadesRestadas) {
+					$statement = null;
+					$inventario= Inventario::obtenerInventario($idInventario);
+					$unidadesNuevas = $inventario->getUnidades() + $unidadesRestadas; 
+					$statement = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidadesNuevas WHERE `id_inventario` = :idInventario");
+					$statement->bindValue(":unidadesNuevas", $unidadesNuevas);
+					$statement->bindValue(":idInventario", $idInventario);
+					$statement->execute();
+					if(!$statement){
+						return ERROR;
+					}
+
 				}
+				$statement = $conexion->prepare("DELETE FROM `productoxventa` WHERE `id_productoxventa` = :idProductoXVenta ");
+				$statement->bindValue(":idProductoXVenta", $productoxventa->getIdProductoxventa());
+				$statement->execute();
 
+
+				$total=$this->getTotal()-($unidades*$precio);
+				$subtotalIva=$total;
+
+				if($producto->getTieneIva()){
+					$subtotalIva = $total/(1+IVA);
+				}
+				$subtotal = $this->getSubtotal()-$subtotalIva;
+				$this->setTotal($total);
+				$this->setSubtotal($subtotal );
+
+				$conexion = null;
+				return SUCCESS;
+			}else{
+				echo "NO HAY PRODUCTO X VENTA";
+				return ERROR;
 			}
-			$statement = $conexion->prepare("DELETE FROM `productoxventa` WHERE `id_productoxventa` = :idProductoXVenta ");
-			$statement->bindValue(":idProductoXVenta", $productoXVenta->getIdProductoxventa());
-			$statement->execute();
-
-
-			$total=$this->getTotal()-($unidades*$precio);
-			$subtotalIva=$total;
-
-			if($producto->getTieneIva()){
-				$subtotalIva = $total/(1+IVA);
-			}
-			$subtotal = $this->getSubtotal()-$subtotalIva;
-			$this->setTotal($total);
-			$this->setSubtotal($subtotal );
-
-			$conexion = null;
-			return SUCCESS;
 
 		}
 
@@ -326,10 +334,13 @@
 			$conexion->prepare("DELETE FROM `ventas` WHERE `id_venta` = :idVenta");
 			$statement->bindValue(":idVenta", $this->getIdVenta());
 			$statement->execute();
+
 			if(!$statement){
 				return ERROR;
+			}else{
+				return SUCCESS;
 			}
-			return SUCCESS;
+
 
 		}
 
@@ -433,9 +444,7 @@
 			return $statement;
 		}
 
-		public static function anularVenta($idVenta){
-			$factura = Factura::obtenerFactura($this->getIdVenta(),false);
-			$factura ->anularFactura();
+		public static function anularVenta($idVenta){ 
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("SELECT * FROM `productoxventa` WHERE `VENTAS_id_venta` = :idVenta");
 			$statement->bindValue(":idVenta", $idVenta);
@@ -474,6 +483,12 @@
 			$fechaAnulada = date('Y-m-d');
 			$statement->bindValue(":fechaAnulada", $fechaAnulada);
 			$statement->execute();
+			if($statement){
+				$factura = Factura::obtenerFactura($this->getIdVenta(),false);
+				$factura ->anularFactura();
+			}else{
+				return ERROR;
+			}
 			$statement = null;
 			$conexion = null;
 			return SUCCESS;
@@ -484,7 +499,7 @@
 
 		}
 	}
-	/*$fecha = date('Y-m-d');
+	$fecha = date('Y-m-d');
 	$venta = new Venta($fecha);
 	$venta->seleccionarProducto(1,1);
 	echo "Total 1 : " . $venta->getTotal();
@@ -495,7 +510,11 @@
 	echo "<br>";
 	$array = $venta-> getArrayDistribucion();
 	var_dump($array);
+	$venta->desseleccionarProducto(77);
 
-	$array = $venta->*/
+
+	echo "Total 3: " . $venta->getTotal();
+	echo "<br>SubTotal 3 : " . $venta->getSubtotal();
+
 
 	?>
