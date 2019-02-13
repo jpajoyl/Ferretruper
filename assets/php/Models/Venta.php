@@ -1,5 +1,5 @@
 <?php 
-	include "../Conexion.php";
+/*	include "../Conexion.php";
 	include "../Controllers/Response.php";
 	include "Usuario.php";
 	include "Proveedor.php";
@@ -7,7 +7,7 @@
 	include "Inventario.php";
 	include "Factura.php";
 	include "ProductoXVenta.php";
-	include "TipoVenta.php";
+	include "TipoVenta.php";*/
 	/**
 	 * 
 	 */
@@ -461,7 +461,7 @@
 					$statement2 = $conexion->prepare("SELECT * FROM `inventario` WHERE `productos_id_producto` = :idProducto ORDER BY `inventario`.`precio_inventario` DESC");
 					$statement2->bindValue(":idProducto", $id_producto);
 					$statement2->execute();
-					$resultado2 =  $statement->fetch(PDO::FETCH_ASSOC);
+					$resultado2 =  $statement2->fetch(PDO::FETCH_ASSOC);
 					if($resultado2){
 						$id_inventario = $resultado2['id_inventario'];
 						$unidades = $resultado2['unidades'] + $unidades;
@@ -482,12 +482,13 @@
 				}
 
 			$statement = null;
-			$statement = $conexion->prepare("UPDATE `ventas` SET `anulada`= 1,`fecha_anulada`=:fechaAnulada WHERE 1");
+			$statement = $conexion->prepare("UPDATE `ventas` SET `anulada`= 1,`fecha_anulada`=:fechaAnulada WHERE id_venta = :idVenta");
 			$fechaAnulada = date('Y-m-d');
 			$statement->bindValue(":fechaAnulada", $fechaAnulada);
+			$statement->bindValue(":idVenta", $idVenta);
 			$statement->execute();
 			if($statement){
-				$factura = Factura::obtenerFactura($this->getIdVenta(),false);
+				$factura = Factura::obtenerFactura($idVenta,false);
 				$factura ->anularFactura();
 			}else{
 				return ERROR;
@@ -502,7 +503,7 @@
 
 		}
 	}
-	$fecha = date('Y-m-d');
+/*	$fecha = date('Y-m-d');
 	$venta = new Venta($fecha);
 	$venta->seleccionarProducto(1,1);
 	echo "Total 1 : " . $venta->getTotal();
@@ -515,6 +516,6 @@
 	var_dump($array);
 	$venta->efectuarVenta(1,3,"Efectivo",1);
 
-
+*/
 
 	?>

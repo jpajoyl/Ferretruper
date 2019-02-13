@@ -17,8 +17,14 @@ $(document).ready(function() {
         loadData(false);
         $("#ver-papelera").fadeIn(0);
     });
-
-    function anularFactura(tbody,table){
+    function emitirFacturaAnulada(tbody,table){
+        $(tbody).on("click", ".emitir-factura", function(){
+            var data=table.row($(this).parents("tr")).data();
+            window.open("../assets/php/Controllers/CVenta.php?method=emitirFactura&id-venta="+data.id_venta);
+            location.reload();
+        });
+    }
+    function anularVenta(tbody,table){
         $(tbody).on("click", ".anular-factura", function(){
             var data=table.row($(this).parents("tr")).data();
             Swal({
@@ -38,13 +44,12 @@ $(document).ready(function() {
                     data: {"idVenta":data.id_venta},
                     success:function(data){  
                       if(data!=""){
-                        console.log(data);
                         if(data==1){
                             loadData(false);
                             setTimeout(function(){
                                 Swal(
                                   'Satisfactorio!',
-                                  'Se ha eliminado correctamente el producto',
+                                  'Se ha anulado correctamente la factura',
                                   'success'
                                   );
                             },500); 
@@ -99,47 +104,40 @@ $(document).ready(function() {
                     "infoFiltered": "(registros disponibles _MAX_)"
                 }
             });
-            desactivarProducto("#table-ventas tbody",table);
+            anularVenta("#table-ventas tbody",table);
         }else{
-            window.table=$('#table-productos').DataTable({
+            window.table=$('#table-ventas').DataTable({
                 "ajax":{
                     "method":"POST",
-                    "url":"../assets/php/Controllers/CProducto.php?method=verProductosDeshabilitados",
+                    "url":"../assets/php/Controllers/CVenta.php?method=verVentasAnuladas",
                     "dataSrc": function(data){
                         if(data == 3){
                             return [];
                         }else {
-                            return data.productos;
+                            return data.ventas;
                         }
                     }
                 },
                 "autoWidth": false,
                 "columns":[
-                {
-                    "className":      'details-control',
-                    "orderable":      false,
-                    "data":           null,
-                    "defaultContent": ''
-                },
-                {"data":"id_producto"},
-                {"data":"nombre"},
-                {"data":"referencia_fabrica"},
-                {"data":"codigo_barras"},
-                {"data":"unidades_totales"},
-                {"data":"precio_mayor_inventario"},
-                {"defaultContent":"<center><button class='btn btn-success btn-xs rehabilitar-producto'><i class='fa fa-chevron-circle-left'></i></center>"}
+                {"data":"id_venta"},
+                {"data":"fecha"},
+                {"data":"total"},
+                {"data":"numero_dian"},
+                {"defaultContent":"<center></button><button class='btn btn-success btn-xs emitir-factura'><i class='fa fa-chevron-circle-left'></i></button></center>"}
                 ],
                 "destroy":true,
                 "responsive":true,
                 "language": {
                     "lengthMenu": "Mostrar _MENU_ registros por pagina",
                     "zeroRecords": "No se han encontrado registros",
-                    "info": "(_MAX_ proveedores) Pagina _PAGE_ de _PAGES_",
+                    "info": "(_MAX_ ventas) Pagina _PAGE_ de _PAGES_",
                     "search": "Buscar",
                     "infoEmpty": "No hay registros disponibles",
                     "infoFiltered": "(registros disponibles _MAX_)"
                 }
             });
+            emitirFacturaAnulada("#table-ventas tbody",table);
         }
     }
 
