@@ -1,5 +1,5 @@
 <?php 
-/*	include "../Conexion.php";
+	include "../Conexion.php";
 	include "../Controllers/Response.php";
 	include "Usuario.php";
 	include "Proveedor.php";
@@ -7,7 +7,7 @@
 	include "Inventario.php";
 	include "Factura.php";
 	include "ProductoXVenta.php";
-	include "TipoVenta.php";*/
+	include "TipoVenta.php";
 	/**
 	 * 
 	 */
@@ -355,7 +355,8 @@
 			return $statement;
 		}
 
-		public function efectuarVenta($resolucion,$idEmpleado, $tipoVenta = "Efectivo", $idCliente = 1){ //Factura
+		public function efectuarVenta($resolucion,$idEmpleado, $tipoVenta = "Efectivo", $idCliente = 1){ 
+		//Factura
 			$total=$this->getTotal();
 			$conexion = Conexion::conectar();
 			$statement=$conexion->prepare("UPDATE `ventas` SET `subtotal`=:subtotal,`total`=:total WHERE `id_venta` = :idVenta");
@@ -376,7 +377,7 @@
 				$resultado=$statement->fetch(PDO::FETCH_ASSOC);
 				if($resultado){
 					$numeroDian = $resultado['numero_dian']+ 1;
-					//$factura = new factura($total,$fecha,$resolucion,$idVenta,$resolucion,$numeroDian); Hay un error.
+					$factura = new factura($total,$fecha,$resolucion,$idVenta,$resolucion,$numeroDian); //Hay un error.
 					$factura = true;
 					if($factura){
 						$this->asociarTipoVenta($idEmpleado,$tipoVenta,$idCliente);
@@ -501,7 +502,7 @@
 
 		}
 	}
-/*	$fecha = date('Y-m-d');
+	$fecha = date('Y-m-d');
 	$venta = new Venta($fecha);
 	$venta->seleccionarProducto(1,1);
 	echo "Total 1 : " . $venta->getTotal();
@@ -512,7 +513,7 @@
 	echo "<br>";
 	$array = $venta-> getArrayDistribucion();
 	var_dump($array);
-	$venta->efectuarVenta(1,63,"Efectivo",61);*/
+	$venta->efectuarVenta(1,3,"Efectivo",1);
 
 
 
