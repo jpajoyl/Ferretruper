@@ -10,11 +10,11 @@ $(document).ready(function() {
             url: '../assets/php/Controllers/CVenta.php?method=obtenerVenta',
             type: 'POST',
             success:function(data){
-                data=$.parseJSON(data);
-                if(data!=3){
+                if(data!=0){
+                  data=$.parseJSON(data);
                     if(data.response==1){
+                      $("#table-venta > tbody").html("");
                         if(data.productosxventa!=3){
-                             $("#table-venta > tbody").html("");
                             $.map(data.productosxventa, function(producto) {
                              var tbody='<tr id-productosxventa="'+producto.id_productoxventa+'">'+
                                '<td width="15%" id="td-id-producto">'+producto.id_producto+'</td>'+
@@ -26,11 +26,17 @@ $(document).ready(function() {
                                '</tr>';
                              $("#table-venta > tbody").prepend(tbody);
                             }); 
+                        }else{
+                          var tbody='<td colspan="6" class="no-venta"><div class="alert alert-secondary mt" role="alert">'+
+                               'Aun no se ha iniciado una venta. Seleccione un producto para iniciar'+
+                               '</div></td>';
+                          $("#table-venta > tbody").prepend(tbody);
+                          $(".no-venta").fadeIn(0);
                         }
                         $("#total-preCompra").html(numberWithCommas(data.totalVenta));
                     }
                 }else{
-                    $("#no-venta").fadeIn(0);
+                    $(".no-venta").fadeIn(0);
                 }
             }
         });
@@ -118,7 +124,7 @@ $(document).ready(function() {
                             '<td width="10%">'+
                                 '<center><button class="btn btn-danger btn-xs eliminar-producto-no-seleccionado"><i class="fa fa-trash"></i></button></button></center>'+
                             '</td></tr>';
-                $("#no-venta").fadeOut(0);
+                $(".no-venta").fadeOut(0);
                 $("#body-table-venta").prepend(tbody);
                 setTimeout(function(){
                     $("#input-cantidad-producto").focus();
@@ -133,8 +139,8 @@ $(document).ready(function() {
 
     $(document).on("click", ".eliminar-producto-no-seleccionado", function(){
         $(this).closest('tr').remove();
-        if($("#body-table-venta tr").length==1){
-            $("#no-venta").fadeIn(0);
+        if($("#body-table-venta tr").length==0){
+            $(".no-venta").fadeIn(0);
         }
     });
 
@@ -271,24 +277,17 @@ $(document).ready(function() {
 
    $(document).on("click", ".eliminar-producto-seleccionado", function(){
         var idProductoXVenta=$(this).closest('tr').attr("id-productosxventa");
-        if($("#body-table-venta tr").length==1){
-            $("#no-venta").fadeIn(0);
+        if($("#body-table-venta tr").length==0){
+            $(".no-venta").fadeIn(0);
         }
         $.ajax({
             url: '../assets/php/Controllers/CVenta.php?method=deseleccionarProducto',
             type: 'POST',
             data: {"idProductoXVenta":idProductoXVenta},
             success:function(data){
-                console.log(data);
                 if(data==1){
-                    Swal(
-                      'Error!',
-                      'Deseleccionado satisfactoriamente!',
-                      'error'
-                    );
-                    setTimeout(function(){
-                        getVenta();
-                    },50);
+                 loadData();
+                 getVenta();
                 }else{
                     Swal(
                       'Error!',

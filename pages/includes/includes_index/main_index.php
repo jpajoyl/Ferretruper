@@ -36,9 +36,7 @@
 					</tr>
 				</thead>
 				<tbody id="body-table-venta">
-					<td colspan="6" id="no-venta"><div class="alert alert-secondary mt" role="alert">
-					  Aun no se ha iniciado una venta. Seleccione un producto para iniciar
-					</div></td>
+					
 				</tbody>
 			</table>
 		</form>

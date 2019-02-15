@@ -252,7 +252,7 @@ class TipoVenta{
         while ($resultado){
             $total += $resultado['valor'];
         }
-        return $total
+        return $total;
     }
 
     public function getSaldoFaltante(){
