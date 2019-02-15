@@ -5,6 +5,7 @@ if(!isset($include)){
 	include_once '../Models/Inventario.php';
 	include_once '../Models/Usuario.php';
 	include_once '../Models/Cliente.php';
+	include_once '../Models/Proveedor.php';
 	include_once '../Models/Producto.php';
 	include_once '../Models/Factura.php';
 	include_once '../Models/Venta.php';
@@ -51,7 +52,7 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 				unset($_COOKIE["venta"]);
 				setcookie("venta", "",time() - 3600, "/");
 				$serializeVenta=serialize($venta);
-				setcookie("venta", $serializeVenta,time() + 3600, "/");
+				setcookie("venta", $serializeVenta,time() + 7200, "/");
 				echo $seleccionarProducto;
 			}
 		}else{
@@ -62,7 +63,7 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 				$totalVenta = isset($_POST['totalVenta'])?$_POST['totalVenta']:0;
 				$seleccionarProducto=$venta->seleccionarProducto($idProducto,$unidades);
 				$serializeVenta=serialize($venta);
-				setcookie("venta", $serializeVenta,time() + 3600, "/");
+				setcookie("venta", $serializeVenta,time() + 7200, "/");
 				echo $seleccionarProducto;
 			} catch (Exception $e) {
 				echo ERROR;
@@ -77,7 +78,7 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 				unset($_COOKIE["venta"]);
 				setcookie("venta", "",time() - 3600, "/");
 				$serializeVenta=serialize($venta);
-				setcookie("venta", $serializeVenta,time() + 3600, "/");
+				setcookie("venta", $serializeVenta,time() + 7200, "/");
 				echo $deseleccionarProducto;
 			}
 		}else{
