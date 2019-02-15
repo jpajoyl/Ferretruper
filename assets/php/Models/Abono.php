@@ -82,7 +82,8 @@
 	    	if($statement!=NULL){
 	    		$statement->bindParam(':id_Venta',$id_Venta,PDO::PARAM_STR,45);
 	    	}
-	    	$this->tipoVenta = (TipoVenta::obtenerTipoVenta($id_Venta))->getIdTipoVenta();
+	    	$tipoVenta=TipoVenta::obtenerTipoVenta($id_Venta)->getIdTipoVenta();
+	    	$this->tipoVenta=$tipoVenta;
 	    }
 
 

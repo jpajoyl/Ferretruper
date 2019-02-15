@@ -1,237 +1,112 @@
 $(document).ready(function() {
 
 	$(window).load(function(){
-	 	loadData(false);
-        $("#ver-pagados").fadeIn(0);
+	 	loadData(0);
+        $("#ver-pagados").fadeIn(0); 
 	});
 
     $("#ver-pagados").click(function(event){
         event.preventDefault();
         $(this).fadeOut(0);
-        loadData(true);
+        loadData(1);
         $("#volver-principal").fadeIn(0);
     });
 
     $("#volver-principal").click(function(event){
         event.preventDefault();
         $(this).fadeOut(0);
-        loadData(false);
+        loadData(0);
         $("#ver-pagados").fadeIn(0);
     });
 
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    function fechaToString(date,plazo){
+        fecha = new Date(date);
+        var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        fecha.setDate(fecha.getDate() + plazo);
+        return(fecha.toLocaleDateString("es-ES", options));
+
+    }
+
 	function loadData(pagados){
-        if(!pagados){
-            window.table=$('#table-creditos').DataTable({
-                "ajax":{
-                    "method":"POST",
-                    "url":"../assets/php/Controllers/CCredito.php?method=verCreditos",
-                    "dataSrc": function(data){
-                        if(data == 3){
-                            return [];
-                        }else {
-                            return data.creditos;
-                        }
+        window.table=$('#table-creditos').DataTable({
+            "ajax":{
+                "method":"POST",
+                "url":"../assets/php/Controllers/CCredito.php?method=verCreditos&activos="+pagados,
+                "dataSrc": function(data){
+                    if(data == 3){
+                        return [];
+                    }else {
+                        return data.creditos;
                     }
-                },
-                "autoWidth": false,
-                "columns":[
-                {
-                            "searchable": false,
-                            "orderable": false,
-                            "targets": 0,
-                            "data":           null
-                },
-                {
-                    "className":      'details-control',
-                    "orderable":      false,
-                    "data":           null,
-                    "defaultContent": ''
-                },
-                {"data":"VENTAS_id_venta"},
-                {"data":"USUARIOS_id_cliente"},
-                {"data":"total"},
-                {"data":"fecha"},//FECHA
-                {"data":"estado"},
-                {"defaultContent":"<center><button class='btn btn-primary btn-xs editar-producto'><i class='fa fa-pencil'></i></button>\
-                </button><button class='btn btn-danger btn-xs eliminar-producto'><i class='fa fa-trash-o'></i></button></center>"}
-                ],
-                "order": [[ 1, 'asc' ]],
-                "destroy":true,
-                "responsive":true,
-                "language": {
-                    "lengthMenu": "Mostrar _MENU_ registros por pagina",
-                    "zeroRecords": "No se han encontrado registros",
-                    "info": "(_MAX_ proveedores) Pagina _PAGE_ de _PAGES_",
-                    "search": "Buscar",
-                    "infoEmpty": "No hay registros disponibles",
-                    "infoFiltered": "(registros disponibles _MAX_)"
                 }
-            });
-
-            table.on( 'order.dt search.dt', function () {
-                    table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                        cell.innerHTML = i+1;
-                    } );
-                } ).draw();
-
-            desactivarProducto("#table-creditos tbody",table);
-        }else{
-            window.table=$('#table-creditos').DataTable({
-                "ajax":{
-                    "method":"POST",
-                    "url":"../assets/php/Controllers/CProducto.php?method=vercreditosDeshabilitados",
-                    "dataSrc": function(data){
-                        if(data == 3){
-                            return [];
-                        }else {
-                            return data.creditos;
-                        }
-                    }
-                },
-                "autoWidth": false,
-                "columns":[
-                {
-                    "className":      'details-control',
-                    "orderable":      false,
-                    "data":           null,
-                    "defaultContent": ''
-                },
-                {"data":"id_producto"},
-                {"data":"nombre"},
-                {"data":"referencia_fabrica"},
-                {"data":"codigo_barras"},
-                {"data":"unidades_totales"},
-                {"data":"precio_mayor_inventario"},
-                {"defaultContent":"<center><button class='btn btn-success btn-xs rehabilitar-producto'><i class='fa fa-chevron-circle-left'></i></center>"}
-                ],
-                "destroy":true,
-                "responsive":true,
-                "language": {
-                    "lengthMenu": "Mostrar _MENU_ registros por pagina",
-                    "zeroRecords": "No se han encontrado registros",
-                    "info": "(_MAX_ proveedores) Pagina _PAGE_ de _PAGES_",
-                    "search": "Buscar",
-                    "infoEmpty": "No hay registros disponibles",
-                    "infoFiltered": "(registros disponibles _MAX_)"
+            },
+            "autoWidth": false,
+            "columns":[
+            {
+                        "searchable": false,
+                        "orderable": false,
+                        "targets": 0,
+                        "data":           null
+            },
+            {
+                "className":      'details-control',
+                "orderable":      false,
+                "data":           null,
+                "defaultContent": ''
+            },
+            {"data":"VENTAS_id_venta"},
+            {"data":"numero_identificacion"},
+            {"data":function (data, type, row){
+                return numberWithCommas(data.total);
+            }},
+            {"data":function (data, type, row){
+                return data.fecha+" / "+fechaToString(data.fecha,data.plazo);
+            }},//FECHA
+            {"data":function (data, type, row){
+                if(data.estado==0){
+                    return "Activo";
+                }else{
+                    return "Pagado";
                 }
-            });
-            reactivarProducto("#table-creditos tbody",table);
-        }
-        getDataEditProducto("#table-creditos tbody",table);
-    }
-
-    function getDataEditProducto(tbody,table){
-        $(tbody).on("click", ".editar-producto", function(){
-            var data=table.row($(this).parents("tr")).data();
-            $("#nombre-producto").html(data.nombre);
-            $("#input-id-producto-editar").val(data.id_producto);
-            $("#input-nombre-producto-editar").val(data.nombre);
-            $("#input-descripcion-producto-editar").val(data.descripcion);
-            $("#input-referencia-fabrica-editar").val(data.referencia_fabrica);
-            $("#input-valor-utilidad-editar").val(data.valor_utilidad);
-            $('input:radio[name=IVA]:checked').val(data.tiene_iva);
-            $("#input-codigo-barras-editar").val(data.codigo_barras);         
-            $("#modal-editar-producto").modal("show");
+            }},
+            {"data":function (data, type, row){
+                if(data.estado==0){
+                    return "<center><button class='btn btn-primary btn-xs abonar-credito' title='Agregar abono'><i class='fa fa-money'></i></button></button></center>";
+                }else{
+                    return "";
+                }
+            }}
+            ],
+            "order": [[ 1, 'asc' ]],
+            "destroy":true,
+            "responsive":true,
+            "language": {
+                "lengthMenu": "Mostrar _MENU_ registros por pagina",
+                "zeroRecords": "No se han encontrado registros",
+                "info": "(_MAX_ proveedores) Pagina _PAGE_ de _PAGES_",
+                "search": "Buscar",
+                "infoEmpty": "No hay registros disponibles",
+                "infoFiltered": "(registros disponibles _MAX_)"
+            }
         });
+
+        table.on( 'order.dt search.dt', function () {
+                table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                    cell.innerHTML = i+1;
+                } );
+            } ).draw();
+
+        agregarAbono("#table-creditos tbody",table);
+        
     }
 
-    function desactivarProducto(tbody,table){
-        $(tbody).on("click", ".eliminar-producto", function(){
-            var data=table.row($(this).parents("tr")).data();
-            if(parseInt(data.unidades_totales)>0){
-                    Swal({
-                      title: 'Estas seguro?',
-                      text: "Se eliminara el producto "+data.nombre+"!",
-                      type: 'warning',
-                      showCancelButton: true,
-                      confirmButtonColor: '#3085d6',
-                      cancelButtonColor: '#d33',
-                      confirmButtonText: 'Si, Eliminarlo!',
-                      cancelButtonText: "Cancelar"
-                  }).then((result) => {
-                      if (result.value) {
-                        $.ajax({
-                            url: '../assets/php/Controllers/CProducto.php?method=desactivarProducto',
-                            type: 'POST',
-                            data: {"idProducto":data.id_producto},
-                            success:function(data){  
-                              if(data!=""){
-                                console.log(data);
-                                if(data==1){
-                                    loadData(false);
-                                    setTimeout(function(){
-                                        Swal(
-                                          'Satisfactorio!',
-                                          'Se ha eliminado correctamente el producto',
-                                          'success'
-                                          );
-                                    },500); 
-
-                                }else if(data==0 || data==3){
-                                    loadData(false); 
-                                    setTimeout(function(){
-                                        Swal(
-                                          'Error!',
-                                          'Ha ocurrido un error, vuelva a intentar',
-                                          'error'
-                                          );
-                                    },500);        
-                                }
-                            }
-                        }   
-                    });
-                    }
-                });
-            }else{
-                Swal(
-                  'Error!',
-                  'No se puede eliminar el producto',
-                  'error'
-                  );
-            }       
-        });
-    }
-    function reactivarProducto(tbody,table){
-        $(tbody).on("click", ".rehabilitar-producto", function(){
-            var data=table.row($(this).parents("tr")).data();
-                $.ajax({
-                    url: '../assets/php/Controllers/CProducto.php?method=reactivarProducto',
-                    type: 'POST',
-                    data: {"idProducto":data.id_producto},
-                    success:function(data){  
-                      if(data!=""){
-                        console.log(data);
-                        if(data==1){
-                            loadData(true);
-                            setTimeout(function(){
-                                Swal(
-                                  'Satisfactorio!',
-                                  'Se ha reactivado correctamente el producto',
-                                  'success'
-                                  );
-                            },500); 
-
-                        }else if(data==0 || data==3){
-                            loadData(true); 
-                            setTimeout(function(){
-                                Swal({
-                                  title: 'Error!',
-                                  text: "Sugerimos recargar la pagina",
-                                  type: 'error',
-                                  confirmButtonColor: '#088A08',
-                                  cancelButtonColor: '#d33',
-                                  confirmButtonText: 'Si, recargar!',
-                                  cancelButtonText: "No"
-                                }).then((result) => {
-                                  if (result.value) {
-                                    location.reload(true);
-                                  }
-                                })
-                            },500);        
-                        }
-                    }
-                }   
-            });
+    function agregarAbono(tbody,table){
+        $(tbody).on("click", ".abonar-credito", function(){
+      
         });
     }
 
@@ -244,38 +119,56 @@ $(document).ready(function() {
             tr.removeClass('shown');
         }
         else {
+            var data=row.data();
+             var contenidoCliente='<table id="table-cliente-credito" class="table table-responsive-xl table-bordered">'+
+            '<thead>'+
+                '<tr>'+
+                    '<th scope="col">Identificacion</th>'+
+                    '<th scope="col">Nombre</th>'+
+                    '<th scope="col">Direccion</th>'+
+                    '<th scope="col">Telefono/Celular</th>'+
+                '</tr>'+
+            '</thead>'+
+            '<tbody>'+
+                '<tr>'+
+                    '<td class="id-cliente">'+data.numero_identificacion+'</td>'+
+                    '<td class="nombre-cliente">'+data.nombre+'</td>'+
+                    '<td class="direccion-cliente">'+data.direccion+' '+data.ciudad+'</td>'+
+                    '<td class="telefonos-cliente">'+data.telefono+' / '+data.celular+'</td>'+
+                '</tr>'+
+            '</tbody></table>';
             $.ajax({
-                url: '../assets/php/Controllers/CInventario.php?method=verInventarios',
+                url: '../assets/php/Controllers/CCredito.php?method=verAbonosCredito',
                 type: 'POST',
-                data: {"idProducto":row.data().id_producto},
+                data: {"idTipoVenta":data.id_tipo_venta},
                 success:function(data){
                     if(data!=""){
                         if(data!=3){
-                            var contenido='<table id="table-inventarios-producto" class="table table-responsive-xl table-bordered">'+
+                            var contenido='<table id="table-abonos-credito" class="table table-responsive-xl table-bordered">'+
                             '<thead>'+
                                 '<tr>'+
-                                    '<th scope="col">NIT</th>'+
-                                    '<th scope="col">Proveedor</th>'+
-                                    '<th scope="col">Precio compra</th>'+
-                                    '<th scope="col">Unidades</th>'+
-                                    '<th scope="col">Precio inventario</th>'+
+                                    '<th scope="col">No</th>'+
+                                    '<th scope="col">Valor pagado</th>'+
+                                    '<th scope="col">Fecha abono</th>'+
+                                    '<th scope="col"></th>'
                                 '</tr>'+
                             '</thead>'+
                             '<tbody>';
-                            $.map($.parseJSON(data).inventarios, function(dataInventarios) {
+                            var contador=1;
+                            $.map($.parseJSON(data).abonos, function(dataAbonos) {
                                 contenido+='<tr>'+
-                                        '<td class="nit-proveedor-inventario">'+dataInventarios.numero_identificacion+'-'+dataInventarios.digito_de_verificacion+'</td>'+
-                                        '<td class="nombre-proveedor-inventario">'+dataInventarios.nombre+'</td>'+
-                                        '<td class="precio-compra-inventario">'+dataInventarios.precio_compra+'</td>'+
-                                        '<td class="unidades-inventario">'+dataInventarios.unidades+'</td>'+
-                                        '<td class="precio-venta-inventario">'+dataInventarios.precio_inventario+'</td>'+
+                                        '<td class="id-abono">'+contador+'<input type="hidden" id="input-id-abono" value='+dataAbonos.id_abono+'></td>'+
+                                        '<td class="valor-abono">'+numberWithCommas(dataAbonos.valor)+'</td>'+
+                                        '<td class="fecha-abono">'+fechaToString(dataAbonos.fecha,0)+'</td>'+
+                                        '<td class="editar-abono"><center><button class="btn btn-warning btn-xs editar-abono" title="Editar valor abono"><i class="fa fa-pencil"></i></button></button></center></td>'+
                                         '</tr>';
+                                        contador++;
                             });
-                            contenido+='</tbody></table>'
-                            row.child(contenido).show();
+                            contenido+='</tbody></table>';
+                            row.child(contenidoCliente+contenido).show();
                         }else{
                             var contenido='<div class="alert alert-danger" role="alert">Este producto no tiene ningun proveedor aun</div>';
-                            row.child(contenido).show();
+                            row.child(contenidoCliente+contenido).show();
                         }
                         
                     }  
@@ -284,62 +177,5 @@ $(document).ready(function() {
                 tr.addClass('shown');
             });
         }
-    });
-
-    $("#form-editarProducto").submit(function(event){
-        event.preventDefault();
-        var data;
-        data = {
-            "idProducto" : $("#input-id-producto-editar").val(),
-            "nombre" : $("#input-nombre-producto-editar").val(),
-            "descripcion" : $("#input-descripcion-producto-editar").val(),
-            "referenciaFabrica" : $("#input-referencia-fabrica-editar").val(),
-            "iva" : $('input:radio[name=IVA-editar]:checked').val(),
-            "CodigoDeBarras" : $("#input-codigo-barras-editar").val()
-        } 
-        $.ajax({
-            url: '../assets/php/Controllers/CProducto.php?method=editarProducto',
-            type: 'POST',
-            data: data,
-            success:function(data){
-              if(data!=""){
-                if(data==1){
-                    $("#modal-editar-producto").modal("hide");
-                    setTimeout(function(){
-                        Swal(
-                          'Satisfactorio!',
-                          'Se ha editado correctamente el producto',
-                          'success'
-                          );
-                        $("#nombre-producto").html("");
-                        document.getElementById("form-editarProducto").reset();
-                    },500); 
-                }else if(data==0){
-                    $("#modal-editar-producto").modal("hide");
-                    setTimeout(function(){
-                        Swal(
-                          'Error!',
-                          'Ha ocurrido un error, vuelva a intentar',
-                          'error'
-                          );
-                        $("#nombre-producto").html("");
-                        document.getElementById("form-editarProducto").reset();
-                    },500);
-                }else if(data==3){
-                    $("#modal-editar-producto").modal("hide");
-                    setTimeout(function(){
-                        Swal(
-                          'Error!',
-                          'Opps, no se ha encontrado el proveedor para editar',
-                          'error'
-                          );
-                    },500);
-                }
-            }
-        }   
-        }).always(function(){
-            loadData(false);                        
-        });
-
     });
 });

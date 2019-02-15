@@ -16,8 +16,8 @@
 				<tr>
 					<th></th>
 					<th></th>
-					<th>Id venta</th>
-					<th>Id cliente</th>
+					<th>No venta</th>
+					<th>Cliente</th>
 					<th>Valor</th>
 					<th>Fecha ini/fin</th>
 					<th>Estado</th>

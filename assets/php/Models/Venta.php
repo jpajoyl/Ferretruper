@@ -436,11 +436,11 @@
 
 		}
 
-		public static function verCreditosActivos(){
+		public static function verCreditos($activos){
 			$tipoVenta= "Credito";
 			$conexion = Conexion::conectar();
-			$statement= $conexion->prepare("SELECT * FROM `ventas` INNER JOIN `tipo_venta` ON tipo_venta.VENTAS_id_venta = ventas.id_venta WHERE tipo_venta.estado = :estado and tipo_venta.tipo_venta = :tipoVenta"); 
-			$statement->bindValue(":estado", 0);
+			$statement= $conexion->prepare("SELECT * FROM `ventas` JOIN `tipo_venta` ON tipo_venta.VENTAS_id_venta = ventas.id_venta JOIN `usuarios` ON tipo_venta.USUARIOS_id_cliente = usuarios.id_usuario WHERE tipo_venta.estado = :estado and tipo_venta.tipo_venta = :tipoVenta"); 
+			$statement->bindValue(":estado", $activos);
 			$statement->bindValue(":tipoVenta", $tipoVenta);
 			$statement->execute();
 			$conexion=null;
