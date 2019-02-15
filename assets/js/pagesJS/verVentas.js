@@ -21,7 +21,6 @@ $(document).ready(function() {
         $(tbody).on("click", ".emitir-factura", function(){
             var data=table.row($(this).parents("tr")).data();
             window.open("../assets/php/Controllers/CVenta.php?method=emitirFactura&id-venta="+data.id_venta);
-            location.reload();
         });
     }
     function anularVenta(tbody,table){
