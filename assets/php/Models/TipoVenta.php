@@ -223,6 +223,7 @@ class TipoVenta{
     }
 
     public function pagarCredito(){
+        $conexion = Conexion::conectar();
         $tipo_venta = $this->getTipoVenta();
         if ($tipo_venta == "Credito"){
             $idTipoVenta = $this->getIdTipoVenta();
@@ -240,6 +241,24 @@ class TipoVenta{
             return ERROR;
         }
 
+    }
+
+    public function getTotalAbonado(){
+        $conexion = Conexion::conectar();
+        $idTipoVenta = $this->getIdTipoVenta();
+        $statement = Abono::obtenerAbonos($idTipoVenta);
+        $total = 0;
+        $resultado = $statement->fetch(PDO::FETCH_ASSOC);
+        while ($resultado){
+            $total += $resultado['valor'];
+        }
+        return $total
+    }
+
+    public function getSaldoFaltante(){
+        $venta = Venta::obtenerVenta($this->getVenta());
+        $pagado = $this->getTotalAbonado();
+        return $venta->getTotal() - $pagado;
     }
 
 

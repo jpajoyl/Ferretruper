@@ -19,21 +19,21 @@
 		public function __construct0($valor, $fecha, $id_Venta){  //Id_venta es el id de la VENTAAAAAAAAAAAAAAAAAAAAAAA
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("INSERT INTO `abonos`(`id_abono`, `valor`, `fecha`, `TIPO_VENTA_id_tipo_venta`) VALUES (null,:valor,:fecha,:id_Venta)");
-			$this->setNumeroDeIdentificacion($numeroDeIdentificacion,$statement);
-			$this->setTipoDeIdentificacion($tipoDeIdentificacion,$statement);
-			$this->setDigitoDeVerificacion($digitoDeVerificacion,$statement);
-			$this->setNombre($nombre,$statement);
-			$this->setDireccion($direccion,$statement);
-			$this->setCiudad($ciudad,$statement);
-			$this->setEmail($email,$statement);
-			$this->setCelular($celular,$statement);
-			$this->setTelefono($telefono,$statement);
-			$this->setClasificacion($clasificacion,$statement);
+			$this->setValor($valor,$statement);
+			$this->setFecha($fecha,$statement);
+			$this->setTipoVenta($id_Venta,$statement);
+
 			$statement->execute();
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
 			}
 			$this->setIdAbono($conexion->lastInsertId());
+
+			$tipoVenta= $this->getTipoVenta();
+			$faltante = $tipoVenta->getSaldoFaltante();
+			if($faltante<=0){
+				$tipoVenta->pagarCredito();
+			}
 			$conexion = null;
 	    	$statement=null;
 		}
@@ -82,8 +82,7 @@
 	    	if($statement!=NULL){
 	    		$statement->bindParam(':id_Venta',$id_Venta,PDO::PARAM_STR,45);
 	    	}
-	    	$tipoVenta=TipoVenta::obtenerTipoVenta($id_Venta)->getIdTipoVenta();
-	    	$this->tipoVenta=$tipoVenta;
+	    	$tipoVenta=TipoVenta::obtenerTipoVenta($id_Venta);
 	    }
 
 
