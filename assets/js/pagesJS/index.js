@@ -56,11 +56,11 @@ $(document).ready(function() {
           "serverSide": true,
           "ajax": "../assets/php/Controllers/CProducto.php?method=verProductos",
           "createdRow":function (row, data, index){
-            $(row).attr("id-producto-inventario",data.id_producto);
-             if(parseInt(data.unidades_totales) == 0){
+            $(row).attr("id-producto-inventario",data[0]);
+             if(parseInt(data[4]) == 0){
                   $(row).toggleClass('tr-warning');
               }
-              if(parseInt(data.unidades_totales) < 0){
+              if(parseInt(data[4]) < 0){
                   $(row).toggleClass('tr-locked');
             }
           },
