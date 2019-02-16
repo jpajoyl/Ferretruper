@@ -6,11 +6,11 @@
 			header('Location: index.php');
 		}
 		$empleado=Empleado::obtenerEmpleado($objectSession->getEmpleadoActual());
-		if($empleado->getPermiso()==0 and $paginaActual!="index.php"){
+		if($empleado->getPermiso()==0 && $paginaActual!="index.php"){
 			header('Location: index.php');
 		}
 	}else{
-		if(!$paginaActual){
+		if($paginaActual!="login.php"){
 			header('Location: login.php');
 		}
 	}
