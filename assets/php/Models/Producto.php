@@ -177,6 +177,7 @@
 		//retorna un statement con todos los datos del inventario
 		public static function verProductos($request,$modo=true){
 			// Database connection info
+			$conexion = Conexion::conectar()
 			$dbDetails = array(
 			    'host' => 'localhost',
 			    'user' => 'root',
@@ -223,7 +224,7 @@
 			require('../ssp.class.php');
 
 			// Output data as json format
-			return SSP::simple( $request, $dbDetails, $table, $primaryKey, $columns );
+			return SSP::simple( $request, $conexion, $table, $primaryKey, $columns );
 
 		}
 
@@ -383,7 +384,7 @@
 
 		public static function buscarPorNombre($nombre){
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("SELECT * FROM `productos` WHERE  `nombre` LIKE ?");
+			$statement = $conexion->prepare("SELECT * FROM `productos` WHERE  `nombre` LIKE ? LIMIT 10");
 			$statement->bindValue(1, "%$nombre%", PDO::PARAM_STR);
 			$statement->execute();
 			if($statement->rowCount()>0){

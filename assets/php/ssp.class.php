@@ -227,7 +227,7 @@ class SSP {
 	static function simple ( $request, $conn, $table, $primaryKey, $columns )
 	{
 		$bindings = array();
-		$db = self::db( $conn );
+		$db = $conn;
 
 		// Build the SQL query string from the request
 		$limit = self::limit( $request, $columns );
