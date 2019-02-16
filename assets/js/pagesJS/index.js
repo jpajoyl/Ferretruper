@@ -64,6 +64,8 @@ $(document).ready(function() {
                   $(row).toggleClass('tr-locked');
             }
           },
+          "destroy":true,
+          "autoWidth": false,
           "responsive":true,
           "language": {
             "lengthMenu": "Mostrar _MENU_ registros por pagina",
@@ -83,13 +85,13 @@ $(document).ready(function() {
             if(!$("#añadir-producto-venta").length){
                 var tbody='<tr id="añadir-producto-venta">'+
                             '<td width="15%" id="td-id-producto">'+
-                                data.id_producto+'<input type="hidden" id="input-id-producto" value="'+data.id_producto+'">'+
+                                data[0]+'<input type="hidden" id="input-id-producto" value="'+data[0]+'">'+
                             '</td>'+
                             '<td>'+
-                                data.nombre+
+                                data[1]+
                             '</td>'+
                             '<td width="15%">'+
-                                numberWithCommas(data.precio_mayor_inventario)+'<input type="hidden" id="input-precio-inventario-producto" value="'+data.precio_mayor_inventario+'">'+
+                                numberWithCommas(data[5])+'<input type="hidden" id="input-precio-inventario-producto" value="'+data[5]+'">'+
                             '</td>'+
                             '<td width="15%" id="td-cantidad-producto">'+
                                 '<input type="number" class="form-control" id="input-cantidad-producto" placeholder="cantidad" autocomplete="off">'+
