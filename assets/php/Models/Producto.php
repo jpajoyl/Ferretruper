@@ -414,4 +414,18 @@
 
 	}
 
+	/*
+		public static function verProductos($modo=true){
+			$conexion = Conexion::conectar();
+			if($modo){
+				$statement = $conexion->prepare("SELECT * FROM `productos` WHERE `activa` = 1");
+			}else{
+				$statement = $conexion->prepare("SELECT * FROM `productos` WHERE `activa` = 0");
+			}
+			$statement->execute();
+			$conexion=null;
+			return $statement;
+		}
+	*/
+
 	?>
