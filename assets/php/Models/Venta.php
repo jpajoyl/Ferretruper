@@ -314,6 +314,7 @@
 				$this->setTotal($total);
 				$this->setSubtotal($subtotal);
 
+				$producto->calcularUnidades();
 				$conexion = null;
 				return SUCCESS;
 			}else{
