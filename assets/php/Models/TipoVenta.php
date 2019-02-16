@@ -155,7 +155,7 @@ class TipoVenta{
             );
 
             // DB table to use
-            $table = 'SELECT * FROM `ventas` INNER JOIN `tipo_venta` ON tipo_venta.VENTAS_id_venta = ventas.id_venta';
+            $table = '`ventas` INNER JOIN `tipo_venta` ON tipo_venta.VENTAS_id_venta = ventas.id_venta';
 
             // Table's primary key
             $primaryKey = 'id_producto';

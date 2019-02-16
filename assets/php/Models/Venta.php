@@ -380,7 +380,7 @@
 					$numeroDian = $resultado['numero_dian']+ 1;
 					$statement=null;
 					$resultado=null;
-					¿$statement = $conexion->prepare("SELECT * FROM `informacion_facturas` WHERE `id_informacion_facturas` = :idInformacionFacturas ");
+					$statement = $conexion->prepare("SELECT * FROM `informacion_facturas` WHERE `id_informacion_facturas` = :idInformacionFacturas ");
 					$statement->bindValue(':idInformacionFacturas',1);
 					$statement->execute();
 					$resultado=$statement->fetch(PDO::FETCH_ASSOC);
