@@ -52,37 +52,9 @@ $(document).ready(function() {
 
 	function loadData(){
         window.table=$('#table-productos').DataTable({
-            "ajax":{
-                "method":"POST",
-                "url":"../assets/php/Controllers/CProducto.php?method=verProductos",
-                "dataSrc": function(data){
-                    if(data == 3){
-                        return [];
-                    }else {
-                        return data.productos;
-                    }
-                }
-            },
-            "destroy":true,
-            "autoWidth": false,
-            "columns":[
-            {"data":"id_producto"},
-            {"data":"nombre"},
-            {"data":"referencia_fabrica"},
-            {"data":"codigo_barras"},
-            {className:"unidades-totales","data":"unidades_totales"},
-            {"data":function (data, type, row){
-                return numberWithCommas(data.precio_mayor_inventario);
-            }},
-            {className:"button-añadir-producto","data":function (data, type, row){
-            	if(parseInt(data.unidades_totales)>0) {
-            		return "<center><button class='btn btn-success btn-xs añadir-producto'><i class='fa fa-plus-circle'></i></button>\
-                    </button></center>";
-                }else{
-                  return "";
-              }
-            }}
-          ],
+          "processing": true,
+          "serverSide": true,
+          "ajax": "../assets/php/Controllers/CProducto.php?method=verProductos",
           "createdRow":function (row, data, index){
             $(row).attr("id-producto-inventario",data.id_producto);
              if(parseInt(data.unidades_totales) == 0){

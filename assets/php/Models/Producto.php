@@ -175,16 +175,56 @@
 		//metodos
 
 		//retorna un statement con todos los datos del inventario
-		public static function verProductos($modo=true){
-			$conexion = Conexion::conectar();
-			if($modo){
-				$statement = $conexion->prepare("SELECT * FROM `productos` WHERE `activa` = 1");
-			}else{
-				$statement = $conexion->prepare("SELECT * FROM `productos` WHERE `activa` = 0");
-			}
-			$statement->execute();
-			$conexion=null;
-			return $statement;
+		public static function verProductos($request,$modo=true){
+			// Database connection info
+			$dbDetails = array(
+			    'host' => 'localhost',
+			    'user' => 'root',
+			    'pass' => '',
+			    'db'   => 'ferretruperbd2'
+			);
+
+			// DB table to use
+			$table = 'productos';
+
+			// Table's primary key
+			$primaryKey = 'id_producto';
+
+			// Array of database columns which should be read and sent back to DataTables.
+			// The `db` parameter represents the column name in the database. 
+			// The `dt` parameter represents the DataTables column identifier.
+			$columns = array(
+			    array( 'db' => 'id_producto', 'dt' => 0 ),
+			    array( 'db' => 'nombre',  'dt' => 1 ),
+			    array( 'db' => 'referencia_fabrica',      'dt' => 2 ),
+			    array( 'db' => 'codigo_barras',     'dt' => 3 ),
+			    array( 'db' => 'unidades_totales',    'dt' => 4 ),
+			    array(
+			        'db'        => 'precio_mayor_inventario',
+			        'dt'        => 5,
+			        'formatter' => function( $d, $row ) {
+			            return number_format($d);
+			        }
+			    ),
+			    array(
+			        'db'        => 'unidades_totales',
+			        'dt'        => 6,
+			        'formatter' => function( $d, $row ) {
+			            if($d>0){
+			            	return "<center><button class='btn btn-success btn-xs añadir-producto'><i class='fa fa-plus-circle'></i></button></button></center>";
+			            }else{
+			            	return "";
+			            }
+			        }
+			    )
+			);
+
+			// Include SQL query processing class
+			require('../ssp.class.php');
+
+			// Output data as json format
+			return SSP::simple( $request, $dbDetails, $table, $primaryKey, $columns );
+
 		}
 
 		public function calcularUnidades(){
