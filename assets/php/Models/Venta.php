@@ -303,16 +303,16 @@
 				$statement->bindValue(":idProductoXVenta", $productoxventa->getIdProductoxventa());
 				$statement->execute();
 
-
-				$total=$this->getTotal()-($unidades*$precio);
-				$subtotalIva=$total;
+				$precioProductoxventa=($unidades*$precio);
+				$total=$this->getTotal()-$precioProductoxventa;
+				$subtotalIva=$precioProductoxventa;
 
 				if($producto->getTieneIva()){
-					$subtotalIva = $total/(1+IVA);
+					$subtotalIva = $precioProductoxventa/(1+IVA);
 				}
 				$subtotal = $this->getSubtotal()-$subtotalIva;
 				$this->setTotal($total);
-				$this->setSubtotal($subtotal );
+				$this->setSubtotal($subtotal);
 
 				$conexion = null;
 				return SUCCESS;

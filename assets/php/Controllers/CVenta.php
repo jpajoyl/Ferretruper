@@ -20,8 +20,8 @@ include_once 'Response.php';
 if($method!="" && $objectSession->getEmpleadoActual()!=null){
 	if(!strcmp($method,"obtenerVenta")){
 		if(isset($_COOKIE['venta'])){
-				// unset($_COOKIE["venta"]);
-				// setcookie("venta", "",time() - 3600, "/");
+				//unset($_COOKIE["venta"]);
+				//setcookie("venta", "",time() - 3600, "/");
 			$venta=unserialize($_COOKIE['venta']);
 			if($venta instanceof Venta){
 				$data['response']=SUCCESS;
@@ -34,6 +34,7 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 					$data['productosxventa']=NOT_FOUND;
 				}
 				$data['totalVenta']=$venta->getTotal();
+				$data['subtotalVenta']=$venta->getSubtotal();
 				echo json_encode($data);
 			}else{
 				echo ERROR;
@@ -84,7 +85,9 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		}else{
 			echo ERROR;
 		}
-	}elseif (!strcmp($method,"verVentas")) {
+	}else if(!strcmp($method,"terminarVenta")){
+		
+	}else if (!strcmp($method,"verVentas")) {
 		$array = array();
 		$listaVentas=TipoVenta::obtenerTipoVentas();
 		if($listaVentas->rowCount()>0){
@@ -102,11 +105,11 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		}else{
 			echo NOT_FOUND;
 		}
-	}elseif (!strcmp($method,"anularVenta")) {
+	}else if (!strcmp($method,"anularVenta")) {
 		$idVenta = $_POST['idVenta'];
 		$var = Venta::anularVenta($idVenta);
 		echo $var;
-	}elseif (!strcmp($method,"verVentasAnuladas")) {
+	}else if (!strcmp($method,"verVentasAnuladas")) {
 		$array = array();
 		$listaVentas=TipoVenta::obtenerTipoVentas();
 		if($listaVentas->rowCount()>0){
@@ -124,7 +127,7 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		}else{
 			echo NOT_FOUND;
 		}
-	}elseif (!strcmp($method,"emitirFactura")) {
+	}else if (!strcmp($method,"emitirFactura")) {
 		$idVenta=$_GET['id-venta'];
 		$factura = Factura::obtenerFactura($idVenta,false);
 		$factura->imprimirFacturaCarta();

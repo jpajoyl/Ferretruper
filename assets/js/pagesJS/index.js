@@ -33,7 +33,11 @@ $(document).ready(function() {
                           $("#table-venta > tbody").prepend(tbody);
                           $(".no-venta").fadeIn(0);
                         }
+                        $("#subtotal-preCompra").html(numberWithCommas(data.subtotalVenta));
+                        $("#iva-preCompra").html(numberWithCommas((data.totalVenta-data.subtotalVenta)));
                         $("#total-preCompra").html(numberWithCommas(data.totalVenta));
+                    }else{
+                      $(".no-venta").fadeIn(0);
                     }
                 }else{
                     $(".no-venta").fadeIn(0);
@@ -298,6 +302,28 @@ $(document).ready(function() {
             }
         });
     });
+
+   $("#terminar-venta").click(function(event){
+    event.preventDefault();
+        if($("#body-table-venta tr").length>0){
+          $.ajax({
+              url: '../assets/php/Controllers/CVenta.php?method=terminarVenta',
+              type: 'POST',
+              success:function(data){
+                  if(data==1){
+                   loadData();
+                   getVenta();
+                  }else{
+                      Swal(
+                        'Error!',
+                        'Tenemos un error, recarga y vuelve a intentar!',
+                        'error'
+                      );
+                  }
+              }
+          });
+        }
+   });
     
 });
 

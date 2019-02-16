@@ -36,16 +36,48 @@
 					</tr>
 				</thead>
 				<tbody id="body-table-venta">
-					
+					<td colspan="6" class="no-venta"><div class="alert alert-secondary mt" role="alert">
+					  Aun no se ha iniciado una venta. Seleccione un producto para iniciar
+					</div></td>
 				</tbody>
 			</table>
 		</form>
 		<div class="row" id="div-total-venta">
-			<div class="col-xs-6 col-sm-6 col-md-8 col-lg-10 col-xl-10 mt mb">
-				<b class="info-total-venta float-right mr">Total de venta:</b>
+			<div class="col mt mb">
+				
 			</div>
-			<div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 col-xl-2 mt mb">
-				<b class="info-total-venta">$<span id="total-preCompra"></span></b>
+		</div>
+		<div class="row">
+			<div class="col-xs-0 col-sm-0 col-md-6 col-lg-6 col-xl-8">
+				<a role="button" href="#" id="terminar-venta" class="btn btn-success float-right mt">Terminar venta<span class="btn-label btn-label-right"><i class="fa fa-check"></i></span></a>
+				<a role="button" href="#" id="cancelar-venta" class="btn btn-danger float-right mt mr">Cancelar venta<span class="btn-label btn-label-right"><i class="fa fa-trash"></i></span></a>
+			</div>
+			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 float-right">
+			      <table id="table-info-venta" class="table mr table-secondary">
+			        <tbody>
+			          <tr class="tr-info-compra">
+			            <th width="50%" scope="row" class="float-right">Sub Total:</th>
+			            <td width="40%" id="subtotal-preCompra">0</td>
+			          </tr>
+			          <tr class="tr-info-compra">
+			            <th width="30%" scope="row" class="float-right">Iva:</th>
+			            <td width="40%" id="iva-preCompra">0</td>
+			          </tr>
+			          <tr class="tr-info-compra">
+			            <th width="50%" scope="row" class="float-right">Total a pagar:</th>
+			            <td width="40%" id="total-preCompra">0</td>
+			          </tr>
+			          <tr class="tr-info-compra table-info">
+			            <th scope="row" class="float-right">Declara renta:</th>
+			            <td>
+			              <label class="form-check-label">
+			            	<input class="form-check-input" type="checkbox" name="Renta" id="renta" value="1">
+			            	Si
+			              </label>
+			            </td>
+			          </tr>
+			        </tbody>
+			      </table>
 			</div>
 		</div>
 	</div>

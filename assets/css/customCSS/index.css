@@ -22,11 +22,28 @@
 	margin-left: 1.4%;
 	width: 97.5% !important;
 }
-
 .info-total-venta{
 	font-size: 1.1em;
 }
 
 .no-venta{
 	display: none;
+}
+
+#table-info-venta{
+	width: 96.5%;
+}
+
+.tr-info-compra th{
+	text-align: right;
+	padding: 2px !important;
+}
+
+.tr-info-compra td{
+	text-align: center;
+	padding: 2px !important
+}
+
+#renta{
+	cursor: pointer;
 }
