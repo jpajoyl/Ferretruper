@@ -17,7 +17,7 @@ $(document).ready(function() {
         loadData(false);
         $("#ver-papelera").fadeIn(0);
     });
-    function emitirFacturaAnulada(tbody,table){
+    function emitirFactura(tbody,table){
         $(tbody).on("click", ".emitir-factura", function(){
             var data=table.row($(this).parents("tr")).data();
             window.open("../assets/php/Controllers/CVenta.php?method=emitirFactura&id-venta="+data.id_venta);
@@ -90,7 +90,8 @@ $(document).ready(function() {
                 {"data":"fecha"},
                 {"data":"total"},
                 {"data":"numero_dian"},
-                {"defaultContent":"<center></button><button class='btn btn-danger btn-xs anular-factura'><i class='fa fa-trash-o'></i></button></center>"}
+                {"defaultContent":"<center><button class='btn btn-danger btn-xs anular-factura'><i class='fa fa-trash-o'></i></button>\
+                </button><button class='btn btn-primary btn-xs emitir-factura'><i class='fa fa-arrow-right'></i></button></center>"}
                 ],
                 "destroy":true,
                 "responsive":true,
@@ -104,6 +105,7 @@ $(document).ready(function() {
                 }
             });
             anularVenta("#table-ventas tbody",table);
+            emitirFactura("#table-ventas tbody",table);
         }else{
             window.table=$('#table-ventas').DataTable({
                 "ajax":{
@@ -136,7 +138,7 @@ $(document).ready(function() {
                     "infoFiltered": "(registros disponibles _MAX_)"
                 }
             });
-            emitirFacturaAnulada("#table-ventas tbody",table);
+            emitirFactura("#table-ventas tbody",table);
         }
     }
 

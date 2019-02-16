@@ -14,11 +14,11 @@ ini_set('max_execution_time', 300);
 	for ($i=1; $i <=$numRows ; $i++) { 
 		$numeroIdentificacion = $ocjPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue();
 		$dVerificacion = $ocjPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
-		$nombre = $ocjPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
+		$nombre = utf8_decode($ocjPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue());
 		$direccion = $ocjPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
-		$ciudad = $ocjPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
+		$ciudad = utf8_decode($ocjPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue());
 		$telefono = $ocjPHPExcel->getActiveSheet()->getCell('H'.$i)->getCalculatedValue();
-		$clasificacion = $ocjPHPExcel->getActiveSheet()->getCell('I'.$i)->getCalculatedValue();
+		$clasificacion = utf8_decode($ocjPHPExcel->getActiveSheet()->getCell('I'.$i)->getCalculatedValue());
 
 		$sql = "INSERT INTO `usuarios` (`id_usuario`, `tipo_usuario`, `tipo_identificacion`, `numero_identificacion`, `digito_de_verificacion`, `nombre`, `direccion`, `email`, `ciudad`, `celular`, `telefono`, `activa`, `clasificacion`) VALUES (NULL, 'cliente', 'NIT', '$numeroIdentificacion', '$dVerificacion', '$nombre', '$direccion', NULL, '$ciudad', '', '$telefono', '1', '$clasificacion')";
 		$result = $mysqli->query($sql);
