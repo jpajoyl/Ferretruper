@@ -49,7 +49,7 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 				$idProducto=$_POST['idProducto'];
 				$unidades=$_POST['unidades'];
 				$totalVenta = isset($_POST['totalVenta'])?$_POST['totalVenta']:0;
-				$seleccionarProducto=$venta->seleccionarProducto($idProducto,$unidades);
+				$seleccionarProducto=$venta->seleccionarProducto($idProducto,$unidades,$totalVenta);
 				unset($_COOKIE["venta"]);
 				setcookie("venta", "",time() - 3600, "/");
 				$serializeVenta=serialize($venta);
@@ -62,7 +62,7 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 				$idProducto=$_POST['idProducto'];
 				$unidades=$_POST['unidades'];
 				$totalVenta = isset($_POST['totalVenta'])?$_POST['totalVenta']:0;
-				$seleccionarProducto=$venta->seleccionarProducto($idProducto,$unidades);
+				$seleccionarProducto=$venta->seleccionarProducto($idProducto,$unidades,$totalVenta);
 				$serializeVenta=serialize($venta);
 				setcookie("venta", $serializeVenta,time() + 7200, "/");
 				echo $seleccionarProducto;

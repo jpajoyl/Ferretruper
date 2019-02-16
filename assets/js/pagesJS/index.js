@@ -284,6 +284,7 @@ $(document).ready(function() {
         if($("#body-table-venta tr").length==0){
             $(".no-venta").fadeIn(0);
         }
+        console.log(idProductoXVenta);
         $.ajax({
             url: '../assets/php/Controllers/CVenta.php?method=deseleccionarProducto',
             type: 'POST',

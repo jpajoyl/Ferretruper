@@ -256,12 +256,12 @@
 					$arrayDistribucion[strval($idProductoXVenta)] = $arrayDistribucionInventario;
 
 					$total=($numeroUnidades*$precioVentaUnitario);
-					$this->setSumaTotal($total);
+					$this->setSumaTotal(round($total));
 					$subtotalIva=$total;
 					if($producto->getTieneIva()){
 						$subtotalIva = $total/(1+IVA);
 					}
-					$this->setSumaSubTotal($subtotalIva);
+					$this->setSumaSubTotal(round($subtotalIva));
 					$this->setArrayDistribucion($arrayDistribucion);
 					$producto->calcularUnidades();
 					$conexion = null;
@@ -311,8 +311,8 @@
 					$subtotalIva = $precioProductoxventa/(1+IVA);
 				}
 				$subtotal = $this->getSubtotal()-$subtotalIva;
-				$this->setTotal($total);
-				$this->setSubtotal($subtotal);
+				$this->setTotal(round($total));
+				$this->setSubtotal(round($subtotal));
 
 				$producto->calcularUnidades();
 				$conexion = null;
@@ -378,7 +378,7 @@
 				$resultado=$statement->fetch(PDO::FETCH_ASSOC);
 				if($resultado){
 					$numeroDian = $resultado['numero_dian']+ 1;
-					$factura = new factura($total,$fecha,$resolucion,$idVenta,$resolucion,$numeroDian); //Hay un error.
+					$factura = new factura($total,$fecha,$resolucion,$idVenta,$resolucion,$numeroDian); 
 					$factura = true;
 					if($factura){
 						$this->asociarTipoVenta($idEmpleado,$tipoVenta,$idCliente);
