@@ -50,11 +50,20 @@ include_once '../assets/php/Controllers/GetSession.php';
 	
  
 	<!-- Left Sidebar -->
-	<?php include("includes/sidebar.php"); ?>
+	<?php 
+		if($empleado->getPermiso()==1){
+			include("includes/sidebar.php");
+			?>
+			<div class="content-page">
+			<?php
+		}else{
+			?>
+			<div class="content-empleado">
+			<?php
+		}
+	?>
 	<!-- End Sidebar -->
-
-
-    <div class="content-page">
+    
 	
 		<!-- Start content -->
         <div class="content">

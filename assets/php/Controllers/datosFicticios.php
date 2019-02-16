@@ -21,7 +21,7 @@
 		
 	}
 	try {
-		$empleado=new Empleado("fredy","1234",1,"CC", "1016542387", "Fredy Alias el Patron", "La del corazon", "MEDALLO", "2248595", $clasificacion='', $digitoDeVerificacion=NULL, $email="", $celular="");
+		$empleado=new Empleado("fredy","1234",1,"CC", "1016542387", "Fredy", "La del corazon", "MEDALLO", "2248595", $clasificacion='', $digitoDeVerificacion=NULL, $email="", $celular="");
 	} catch (Exception $e) {
 		
 	}

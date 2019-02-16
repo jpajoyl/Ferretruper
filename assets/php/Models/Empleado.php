@@ -154,7 +154,7 @@ class Empleado extends Usuario {
 
             $conexion = Conexion::conectar();
             $resultado = Usuario::buscarDatosUsuario($numeroConsulta,$modo);
-            $consulta2= $conexion->prepare("SELECT usuario FROM `credenciales_de_acceso` WHERE USUARIOS_id_usuario=:id_usuario");
+            $consulta2= $conexion->prepare("SELECT * FROM `credenciales_de_acceso` WHERE USUARIOS_id_usuario=:id_usuario");
             $consulta2->execute(['id_usuario' => $resultado['id_usuario']]);
             $resultado2=$consulta2->fetch(PDO::FETCH_ASSOC);
             $empleado = new Empleado();
@@ -168,7 +168,7 @@ class Empleado extends Usuario {
                 $empleado->setTelefono($resultado['telefono']);
                 $empleado->setCelular($resultado['celular']);
                 $empleado->setUsuario($resultado2['usuario']);
-                
+                $empleado->setPermiso($resultado2['permiso']);
             }
             $conexion = null;
             $consulta = null;

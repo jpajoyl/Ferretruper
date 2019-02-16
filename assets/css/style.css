@@ -325,11 +325,19 @@ a {
   padding-bottom: 70px;
   position: absolute; }
 
-.content-page {
+.content-page{
   margin-left: 250px;
+  overflow: hidden; }
+
+.content-empleado{
+  margin-left: 0px;
   overflow: hidden; }
   
 .content-page .content {
+    padding: 0 5px;
+    margin-top: 50px; }
+
+.content-empleado .content {
     padding: 0 5px;
     margin-top: 50px; }
 
@@ -485,7 +493,7 @@ body.adminbody .main-sidebar.left {
     padding: 10px;
     position: absolute;
     right: 0;
-    left: 250px;
+    left: 0px;
     background-color: #fff; }
 
 #main.enlarged .menu-title {
@@ -493,7 +501,7 @@ body.adminbody .main-sidebar.left {
 #main.enlarged .menu-arrow {
   display: none !important; }
 #main.enlarged .footer {
-  left: 70px; }
+  left: 0px !important; }
 #main.enlarged #sidebar-menu ul ul {
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1), 0 1px 10px 0 rgba(0, 0, 0, 0.08); }
 #main.enlarged .left.main-sidebar {
@@ -565,6 +573,8 @@ body.adminbody .main-sidebar.left {
     color: #ffffff; }
 #main.enlarged .content-page {
   margin-left: 70px; }
+  #main.enlarged .content-empleado {
+  margin-left: 0px; }
 #main.enlarged .navbar-custom {
   margin-left: 160px; }
 #main.enlarged .headerbar .headerbar-left {

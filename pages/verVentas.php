@@ -32,7 +32,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 	<link href="../assets/css/customCSS/dataTableCollapse.css" rel="stylesheet" type="text/css" />
 	<link href="../assets/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
 	<link href="../assets/css/style.css" rel="stylesheet" type="text/css" />
-<!--<link href="../assets/css/customCSS/verVentas.css" rel="stylesheet" type="text/css" />-->
+	<link href="../assets/css/customCSS/verVentas.css" rel="stylesheet" type="text/css" />
 	<!-- BEGIN CSS for this page -->
 	<link rel="stylesheet" type="text/css" href="../assets/css/dataTables.bootstrap4.min.css"/>	
 
