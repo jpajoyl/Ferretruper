@@ -85,8 +85,6 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		}else{
 			echo ERROR;
 		}
-	}else if(!strcmp($method,"terminarVenta")){
-		
 	}else if (!strcmp($method,"verVentas")) {
 		$array = array();
 		$listaVentas=TipoVenta::obtenerTipoVentas();
@@ -104,6 +102,24 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 			echo json_encode($array);
 		}else{
 			echo NOT_FOUND;
+		}
+	}else if(!strcmp($method,"terminarVenta")){
+		
+	}else if(!strcmp($method,"cancelarVenta")){
+		if(isset($_COOKIE['venta'])){
+			$venta=unserialize($_COOKIE['venta']);
+			if($venta instanceof Venta){
+				try {
+					$cancelarVenta=$venta->cancelarVenta();
+					unset($_COOKIE["venta"]);
+					setcookie("venta", "",time() - 3600, "/");
+					echo $cancelarVenta;
+				} catch (Exception $e) {
+					echo ERROR;
+				}
+			}
+		}else{
+			echo ERROR;
 		}
 	}else if (!strcmp($method,"anularVenta")) {
 		$idVenta = $_POST['idVenta'];

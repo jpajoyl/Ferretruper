@@ -37,10 +37,19 @@ $(document).ready(function() {
                         $("#iva-preCompra").html(numberWithCommas((data.totalVenta-data.subtotalVenta)));
                         $("#total-preCompra").html(numberWithCommas(data.totalVenta));
                     }else{
+                      $("#table-venta > tbody").html("");
+                      var tbody='<td colspan="6" class="no-venta"><div class="alert alert-secondary mt" role="alert">'+
+                           'Aun no se ha iniciado una venta. Seleccione un producto para iniciar'+
+                           '</div></td>';
+                      $("#table-venta > tbody").prepend(tbody);
                       $(".no-venta").fadeIn(0);
                     }
                 }else{
-                    $(".no-venta").fadeIn(0);
+                    Swal(
+                      'Error!',
+                      'A ocurrido un error',
+                      'error'
+                    );
                 }
             }
         });
@@ -64,6 +73,7 @@ $(document).ready(function() {
                   $(row).toggleClass('tr-locked');
             }
           },
+          "columnDefs": [ { className: "unidades-totales", "targets": [ 4 ] } ],
           "destroy":true,
           "autoWidth": false,
           "responsive":true,
@@ -277,6 +287,28 @@ $(document).ready(function() {
             }
         });
     });
+
+   $("#cancelar-venta").click(function(event){
+    event.preventDefault();
+        if($("#body-table-venta tr").length>0){
+          $.ajax({
+              url: '../assets/php/Controllers/CVenta.php?method=cancelarVenta',
+              type: 'POST',
+              success:function(data){
+                  if(data==1){
+                   loadData();
+                   getVenta();
+                  }else{
+                      Swal(
+                        'Error!',
+                        'Tenemos un error, recarga y vuelve a intentar!',
+                        'error'
+                      );
+                  }
+              }
+          });
+        }
+   });
 
    $("#terminar-venta").click(function(event){
     event.preventDefault();
