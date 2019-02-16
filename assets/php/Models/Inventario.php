@@ -187,6 +187,7 @@ class Inventario {
 		return $statement;
 	}
 
+
 	public static function obtenerInventariosConProveedor($numeroDeConsulta, $modo=true)
 	{//true->>busca por idProducto     //false busca por idProveedor
 		$conexion = Conexion::conectar();

@@ -135,13 +135,68 @@ class TipoVenta{
 
     }
 
-    public static function obtenerTipoVentas(){
+    /*public static function obtenerTipoVentas(){
             $conexion = Conexion::conectar();
             $statement= $conexion->prepare("SELECT * FROM `ventas` INNER JOIN `tipo_venta` ON tipo_venta.VENTAS_id_venta = ventas.id_venta WHERE tipo_venta.estado = :estado"); 
             $statement->bindValue(":estado", 1);
             $statement->execute();
             $conexion=null;
             return $statement;
+    }*/
+
+
+    public static function obtenerTipoVentas(){
+// Database connection info
+            $dbDetails = array(
+                'host' => 'localhost',
+                'user' => 'root',
+                'pass' => '',
+                'db'   => 'ferretruperbd2'
+            );
+
+            // DB table to use
+            $table = 'SELECT * FROM `ventas` INNER JOIN `tipo_venta` ON tipo_venta.VENTAS_id_venta = ventas.id_venta';
+
+            // Table's primary key
+            $primaryKey = 'id_producto';
+
+            // Array of database columns which should be read and sent back to DataTables.
+            // The `db` parameter represents the column name in the database. 
+            // The `dt` parameter represents the DataTables column identifier.
+            $columns = array(
+                array( 'db' => 'id_producto', 'dt' => 0 ),
+                array( 'db' => 'nombre',  'dt' => 1 ),
+                array( 'db' => 'referencia_fabrica',      'dt' => 2 ),
+                array( 'db' => 'codigo_barras',     'dt' => 3 ),
+                array( 'db' => 'unidades_totales',    'dt' => 4 ),
+                array(
+                    'db'        => 'precio_mayor_inventario',
+                    'dt'        => 5,
+                    'formatter' => function( $d, $row ) {
+                        return number_format($d);
+                    }
+                ),
+                array(
+                    'db'        => 'unidades_totales',
+                    'dt'        => 6,
+                    'formatter' => function( $d, $row ) {
+                        if($d>0){
+                            return "<center><button class='btn btn-success btn-xs añadir-producto'><i class='fa fa-plus-circle'></i></button></button></center>";
+                        }else{
+                            return "";
+                        }
+                    }
+                )
+            );
+
+            $whereStatement = 'WHERE tipo_venta.estado = :estado';
+
+            // Include SQL query processing class
+            require('../ssp.class.php');
+
+            // Output data as json format
+            return SSP::complex( $request, $dbDetails, $table, $primaryKey, $columns,null,$whereStatement );
+
     }
 
     public static function obtenerTipoVenta($idVenta){

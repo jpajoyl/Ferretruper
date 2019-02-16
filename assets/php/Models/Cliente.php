@@ -35,7 +35,7 @@ class Cliente extends Usuario {
         $statement=null;
     }
 
-    public static function verClientes(){
+    /*public static function verClientes(){
     	$conexion = Conexion::conectar();
     	$statement = $conexion->prepare("SELECT * FROM `usuarios` WHERE tipo_usuario = 'cliente' and activa = 1");
 
@@ -43,7 +43,44 @@ class Cliente extends Usuario {
         $conexion=null;
         return $statement;
     	
+    }*/
+
+    public static function verClientes(){
+                                // Database connection info
+            $dbDetails = array(
+                'host' => 'localhost',
+                'user' => 'root',
+                'pass' => '',
+                'db'   => 'ferretruperbd2'
+            );
+
+            // DB table to use
+            $table = 'usuarios';
+
+            // Table's primary key
+            $primaryKey = 'id_usuario';
+
+            // Array of database columns which should be read and sent back to DataTables.
+            // The `db` parameter represents the column name in the database. 
+            // The `dt` parameter represents the DataTables column identifier.
+            $columns = array(
+                array( 'db' => 'id_usuario', 'dt' => 0 ),
+                array( 'db' => 'digito_de_verificacion',  'dt' => 1 ),
+                array( 'db' => 'nombre',      'dt' => 2 ),
+                array( 'db' => 'email',     'dt' => 3 ),
+                array( 'db' => 'Direccion',    'dt' => 4 ),
+                array( 'db' => 'ciudad',    'dt' => 5 ),
+                array(  'db' => 'telefono',    'dt' => 6)
+            );
+            $whereStatement = "WHERE tipo_usuario = 'cliente' and activa = 1";
+
+            // Include SQL query processing class
+            require('../ssp.class.php');
+
+            // Output data as json format
+            return SSP::complex( $request, $dbDetails, $table, $primaryKey, $columns,null,$whereStatement);
     }
+
         
     public static function obtenerCliente($numeroConsulta,$modo=true) {
         $resultado = Usuario::buscarDatosUsuario($numeroConsulta,$modo);

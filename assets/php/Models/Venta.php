@@ -378,9 +378,17 @@
 				$resultado=$statement->fetch(PDO::FETCH_ASSOC);
 				if($resultado){
 					$numeroDian = $resultado['numero_dian']+ 1;
-					$factura = new factura($total,$fecha,$resolucion,$idVenta,$resolucion,$numeroDian); 
+					$statement=null;
+					$resultado=null;
+					¿$statement = $conexion->prepare("SELECT * FROM `informacion_facturas` WHERE `id_informacion_facturas` = :idInformacionFacturas ");
+					$statement->bindValue(':idInformacionFacturas',1);
+					$statement->execute();
+					$resultado=$statement->fetch(PDO::FETCH_ASSOC);
+					$informacionFactura=$resultado['descripcion'];
+
+					$factura = new factura($total,$fecha,$informacionFactura,$idVenta,$resolucion,$numeroDian); 
 					$factura = true;
-					if($factura){
+					if($factura and $informacionFactura){
 						$this->asociarTipoVenta($idEmpleado,$tipoVenta,$idCliente);
 						$statement=null;
 						$resultado=null;
@@ -389,6 +397,9 @@
 						$statement->bindParam(':idResolucion',$resolucion,PDO::PARAM_INT);
 						$statement->bindParam(':numeroNuevoDian',$numeroNuevoDian,PDO::PARAM_INT);
 						$statement->execute();
+
+						$conexion =null;
+						return SUCCESS;
 
 					}else{
 						return ERROR;
