@@ -326,7 +326,7 @@
 
 		public function cancelarVenta(){ //Probar , no se si funcione;
 			$arrayDistribucion = $this->getArrayDistribucion();
-			foreach ($productosxVenta as $key => $value) {
+			foreach ($arrayDistribucion as $key => $value) {
 				$this->desseleccionarProducto($key);
 			}
 

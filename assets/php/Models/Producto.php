@@ -192,9 +192,11 @@
 			$conexion = Conexion::conectar();
 			$statement = Inventario::obtenerInventarios($this->getIdProducto());
 			$statement->execute();
-			if($statement->rowCount()>0){
-				while($inventario = $statement->fetch(PDO::FETCH_ASSOC)){
-					$unidadesTotalesContador+=$inventario['unidades'];
+			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
+			if($resultado){
+				while($resultado ){
+					$unidadesTotalesContador+=$resultado['unidades'];
+					$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 				}
 			}
 			$cambiarUnidades=$this->cambiarUnidadesTotales($unidadesTotalesContador);
