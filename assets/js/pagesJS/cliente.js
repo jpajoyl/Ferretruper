@@ -7,48 +7,39 @@ $(document).ready(function() {
     function formatData (data) {
         return '<div class="row">'+
                         '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">'+
-                            '<i><i class="fa fa-mobile"></i><strong>  Cel: </strong>'+data.celular+'</i>'+
+                            '<i><i class="fa fa-mobile"></i><strong>  Cel: </strong>'+data[9]+'</i>'+
                         '</div>'+
                     '</div>'+
                     '<div class="row">'+
                         '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">'+
-                            '<i><i class="fa fa-phone"></i><strong> Tel: </strong>'+data.telefono+'</i>'+
+                            '<i><i class="fa fa-phone"></i><strong> Tel: </strong>'+data[7]+'</i>'+
                         '</div>'+
                     '</div>';
     }
 
     function loadData(){
+        /*
+            0:id_usuario
+            1:numero_identificacion
+            2:digito_de_verificacion
+            3:nombre
+            4:email
+            5:Direccion
+            6:ciudad
+            7:telefono
+            9:celular
+            10:clasificacion
+        */
         window.table=$('#table-clientes').DataTable({
-                "ajax":{
-                    "method":"POST",
-                    "url":"../assets/php/Controllers/CCliente.php?method=verClientes",
-                    "dataSrc": function(dataReturn){
-                        if(dataReturn == 3){
-                            return [];
-                        }
-                        else {
-                            return dataReturn.data;
-                        }
-                    }
-                },
+                "processing": true,
+                "serverSide": true,
+                "ajax":"../assets/php/Controllers/CCliente.php?method=verClientes",
                 "autoWidth": false,
-                "columns":[
-                    {
-                        "className":      'details-control',
-                        "orderable":      false,
-                        "data":           null,
-                        "defaultContent": ''
-                    },
-                    {"data":"numero_identificacion"},
-                    {"data":"digito_de_verificacion"},
-                    {"data":"nombre"},
-                    {"data":"email"},
-                    {"data":"direccion"},
-                    {"data":"ciudad"},
-                    {"data":"telefono"},
-                    {"defaultContent":"<button class='btn btn-primary btn-xs editar-cliente'><i class='fa fa-pencil'></i></button>\
-                    </button><button class='btn btn-danger btn-xs eliminar-cliente'><i class='fa fa-trash-o'></i></button>"}
-                ],
+                "columnDefs": [ {"render": function (data, type, row) {
+                                return "";
+                                },
+                                className: "details-control",
+                                "targets": [0]} ],
                 "destroy":true,
                 "responsive":true,
                 "language": {
@@ -81,20 +72,32 @@ $(document).ready(function() {
 
     function getDataEdit(tbody,table){
         $(tbody).on("click", ".editar-cliente", function(){
+            /*
+            0:id_usuario
+            1:numero_identificacion
+            2:digito_de_verificacion
+            3:nombre
+            4:email
+            5:Direccion
+            6:ciudad
+            7:telefono
+            9:celular
+            10:clasificacion
+        */
             var data=table.row($(this).parents("tr")).data();
-            $("#id-cliente").html(data.numero_identificacion);
-            if(data.digito_de_verificacion!=""){
-                $("#digitoDeVerificacion").html("-"+data.digito_de_verificacion);
+            $("#id-cliente").html(data[1]);
+            if(data[2]!=null){
+                $("#digitoDeVerificacion").html("-"+data[2]);
             }
-            $("#input-id-editar").val(data.numero_identificacion);
-            $("#input-digito-de-verificacion-editar").val(data.digito_de_verificacion);
-            $("#input-nombre-editar").val(data.nombre);
-            $("#input-direccion-editar").val(data.direccion);
-            $("#input-ciudad-editar").val(data.ciudad);
-            $("#input-email-editar").val(data.email);
-            $("#input-telefono-editar").val(data.telefono);
-            $("#input-celular-editar").val(data.celular);
-            $("#input-clasificacion-editar").val(data.clasificacion);           
+            $("#input-id-editar").val(data[1]);
+            $("#input-digito-de-verificacion-editar").val(data[2]);
+            $("#input-nombre-editar").val(data[3]);
+            $("#input-direccion-editar").val(data[5]);
+            $("#input-ciudad-editar").val(data[6]);
+            $("#input-email-editar").val(data[4]);
+            $("#input-telefono-editar").val(data[7]);
+            $("#input-celular-editar").val(data[9]);
+            $("#input-clasificacion-editar").val(data[10]);           
             $("#modal-editar-cliente").modal("show");
         });
     }
@@ -104,7 +107,7 @@ $(document).ready(function() {
             var data=table.row($(this).parents("tr")).data();
             Swal({
               title: 'Estas seguro?',
-              text: "Se eliminara el cliente "+data.nombre+"!",
+              text: "Se eliminara el cliente "+data[3]+"!",
               type: 'warning',
               showCancelButton: true,
               confirmButtonColor: '#3085d6',

@@ -45,9 +45,8 @@ class Cliente extends Usuario {
     	
     }*/
 
-    public static function verClientes(){
-                                // Database connection info
-            $dbDetails = array(
+    public static function verClientes($request){
+             $dbDetails = array(
                 'host' => 'localhost',
                 'user' => 'root',
                 'pass' => '',
@@ -63,22 +62,46 @@ class Cliente extends Usuario {
             // Array of database columns which should be read and sent back to DataTables.
             // The `db` parameter represents the column name in the database. 
             // The `dt` parameter represents the DataTables column identifier.
+            
             $columns = array(
-                array( 'db' => 'id_usuario', 'dt' => 0 ),
-                array( 'db' => 'digito_de_verificacion',  'dt' => 1 ),
-                array( 'db' => 'nombre',      'dt' => 2 ),
-                array( 'db' => 'email',     'dt' => 3 ),
-                array( 'db' => 'Direccion',    'dt' => 4 ),
-                array( 'db' => 'ciudad',    'dt' => 5 ),
-                array(  'db' => 'telefono',    'dt' => 6)
-            );
-            $whereStatement = "WHERE tipo_usuario = 'cliente' and activa = 1";
+                    array(
+                        'db'        => 'id_usuario',
+                        'dt'        => 0
+                    ),
+                    array( 'db' => 'numero_identificacion', 'dt' => 1, 'field' => 'numero_identificacion'),
+                    array( 'db' => 'digito_de_verificacion',  'dt' => 2, 'field' => 'digito_de_verificacion'),
+                    array( 'db' => 'nombre',      'dt' => 3, 'field' => 'nombre'),
+                    array( 'db' => 'email',     'dt' => 4, 'field' => 'email'),
+                    array( 'db' => 'Direccion',     'dt' => 5, 'field' => 'Direccion'),
+                    array( 'db' => 'ciudad',     'dt' => 6, 'field' => 'ciudad'),
+                    array( 'db' => 'telefono',     'dt' => 7, 'field' => 'telefono'),
+                    array(
+                        'db'        => 'id_usuario',
+                        'dt'        => 8,
+                        'field' => 'id_usuario',
+                        'formatter' => function( $d, $row ) {
+                            if($d>0){
+                                return "<center><button class='btn btn-primary btn-xs editar-cliente'><i class='fa fa-pencil'></i></button>
+                                </button><button class='btn btn-danger btn-xs eliminar-cliente'><i class='fa fa-trash-o'></i></button></center>";
+                                }else{
+                                    return "";
+                                }
+                        }
+                    ),
+                    array( 'db' => 'celular',     'dt' => 9, 'field' => 'celular'),
+                    array( 'db' => 'clasificacion',     'dt' => 10, 'field' => 'clasificacion')
 
+
+                );
+            $whereStatement = 'tipo_usuario= "cliente"';
+            
             // Include SQL query processing class
-            require('../ssp.class.php');
+            require('../ssp.customized.class.php');
+            $joinQuery = NULL;
 
-            // Output data as json format
-            return SSP::complex( $request, $dbDetails, $table, $primaryKey, $columns,null,$whereStatement);
+            // Output data
+            return SSP::simple( $request, $dbDetails, $table, $primaryKey, $columns, $joinQuery, $whereStatement);
+
     }
 
         

@@ -8,15 +8,7 @@
 	include_once 'Response.php';	
 	if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		if(!strcmp($method,"verClientes")){
-			$listaClientes=Cliente::verClientes();
-			if($listaClientes->rowCount()>0){
-				while ($cliente = $listaClientes->fetch(PDO::FETCH_ASSOC)) {
-					$array['data'][]=$cliente;
-				}
-				echo json_encode($array);
-			}else{
-				echo NOT_FOUND;
-			}
+			echo json_encode(Cliente::verClientes($_GET));
 		}else if(!strcmp($method,"registrarCliente")){
 			$id=$_POST['id'];
 			$digitoDeVerificacion=$_POST['digitoDeVerificacion'];
