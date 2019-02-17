@@ -463,9 +463,9 @@
 				        'field' => 'anulada',
 				        'formatter' => function( $d, $row ) {
 				            if($d==0){
-				            	return "<center><button class='btn btn-danger btn-xs anular-factura'><i class='fa fa-trash-o'></i></button> </button><button class='btn btn-primary btn-xs emitir-factura'><i class='fa fa-arrow-right'></i></button></center>";
+				            	return "<center><button class='btn btn-danger btn-xs anular-factura'><i class='fa fa-trash-o'></i></button> </button><button class='btn btn-primary btn-xs emitir-factura'><i class='fa fa-print'></i></button></center>";
 				            }else  if($d==1){
-			            		return "<center></button><button class='btn btn-success btn-xs emitir-factura'><i class='fa fa-chevron-circle-left'></i></button></center>";
+			            		return "<center></button><button class='btn btn-warning btn-xs emitir-factura'><i class='fa fa-print'></i></button></center>";
 			           		}else{
 				            	return "";
 				            }
