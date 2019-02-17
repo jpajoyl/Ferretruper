@@ -68,13 +68,7 @@
 			        $columns = array(
 			     			array(
 						        'db'        => 'id_usuario',
-						        'dt'        => 0,
-						        'field' => 'id_usuario',
-						        'formatter' => function( $d, $row ) {
-						        	if($d>0){
-						           		return "";
-						           }
-						        }
+						        'dt'        => 0
 						    ),
 			                array( 'db' => 'numero_identificacion', 'dt' => 1, 'field' => 'numero_identificacion'),
 			                array( 'db' => 'digito_de_verificacion',  'dt' => 2, 'field' => 'digito_de_verificacion'),

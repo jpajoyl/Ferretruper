@@ -42,7 +42,12 @@ function loadData(){
         "serverSide": true,
         "ajax":"../assets/php/Controllers/CProveedor.php?method=verProveedores",
         "autoWidth": false,
-        "columnDefs": [ { className: "table-proveedores-nit-proveedor", "targets": [ 1 ] } ],
+        "columnDefs": [ { className: "table-proveedores-nit-proveedor", "targets": [ 1 ] },
+                        {"render": function (data, type, row) {
+                        return "";
+                    },
+                    className: "details-control",
+                    "targets": [0]} ],
         "destroy":true,
         "responsive":true,
         "language": {
