@@ -425,13 +425,85 @@
 			return $statement;
 		}
 
-		public static function verVentas(){
+		public static function verVentasStatement(){
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("SELECT * FROM `ventas` WHERE 1 ORDER BY `ventas`.`id_venta` DESC ");
 			$statement->execute();
 			$conexion=null;
 			return $statement;
 		}
+
+		public static function verVentas($request,$papelera = true){
+		// Database connection info
+            $dbDetails = array(
+                'host' => 'localhost',
+                'user' => 'root',
+                'pass' => '',
+                'db'   => 'ferretruperbd2'
+            );
+
+            // DB table to use
+            $table = '(SELECT * FROM `ventas` INNER JOIN `facturas` ON facturas.ventas_id_venta = ventas.id_venta)';
+
+            // Table's primary key
+            $primaryKey = 'id_venta';
+
+            // Array of database columns which should be read and sent back to DataTables.
+            // The `db` parameter represents the column name in the database. 
+            // The `dt` parameter represents the DataTables column identifier.
+            if($papelera){
+	            $columns = array(
+		                array( 'db' => 'id_venta', 'dt' => 0 ),
+		                array( 'db' => 'fecha',  'dt' => 1 ),
+		                array( 'db' => 'total',      'dt' => 2 ),
+		                array( 'db' => 'numero_dian',     'dt' => 3 ),
+		                array(
+					        'db'        => 'id_venta',
+					        'dt'        => 4,
+					        'formatter' => function( $d, $row ) {
+					            if($d>0){
+					            	return "defaultContent":"<center><button class='btn btn-danger btn-xs anular-factura'><i class='fa fa-trash-o'></i></button>\
+		                </button><button class='btn btn-primary btn-xs emitir-factura'><i class='fa fa-arrow-right'></i></button></center>";
+					            }else{
+					            	return "";
+					            }
+					        }
+					    )
+
+
+		            );
+	            $whereStatement = 'WHERE facturas.anulada = 0';
+        	}else{
+        		$columns = array(
+	                array( 'db' => 'id_venta', 'dt' => 0 ),
+	                array( 'db' => 'fecha',  'dt' => 1 ),
+	                array( 'db' => 'total',      'dt' => 2 ),
+	                array( 'db' => 'numero_dian',     'dt' => 3 ),
+	                array(
+				        'db'        => 'id_venta',
+				        'dt'        => 4,
+				        'formatter' => function( $d, $row ) {
+				            if($d>0){
+				            	return "<center></button><button class='btn btn-success btn-xs emitir-factura'><i class='fa fa-chevron-circle-left'></i></button></center>";
+				            }else{
+				            	return "";
+				            }
+				        }
+				    )
+
+
+	            );
+	            $whereStatement = 'WHERE facturas.anulada = 1';
+        	}
+
+
+            // Include SQL query processing class
+            require('../ssp.class.php');
+
+            // Output data as json format
+            return SSP::complex( $request, $dbDetails, $table, $primaryKey, $columns,null,$whereStatement);
+		}
+
 
 		public static function verVentasDelDia(){
 			$conexion = Conexion::conectar();

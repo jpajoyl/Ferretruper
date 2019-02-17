@@ -73,26 +73,10 @@ $(document).ready(function() {
     function loadData(papelera){
         if(!papelera){
             window.table=$('#table-ventas').DataTable({
-                "ajax":{
-                    "method":"POST",
-                    "url":"../assets/php/Controllers/CVenta.php?method=verVentas",
-                    "dataSrc": function(data){
-                        if(data == 3){
-                            return [];
-                        }else {
-                            return data.ventas;
-                        }
-                    }
-                },
+                "processing": true,
+                "serverSide": true,
+                "ajax": "../assets/php/Controllers/CVenta.php?method=verVentas",
                 "autoWidth": false,
-                "columns":[
-                {"data":"id_venta"},
-                {"data":"fecha"},
-                {"data":"total"},
-                {"data":"numero_dian"},
-                {"defaultContent":"<center><button class='btn btn-danger btn-xs anular-factura'><i class='fa fa-trash-o'></i></button>\
-                </button><button class='btn btn-primary btn-xs emitir-factura'><i class='fa fa-arrow-right'></i></button></center>"}
-                ],
                 "destroy":true,
                 "responsive":true,
                 "language": {
@@ -108,25 +92,10 @@ $(document).ready(function() {
             emitirFactura("#table-ventas tbody",table);
         }else{
             window.table=$('#table-ventas').DataTable({
-                "ajax":{
-                    "method":"POST",
-                    "url":"../assets/php/Controllers/CVenta.php?method=verVentasAnuladas",
-                    "dataSrc": function(data){
-                        if(data == 3){
-                            return [];
-                        }else {
-                            return data.ventas;
-                        }
-                    }
-                },
+                "processing": true,
+                "serverSide": true,
+                "ajax": "../assets/php/Controllers/CVenta.php?method=verVentasAnuladas",
                 "autoWidth": false,
-                "columns":[
-                {"data":"id_venta"},
-                {"data":"fecha"},
-                {"data":"total"},
-                {"data":"numero_dian"},
-                {"defaultContent":"<center></button><button class='btn btn-success btn-xs emitir-factura'><i class='fa fa-chevron-circle-left'></i></button></center>"}
-                ],
                 "destroy":true,
                 "responsive":true,
                 "language": {
