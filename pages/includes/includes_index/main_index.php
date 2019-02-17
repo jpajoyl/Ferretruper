@@ -49,15 +49,8 @@
 		</div>
 		<div class="row">
 			<div class="col-xs-0 col-sm-0 col-md-6 col-lg-6 col-xl-8">
-				<a role="button" href="#" id="cancelar-venta" class="btn btn-danger float-left mt mr ml">Cancelar venta<span class="btn-label btn-label-right"><i class="fa fa-trash"></i></span></a>
-				<a role="button" id="terminar-venta" class="btn btn-success float-left mt mr" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Terminar venta<span class="btn-label btn-label-right"><i class="fa fa-check"></i></span></a>
-				<div class="row">
-					<div class="collapse mt" id="collapseExample">
-					  <div class="card card-body">
-						Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-					  </div>
-					</div>
-				</div>				
+				<a role="button" href="#" id="terminar-venta" class="btn btn-success float-right mt">Terminar venta<span class="btn-label btn-label-right"><i class="fa fa-check"></i></span></a>
+				<a role="button" href="#" id="cancelar-venta" class="btn btn-danger float-right mt mr">Cancelar venta<span class="btn-label btn-label-right"><i class="fa fa-trash"></i></span></a>
 			</div>
 			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 float-right">
 			      <table id="table-info-venta" class="table mr table-secondary">
@@ -81,6 +74,12 @@
 			            	<input class="form-check-input" type="checkbox" name="Renta" id="renta" value="1">
 			            	Si
 			              </label>
+			            </td>
+			          </tr>
+			          <tr class="tr-info-compra table-success">
+			            <th width="50%" scope="row" class="float-right mt">Efectivo:</th>
+			            <td width="40%" id="efectivo">
+			            	<input type="number" class="form-control mb mr" id="input-efectivo" placeholder="Efectivo" autocomplete="off">
 			            </td>
 			          </tr>
 			        </tbody>

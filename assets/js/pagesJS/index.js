@@ -43,6 +43,9 @@ $(document).ready(function() {
                            '</div></td>';
                       $("#table-venta > tbody").prepend(tbody);
                       $(".no-venta").fadeIn(0);
+                      $("#subtotal-preCompra").html(0);
+                      $("#iva-preCompra").html(0);
+                      $("#total-preCompra").html(0);
                     }
                 }else{
                     Swal(
