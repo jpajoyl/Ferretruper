@@ -20,7 +20,8 @@ $(document).ready(function() {
     function emitirFactura(tbody,table){
         $(tbody).on("click", ".emitir-factura", function(){
             var data=table.row($(this).parents("tr")).data();
-            window.open("../assets/php/Controllers/CVenta.php?method=emitirFactura&id-venta="+data[0]);
+            console.log(data);
+            window.open("../assets/php/Controllers/CVenta.php?method=emitirFactura&id-venta="+data);
         });
     }
     function anularVenta(tbody,table){
@@ -109,6 +110,7 @@ $(document).ready(function() {
             });
             emitirFactura("#table-ventas tbody",table);
         }
+        
     }
 
 });
