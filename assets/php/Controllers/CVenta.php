@@ -11,6 +11,7 @@ if(!isset($include)){
 	include_once '../Models/Venta.php';
 	include_once '../Models/ProductoXVenta.php';
 	include_once '../Models/TipoVenta.php';
+	include_once '../Models/Abono.php';
 
 	$objectSession =new SesionEmpleado();
 	$method = isset($_GET['method'])?$_GET['method']:"";
