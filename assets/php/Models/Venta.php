@@ -451,42 +451,22 @@
             // Array of database columns which should be read and sent back to DataTables.
             // The `db` parameter represents the column name in the database. 
             // The `dt` parameter represents the DataTables column identifier.
-            if(!$papelera){
-	            $columns = array(
-		                array( 'db' => '`ventas`.`id_venta`', 'dt' => 0, 'field' => 'id_venta'),
-		                array( 'db' => '`ventas`.`fecha`',  'dt' => 1, 'field' => 'fecha'),
-		                array( 'db' => '`ventas`.`total`',      'dt' => 2, 'field' => 'total'),
-		                array( 'db' => '`facturas`.`numero_dian`',     'dt' => 3, 'field' => 'numero_dian'),
-		                array(
-					        'db'        => '`ventas`.`anulada`',
-					        'dt'        => 4,
-					        'field' => 'anulada',
-					        'formatter' => function( $d, $row ) {
-					            if($d==0){
-					            	return "<center><button class='btn btn-danger btn-xs anular-factura'><i class='fa fa-trash-o'></i></button> </button><button class='btn btn-primary btn-xs emitir-factura'><i class='fa fa-arrow-right'></i></button></center>";
-					            }else{
-					            	return "";
-					            }
-					        }
-					    )
-
-
-		            );
-	            $whereStatement = '`ventas`.`anulada`=0';
-        	}else{
-        		$columns = array(
+            
+	        $columns = array(
 	                array( 'db' => '`ventas`.`id_venta`', 'dt' => 0, 'field' => 'id_venta'),
-		                array( 'db' => '`ventas`.`fecha`',  'dt' => 1, 'field' => 'fecha'),
-		                array( 'db' => '`ventas`.`total`',      'dt' => 2, 'field' => 'total'),
-		                array( 'db' => '`facturas`.`numero_dian`',     'dt' => 3, 'field' => 'numero_dian'),
-		                array(
-					        'db'        => '`ventas`.`anulada`',
-					        'dt'        => 4,
-					        'field' => 'anulada',
-			        'formatter' => function( $d, $row ) {
-			            if($d==1){
-				            	return "<center></button><button class='btn btn-success btn-xs emitir-factura'><i class='fa fa-chevron-circle-left'></i></button></center>";
-				            }else{
+	                array( 'db' => '`ventas`.`fecha`',  'dt' => 1, 'field' => 'fecha'),
+	                array( 'db' => '`ventas`.`total`',      'dt' => 2, 'field' => 'total'),
+	                array( 'db' => '`facturas`.`numero_dian`',     'dt' => 3, 'field' => 'numero_dian'),
+	                array(
+				        'db'        => '`ventas`.`anulada`',
+				        'dt'        => 4,
+				        'field' => 'anulada',
+				        'formatter' => function( $d, $row ) {
+				            if($d==0){
+				            	return "<center><button class='btn btn-danger btn-xs anular-factura'><i class='fa fa-trash-o'></i></button> </button><button class='btn btn-primary btn-xs emitir-factura'><i class='fa fa-arrow-right'></i></button></center>";
+				            }else  if($d==1){
+			            		return "<center></button><button class='btn btn-success btn-xs emitir-factura'><i class='fa fa-chevron-circle-left'></i></button></center>";
+			           		}else{
 				            	return "";
 				            }
 				        }
@@ -494,15 +474,17 @@
 
 
 	            );
+
+	        if(!$papelera){
+	            $whereStatement = '`ventas`.`anulada`=0';
+        	}else{
 	            $whereStatement = '`ventas`.`anulada`=1';
         	}
-
-
             // Include SQL query processing class
             require('../ssp.customized.class.php');
             $joinQuery = "FROM `ventas` JOIN `facturas` ON (`ventas`.`id_venta` = `facturas`.`ventas_id_venta`)";
 
-            // Output data as json format
+            // Output data
             return SSP::simple( $request, $dbDetails, $table, $primaryKey, $columns, $joinQuery, $whereStatement);
 		}
 
