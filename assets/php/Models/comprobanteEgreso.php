@@ -172,11 +172,15 @@
 			$pdf->Cell(30,10, "Efectivo: si | no",1,1,'C',false);//HHHHHHHHHHHHHHHHHHH
 			$pdf->Cell(100,20, "Cheque No.",1,0,'L',false);
 			$pdf->Cell(90,20, "Firma y Sello Beneficiario:",1,1,'L',false);
+			$fecha=date('Y-m-d');
+			$carpeta = 'C:/xampp/htdocs/Ferretruper/assets/php/ComprobantesEgreso/'.$fecha;
+			if (!file_exists($carpeta)) {
+			    mkdir($carpeta, 0777, true);
+			}
 
 
-
-
-			$pdf->Output('D',$archivo_de_salida,true);
+			$pdf->Output('F', $carpeta."/".$archivo);
+			//$pdf->Output('D',$archivo_de_salida,true);
 			ob_end_flush();
 			header("Content-type:application/pdf");
 			//Creacion de las cabeceras que generarán el archivo pdf

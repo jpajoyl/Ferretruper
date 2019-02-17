@@ -36,7 +36,6 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 			$comprobanteEgreso=new ComprobanteEgreso(date('Y-m-d'));
 			for ($i=0; $i <count($ids) ; $i++) {
 				$factura=FacturaCompra::obtenerFacturaCompraPorIdFacturaCompra($ids[$i]);
-				echo gettype($factura);
 				$factura->asociarComprobanteEgreso($comprobanteEgreso->getNumeroConsecutivo());
 			}
 			$comprobanteEgreso->imprimirComprobante(false);
