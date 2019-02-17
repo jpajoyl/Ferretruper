@@ -2,6 +2,7 @@
 	/**
 	 * 
 	 */
+
 	class Proveedor extends Usuario {
 
 		public function __construct(){
@@ -45,7 +46,7 @@
 			$statement=null;
 		}*/
 
-		public static function verProveedores(){
+		public static function verProveedores($request){
 						// Database connection info
 			$dbDetails = array(
 			    'host' => 'localhost',
@@ -64,21 +65,43 @@
 			// The `db` parameter represents the column name in the database. 
 			// The `dt` parameter represents the DataTables column identifier.
 			$columns = array(
-			    array( 'db' => 'id_usuario', 'dt' => 0 ),
-			    array( 'db' => 'digito_de_verificacion',  'dt' => 1 ),
-			    array( 'db' => 'nombre',      'dt' => 2 ),
-			    array( 'db' => 'email',     'dt' => 3 ),
-			    array( 'db' => 'Direccion',    'dt' => 4 ),
- 				array( 'db' => 'ciudad',    'dt' => 5 ),
-			    array(	'db' => 'telefono',    'dt' => 6)
+				array(
+			        'db'        => 'id_usuario',
+			        'dt'        => 0,
+			        'formatter' => function( $d, $row ) {
+			            if($d>0){
+			            	return "";
+			            }else{
+			            	return "";
+			            }
+			        }
+			    ),
+			    array( 'db' => 'numero_identificacion', 'dt' => 1),
+			    array( 'db' => 'digito_de_verificacion',  'dt' => 2 ),
+			    array( 'db' => 'nombre',      'dt' => 3 ),
+			    array( 'db' => 'email',     'dt' => 4 ),
+			    array( 'db' => 'Direccion',    'dt' => 5),
+ 				array( 'db' => 'ciudad',    'dt' => 6 ),
+			    array( 'db' => 'telefono',    'dt' => 7),
+			    array(
+			        'db'        => 'id_usuario',
+			        'dt'        => 8,
+			        'formatter' => function( $d, $row ) {
+			            if($d>0){
+			            	return "<center><button class='btn btn-primary btn-xs editar-proveedor'><i class='fa fa-pencil'></i></button>\
+			            </button><button class='btn btn-danger btn-xs eliminar-proveedor'><i class='fa fa-trash-o'></i></button></center>";
+			            }else{
+			            	return "";
+			            }
+			        }
+			    )
 			);
-			$whereStatement = "WHERE tipo_usuario = 'proveedor' and activa = 1";
 
 			// Include SQL query processing class
 			require('../ssp.class.php');
 
 			// Output data as json format
-			return SSP::complex( $request, $dbDetails, $table, $primaryKey, $columns,null,$whereStatement);
+			return SSP::simple( $request, $dbDetails, $table, $primaryKey, $columns);
 		}
 		public static function obtenerProveedor($numeroConsulta,$modo=true) {
 			$resultado = Usuario::buscarDatosUsuario($numeroConsulta,$modo);
