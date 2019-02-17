@@ -22,40 +22,30 @@ $(document).ready(function() {
 	function loadData(papelera){
         if(!papelera){
             window.table=$('#table-productos').DataTable({
-                "ajax":{
-                    "method":"POST",
-                    "url":"../assets/php/Controllers/CProducto.php?method=verProductos",
-                    "dataSrc": function(data){
-                        if(data == 3){
-                            return [];
-                        }else {
-                            return data.productos;
-                        }
+                  "processing": true,
+                  "serverSide": true,
+                  "ajax": "../assets/php/Controllers/CProducto.php?method=verProductosInventario",
+                  "createdRow":function (row, data, index){
+                    $(row).attr("id-producto-inventario",data[0]);
+                     if(parseInt(data[4]) == 0){
+                          $(row).toggleClass('tr-warning');
+                      }
+                      if(parseInt(data[4]) < 0){
+                          $(row).toggleClass('tr-locked');
                     }
-                },
-                "autoWidth": false,
-                "columns":[
-                {
-                    "className":      'details-control',
-                    "orderable":      false,
-                    "data":           null,
-                    "defaultContent": ''
-                },
-                {"data":"id_producto"},
-                {"data":"nombre"},
-                {"data":"referencia_fabrica"},
-                {"data":"codigo_barras"},
-                {"data":"unidades_totales"},
-                {"data":"precio_mayor_inventario"},
-                {"defaultContent":"<center><button class='btn btn-primary btn-xs editar-producto'><i class='fa fa-pencil'></i></button>\
-                </button><button class='btn btn-danger btn-xs eliminar-producto'><i class='fa fa-trash-o'></i></button></center>"}
-                ],
-                "destroy":true,
-                "responsive":true,
-                "language": {
+                  },
+                  "columnDefs": [ {"render": function (data, type, row) {
+                                return "";
+                                },
+                                className: "details-control",
+                                "targets": [0]} ],
+                  "destroy":true,
+                  "autoWidth": false,
+                  "responsive":true,
+                  "language": {
                     "lengthMenu": "Mostrar _MENU_ registros por pagina",
                     "zeroRecords": "No se han encontrado registros",
-                    "info": "(_MAX_ proveedores) Pagina _PAGE_ de _PAGES_",
+                    "info": "(_MAX_ productos) Pagina _PAGE_ de _PAGES_",
                     "search": "Buscar",
                     "infoEmpty": "No hay registros disponibles",
                     "infoFiltered": "(registros disponibles _MAX_)"

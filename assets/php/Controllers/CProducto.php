@@ -142,6 +142,8 @@
 			}
 		}else if(!strcmp($method,"verProductos")){
 			echo json_encode(Producto::verProductos($_GET));
+		}else if(!strcmp($method,"verProductosInventario")){
+			echo json_encode(Producto::verProductosInventario($_GET));
 		}else if(!strcmp($method,"verProductosDeshabilitados")){
 			$listaProductos=Producto::verProductos(false);
 			if($listaProductos->rowCount()>0){

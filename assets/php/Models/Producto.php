@@ -194,14 +194,15 @@
 			// The `db` parameter represents the column name in the database. 
 			// The `dt` parameter represents the DataTables column identifier.
 			$columns = array(
-			    array( 'db' => 'id_producto', 'dt' => 0 ),
-			    array( 'db' => 'nombre',  'dt' => 1 ),
-			    array( 'db' => 'referencia_fabrica',      'dt' => 2 ),
-			    array( 'db' => 'codigo_barras',     'dt' => 3 ),
-			    array( 'db' => 'unidades_totales',    'dt' => 4 ),
+			    array( 'db' => 'id_producto', 'dt' => 0,'field' => 'id_producto'),
+			    array( 'db' => 'nombre',  'dt' => 1,'field' => 'nombre'),
+			    array( 'db' => 'referencia_fabrica',      'dt' => 2,'field' => 'referencia_fabrica'),
+			    array( 'db' => 'codigo_barras',     'dt' => 3,'field' => 'codigo_barras'),
+			    array( 'db' => 'unidades_totales',    'dt' => 4,'field' => 'unidades_totales'),
 			    array(
 			        'db'        => 'precio_mayor_inventario',
 			        'dt'        => 5,
+			        'field' => 'precio_mayor_inventario',
 			        'formatter' => function( $d, $row ) {
 			            return number_format($d);
 			        }
@@ -209,6 +210,7 @@
 			    array(
 			        'db'        => 'unidades_totales',
 			        'dt'        => 6,
+			        'field' => 'unidades_totales',
 			        'formatter' => function( $d, $row ) {
 			            if($d>0){
 			            	return "<center><button class='btn btn-success btn-xs añadir-producto'><i class='fa fa-plus-circle'></i></button></button></center>";
@@ -220,10 +222,66 @@
 			);
 
 			// Include SQL query processing class
-			require('../ssp.class.php');
+            require('../ssp.customized.class.php');
 
-			// Output data as json format
-			return SSP::simple( $request, $dbDetails, $table, $primaryKey, $columns );
+
+            // Output data
+            return SSP::simple( $request, $dbDetails, $table, $primaryKey, $columns);
+
+		}
+
+		public static function verProductosInventario($request,$modo=true){
+			// Database connection info
+			$dbDetails = array(
+			    'host' => 'localhost',
+			    'user' => 'root',
+			    'pass' => '',
+			    'db'   => 'ferretruperbd2'
+			);
+
+			// DB table to use
+			$table = 'productos';
+
+			// Table's primary key
+			$primaryKey = 'id_producto';
+
+			// Array of database columns which should be read and sent back to DataTables.
+			// The `db` parameter represents the column name in the database. 
+			// The `dt` parameter represents the DataTables column identifier.
+			$columns = array(
+			    array( 'db' => 'id_producto', 'dt' => 1,'field' => 'id_producto'),
+			    array( 'db' => 'nombre',  'dt' => 2,'field' => 'nombre'),
+			    array( 'db' => 'referencia_fabrica',      'dt' => 3,'field' => 'referencia_fabrica'),
+			    array( 'db' => 'codigo_barras',     'dt' => 4,'field' => 'codigo_barras'),
+			    array( 'db' => 'unidades_totales',    'dt' => 5,'field' => 'unidades_totales'),
+			    array(
+			        'db'        => 'precio_mayor_inventario',
+			        'dt'        => 6,
+			        'field' => 'precio_mayor_inventario',
+			        'formatter' => function( $d, $row ) {
+			            return number_format($d);
+			        }
+			    ),
+			    array(
+			        'db'        => 'unidades_totales',
+			        'dt'        => 7,
+			        'field' => 'unidades_totales',
+			        'formatter' => function( $d, $row ) {
+			            if($d>0){
+			            	return "<center><button class='btn btn-danger btn-xs rehabilitar-producto'><i class='fa fa-trash-o'></i></center>";
+			            }else{
+			            	return "";
+			            }
+			        }
+			    )
+			);
+
+			// Include SQL query processing class
+            require('../ssp.customized.class.php');
+
+
+            // Output data
+            return SSP::simple( $request, $dbDetails, $table, $primaryKey, $columns);
 
 		}
 
