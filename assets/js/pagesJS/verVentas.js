@@ -20,7 +20,7 @@ $(document).ready(function() {
     function emitirFactura(tbody,table){
         $(tbody).on("click", ".emitir-factura", function(){
             var data=table.row($(this).parents("tr")).data();
-            window.open("../assets/php/Controllers/CVenta.php?method=emitirFactura&id-venta="+data.id_venta);
+            window.open("../assets/php/Controllers/CVenta.php?method=emitirFactura&id-venta="+data[0]);
         });
     }
     function anularVenta(tbody,table){
@@ -28,7 +28,7 @@ $(document).ready(function() {
             var data=table.row($(this).parents("tr")).data();
             Swal({
               title: 'Estas seguro?',
-              text: "Se anulara la factura "+data.numero_dian+"!",
+              text: "Se anulara la factura "+data[3]+"!",
               type: 'warning',
               showCancelButton: true,
               confirmButtonColor: '#3085d6',
@@ -40,7 +40,7 @@ $(document).ready(function() {
                 $.ajax({
                     url: '../assets/php/Controllers/CVenta.php?method=anularVenta',
                     type: 'POST',
-                    data: {"idVenta":data.id_venta},
+                    data: {"idVenta":data[0]},
                     success:function(data){  
                       if(data!=""){
                         if(data==1){

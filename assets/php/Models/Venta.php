@@ -443,7 +443,7 @@
             );
 
             // DB table to use
-            $table = '(SELECT * FROM `ventas` INNER JOIN `facturas` ON facturas.ventas_id_venta = ventas.id_venta)';
+            $table = 'ventas';
 
             // Table's primary key
             $primaryKey = 'id_venta';
@@ -451,19 +451,19 @@
             // Array of database columns which should be read and sent back to DataTables.
             // The `db` parameter represents the column name in the database. 
             // The `dt` parameter represents the DataTables column identifier.
-            if($papelera){
+            if(!$papelera){
 	            $columns = array(
-		                array( 'db' => 'id_venta', 'dt' => 0 ),
-		                array( 'db' => 'fecha',  'dt' => 1 ),
-		                array( 'db' => 'total',      'dt' => 2 ),
-		                array( 'db' => 'numero_dian',     'dt' => 3 ),
+		                array( 'db' => '`ventas`.`id_venta`', 'dt' => 0, 'field' => 'id_venta'),
+		                array( 'db' => '`ventas`.`fecha`',  'dt' => 1, 'field' => 'fecha'),
+		                array( 'db' => '`ventas`.`total`',      'dt' => 2, 'field' => 'total'),
+		                array( 'db' => '`facturas`.`numero_dian`',     'dt' => 3, 'field' => 'numero_dian'),
 		                array(
-					        'db'        => 'id_venta',
+					        'db'        => '`ventas`.`anulada`',
 					        'dt'        => 4,
+					        'field' => 'anulada',
 					        'formatter' => function( $d, $row ) {
-					            if($d>0){
-					            	return "defaultContent":"<center><button class='btn btn-danger btn-xs anular-factura'><i class='fa fa-trash-o'></i></button>\
-		                </button><button class='btn btn-primary btn-xs emitir-factura'><i class='fa fa-arrow-right'></i></button></center>";
+					            if($d==0){
+					            	return "<center><button class='btn btn-danger btn-xs anular-factura'><i class='fa fa-trash-o'></i></button> </button><button class='btn btn-primary btn-xs emitir-factura'><i class='fa fa-arrow-right'></i></button></center>";
 					            }else{
 					            	return "";
 					            }
@@ -472,18 +472,19 @@
 
 
 		            );
-	            $whereStatement = 'WHERE facturas.anulada = 0';
+	            $whereStatement = '`ventas`.`anulada`=0';
         	}else{
         		$columns = array(
-	                array( 'db' => 'id_venta', 'dt' => 0 ),
-	                array( 'db' => 'fecha',  'dt' => 1 ),
-	                array( 'db' => 'total',      'dt' => 2 ),
-	                array( 'db' => 'numero_dian',     'dt' => 3 ),
-	                array(
-				        'db'        => 'id_venta',
-				        'dt'        => 4,
-				        'formatter' => function( $d, $row ) {
-				            if($d>0){
+	                array( 'db' => '`ventas`.`id_venta`', 'dt' => 0, 'field' => 'id_venta'),
+		                array( 'db' => '`ventas`.`fecha`',  'dt' => 1, 'field' => 'fecha'),
+		                array( 'db' => '`ventas`.`total`',      'dt' => 2, 'field' => 'total'),
+		                array( 'db' => '`facturas`.`numero_dian`',     'dt' => 3, 'field' => 'numero_dian'),
+		                array(
+					        'db'        => '`ventas`.`anulada`',
+					        'dt'        => 4,
+					        'field' => 'anulada',
+			        'formatter' => function( $d, $row ) {
+			            if($d==1){
 				            	return "<center></button><button class='btn btn-success btn-xs emitir-factura'><i class='fa fa-chevron-circle-left'></i></button></center>";
 				            }else{
 				            	return "";
@@ -493,15 +494,16 @@
 
 
 	            );
-	            $whereStatement = 'WHERE facturas.anulada = 1';
+	            $whereStatement = '`ventas`.`anulada`=1';
         	}
 
 
             // Include SQL query processing class
-            require('../ssp.class.php');
+            require('../ssp.customized.class.php');
+            $joinQuery = "FROM `ventas` JOIN `facturas` ON (`ventas`.`id_venta` = `facturas`.`ventas_id_venta`)";
 
             // Output data as json format
-            return SSP::complex( $request, $dbDetails, $table, $primaryKey, $columns,null,$whereStatement);
+            return SSP::simple( $request, $dbDetails, $table, $primaryKey, $columns, $joinQuery, $whereStatement);
 		}
 
 
