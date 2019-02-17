@@ -76,7 +76,7 @@ $('#table-proveedores tbody').on('click', 'td.details-control', function () {
 function viewProveedor(tbody,table){
     $(tbody).on("click", ".table-proveedores-nit-proveedor", function(){
         var data=table.row($(this).parents("tr")).data();
-        window.location.href = "proveedores.php?p=verProveedor&id="+data.id_usuario;
+        window.location.href = "proveedores.php?p=verProveedor&id="+data[0];
     });
 }
 
