@@ -10,15 +10,8 @@
 	include_once 'Response.php';	
 	if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		if(!strcmp($method,"verProveedores")){
-			$listaProveedores=Proveedor::verProveedores();
-			if($listaProveedores->rowCount()>0){
-				while ($proveedor = $listaProveedores->fetch(PDO::FETCH_ASSOC)) {
-					$array['data'][]=$proveedor;
-				}
-				echo json_encode($array);
-			}else{
-				echo NOT_FOUND;
-			}
+			echo json_encode(Proveedor::verProveedores($_GET));
+
 		}else if(!strcmp($method,"registrarProveedor")){
 			$nit=$_POST['nit'];
 			$digitoDeVerificacion=$_POST['digitoDeVerificacion'];

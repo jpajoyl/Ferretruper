@@ -382,8 +382,15 @@ class Factura {
 		$pdf->line(200,256,10,256);
 		$pdf->SetFont('Arial','',9);
 		$pdf->MultiCell(190,6, utf8_decode($this->getResolucion()),0,"J",false);
+		$fecha=date('Y-m-d');
+		$carpeta = 'C:/xampp/htdocs/Ferretruper/assets/php/Facturas/'.$fecha;
+		if (!file_exists($carpeta)) {
+		    mkdir($carpeta, 0777, true);
+		}
 
-		$pdf->Output('I',$archivo_de_salida,true);
+
+		$pdf->Output('F', $carpeta."/".$archivo);
+		//$pdf->Output('D',$archivo_de_salida,true);
 		ob_end_flush();
 		header("Content-type:application/pdf");
 		//Creacion de las cabeceras que generarán el archivo pdf
@@ -396,7 +403,6 @@ class Factura {
 
 		//Eliminación del archivo en el servidor
 		unlink($archivo);
-		mkdir('hola');
 	}
 	public function imprimirFacturaPOS()
 	{
