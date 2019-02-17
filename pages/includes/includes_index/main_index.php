@@ -78,8 +78,8 @@
 			          </tr>
 			          <tr class="tr-info-compra table-success">
 			            <th width="50%" scope="row" class="float-right mt">Descuento:</th>
-			            <td width="40%" id="efectivo">
-			            	<input type="number" class="form-control mb mr" id="input-descuento" placeholder="Descuento" autocomplete="off" disabled>
+			            <td width="40%" id="descuento">
+			            	<input type="number" class="form-control mb mr" id="input-descuento" placeholder="3% o 5%" autocomplete="off" disabled>
 			            </td>
 			          </tr>
 			          <tr class="tr-info-compra table-success">

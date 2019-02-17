@@ -433,7 +433,7 @@
 			return $statement;
 		}
 
-		public static function verVentas($request,$papelera = true){
+		public static function verVentas($request,$papelera=true){
 		// Database connection info
             $dbDetails = array(
                 'host' => 'localhost',

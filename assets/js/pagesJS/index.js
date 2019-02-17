@@ -162,7 +162,7 @@ $(document).ready(function() {
                             '<input type="text" class="form-control" id="input-usuario" placeholder="Usuario" required autocomplete="off">'+
                         '</div>'+
                         '<div class="form-group">'+
-                            '<input type="text" class="form-control" id="input-password" placeholder="Contraseña" required autocomplete="off">'+
+                            '<input type="password" class="form-control" id="input-password" placeholder="Contraseña" required autocomplete="off">'+
                         '</div>';
                         
             swal({
@@ -312,6 +312,62 @@ $(document).ready(function() {
           });
         }
    });
+
+   $(document).on("click", "#descuento", function(){
+    if(!$("#input-descuento").attr("enviar-total")){
+      var input='<div class="form-group">'+
+                              '<input type="text" class="form-control" id="input-usuario" placeholder="Usuario" required autocomplete="off">'+
+                          '</div>'+
+                          '<div class="form-group">'+
+                              '<input type="password" class="form-control" id="input-password" placeholder="Contraseña" required autocomplete="off">'+
+                          '</div>';
+      swal({
+        title: 'Funcion bloqueada',
+        html: input,
+        showCancelButton: true,
+        confirmButtonColor: '#22C13C',
+        cancelButtonColor: '#9A9A9A',
+        confirmButtonText: 'Comprobar!',
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+          if (result.value) {
+              var data={
+                  'usuario':$("#input-usuario").val(),
+                  'password':$("#input-password").val()
+              }
+              $.ajax({
+                  url: '../assets/php/Controllers/CAdministracion.php?method=comprobarAdministrador',
+                  type: 'POST',
+                  data: data,
+                  success:function(data){
+                      if(data==1){
+                          $("#input-descuento").prop('disabled', false);
+                          $("#input-descuento").attr("enviar-total","si");
+                          $("#input-descuento").focus();
+                      }else if(data==0 || data==3){
+                          setTimeout(function(){
+                              Swal(
+                                'Error!',
+                                'El usuario y/o contraseña son incorrectos',
+                                'error'
+                              );
+                          },100);  
+                      }
+                  }
+              });
+          }
+      });
+    }
+   });
+
+   $('#input-descuento').bind("change keyup", function(e) {
+        if(!$("#input-total-venta").attr("enviar-total")){
+            var descuento=parseInt($('#input-descuento').val());
+            if(descuento!=0 &&descuento!=3 && descuento!=5){
+              $('#input-descuento').val("");
+            }
+        }
+    });
 
    $("#terminar-venta").click(function(event){
     event.preventDefault();

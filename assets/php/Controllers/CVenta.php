@@ -87,7 +87,6 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		}
 	}else if (!strcmp($method,"verVentas")) {
 		echo json_encode(Venta::verVentas($_GET,false));
-		
 	}else if(!strcmp($method,"terminarVenta")){
 		
 	}else if(!strcmp($method,"cancelarVenta")){
@@ -111,8 +110,7 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		$var = Venta::anularVenta($idVenta);
 		echo $var;
 	}else if (!strcmp($method,"verVentasAnuladas")) {
-		echo json_encode(Venta::verVentas($_GET,true));
-		
+		echo json_encode(Venta::verVentas($_GET,true));	
 	}else if (!strcmp($method,"emitirFactura")) {
 		$idVenta=$_GET['id-venta'];
 		$factura = Factura::obtenerFactura($idVenta,false);
