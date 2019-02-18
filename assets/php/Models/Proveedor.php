@@ -89,7 +89,9 @@
 						           			return "";
 						           		}
 						        }
-						    )
+						    ),
+						    array( 'db' => 'celular',     'dt' => 9, 'field' => 'celular'),
+						    array( 'db' => 'clasificacion',     'dt' => 10, 'field' => 'clasificacion')
 
 
 			            );

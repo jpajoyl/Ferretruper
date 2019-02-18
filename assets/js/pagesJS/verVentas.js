@@ -86,7 +86,7 @@ $(document).ready(function() {
                     "info": "(_MAX_ ventas) Pagina _PAGE_ de _PAGES_",
                     "search": "Buscar",
                     "infoEmpty": "No hay registros disponibles",
-                    "infoFiltered": "(registros disponibles _MAX_)"
+                    "infoFiltered": ""
                 }
 
             });
@@ -106,7 +106,7 @@ $(document).ready(function() {
                     "info": "(_MAX_ ventas) Pagina _PAGE_ de _PAGES_",
                     "search": "Buscar",
                     "infoEmpty": "No hay registros disponibles",
-                    "infoFiltered": "(registros disponibles _MAX_)"
+                    "infoFiltered": ""
                 }
             });
             emitirFactura("#table-ventas tbody",table);

@@ -81,7 +81,7 @@ $(document).ready(function() {
 				"info": "(_MAX_ productos) Pagina _PAGE_ de _PAGES_",
 				"search": "Buscar",
 				"infoEmpty": "No hay registros disponibles",
-				"infoFiltered": "(registros disponibles _MAX_)"
+				"infoFiltered": ""
 			}
 		});
 		añadirFactura("#body-table-factura-compra", table);

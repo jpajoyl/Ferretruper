@@ -25,15 +25,6 @@ $(document).ready(function() {
                   "processing": true,
                   "serverSide": true,
                   "ajax": "../assets/php/Controllers/CProducto.php?method=verProductosInventario",
-                  "createdRow":function (row, data, index){
-                    $(row).attr("id-producto-inventario",data[0]);
-                     if(parseInt(data[4]) == 0){
-                          $(row).toggleClass('tr-warning');
-                      }
-                      if(parseInt(data[4]) < 0){
-                          $(row).toggleClass('tr-locked');
-                    }
-                  },
                   "columnDefs": [ {"render": function (data, type, row) {
                                 return "";
                                 },
@@ -48,77 +39,43 @@ $(document).ready(function() {
                     "info": "(_MAX_ productos) Pagina _PAGE_ de _PAGES_",
                     "search": "Buscar",
                     "infoEmpty": "No hay registros disponibles",
-                    "infoFiltered": "(registros disponibles _MAX_)"
+                    "infoFiltered": ""
                 }
             });
             desactivarProducto("#table-productos tbody",table);
         }else{
             window.table=$('#table-productos').DataTable({
-                "ajax":{
-                    "method":"POST",
-                    "url":"../assets/php/Controllers/CProducto.php?method=verProductosDeshabilitados",
-                    "dataSrc": function(data){
-                        if(data == 3){
-                            return [];
-                        }else {
-                            return data.productos;
-                        }
-                    }
-                },
-                "autoWidth": false,
-                "columns":[
-                {
-                    "className":      'details-control',
-                    "orderable":      false,
-                    "data":           null,
-                    "defaultContent": ''
-                },
-                {"data":"id_producto"},
-                {"data":"nombre"},
-                {"data":"referencia_fabrica"},
-                {"data":"codigo_barras"},
-                {"data":"unidades_totales"},
-                {"data":"precio_mayor_inventario"},
-                {"defaultContent":"<center><button class='btn btn-success btn-xs rehabilitar-producto'><i class='fa fa-chevron-circle-left'></i></center>"}
-                ],
-                "destroy":true,
-                "responsive":true,
-                "language": {
+                  "processing": true,
+                  "serverSide": true,
+                  "ajax": "../assets/php/Controllers/CProducto.php?method=verProductosDeshabilitados",
+                  "columnDefs": [ {"render": function (data, type, row) {
+                                return "";
+                                },
+                                className: "details-control",
+                                "targets": [0]} ],
+                  "destroy":true,
+                  "autoWidth": false,
+                  "responsive":true,
+                  "language": {
                     "lengthMenu": "Mostrar _MENU_ registros por pagina",
                     "zeroRecords": "No se han encontrado registros",
-                    "info": "(_MAX_ proveedores) Pagina _PAGE_ de _PAGES_",
+                    "info": "(_MAX_ productos) Pagina _PAGE_ de _PAGES_",
                     "search": "Buscar",
                     "infoEmpty": "No hay registros disponibles",
-                    "infoFiltered": "(registros disponibles _MAX_)"
+                    "infoFiltered": ""
                 }
             });
             reactivarProducto("#table-productos tbody",table);
         }
-        getDataEditProducto("#table-productos tbody",table);
-    }
-
-    function getDataEditProducto(tbody,table){
-        $(tbody).on("click", ".editar-producto", function(){
-            var data=table.row($(this).parents("tr")).data();
-            $("#nombre-producto").html(data.nombre);
-            $("#input-id-producto-editar").val(data.id_producto);
-            $("#input-nombre-producto-editar").val(data.nombre);
-            $("#input-descripcion-producto-editar").val(data.descripcion);
-            $("#input-referencia-fabrica-editar").val(data.referencia_fabrica);
-            $("#input-valor-utilidad-editar").val(data.valor_utilidad);
-            $('input:radio[name=IVA]:checked').val(data.tiene_iva);
-            $("#input-codigo-barras-editar").val(data.codigo_barras);         
-            $("#modal-editar-producto").modal("show");
-        });
     }
 
     function desactivarProducto(tbody,table){
         $(tbody).on("click", ".eliminar-producto", function(){
             var data=table.row($(this).parents("tr")).data();
-            if(parseInt(data.unidades_totales)>0){
+            if(parseInt(data[5])>0){
                     Swal({
                       title: 'Estas seguro?',
-                      text: "Se eliminara el producto "+data.nombre+"!",
+                      text: "Se eliminara el producto "+data[2]+"!",
                       type: 'warning',
                       showCancelButton: true,
                       confirmButtonColor: '#3085d6',
@@ -130,10 +87,9 @@ $(document).ready(function() {
                         $.ajax({
                             url: '../assets/php/Controllers/CProducto.php?method=desactivarProducto',
                             type: 'POST',
-                            data: {"idProducto":data.id_producto},
+                            data: {"idProducto":data[1]},
                             success:function(data){  
                               if(data!=""){
-                                console.log(data);
                                 if(data==1){
                                     loadData(false);
                                     setTimeout(function(){
@@ -174,10 +130,9 @@ $(document).ready(function() {
                 $.ajax({
                     url: '../assets/php/Controllers/CProducto.php?method=reactivarProducto',
                     type: 'POST',
-                    data: {"idProducto":data.id_producto},
+                    data: {"idProducto":data[1]},
                     success:function(data){  
                       if(data!=""){
-                        console.log(data);
                         if(data==1){
                             loadData(true);
                             setTimeout(function(){
@@ -224,7 +179,7 @@ $(document).ready(function() {
             $.ajax({
                 url: '../assets/php/Controllers/CInventario.php?method=verInventarios',
                 type: 'POST',
-                data: {"idProducto":row.data().id_producto},
+                data: {"idProducto":row.data()[1]},
                 success:function(data){
                     if(data!=""){
                         if(data!=3){

@@ -17,7 +17,7 @@
 	color: #fff;
 }
 
-#table-venta, #div-total-venta{
+#table-venta{
 	margin-top: 1%;
 	margin-left: 1.4%;
 	width: 97.5% !important;
@@ -28,10 +28,6 @@
 
 .no-venta{
 	display: none;
-}
-
-#table-info-venta{
-	width: 96.5%;
 }
 
 .tr-info-compra th{
@@ -46,4 +42,8 @@
 
 #renta{
 	cursor: pointer;
+}
+
+#terminar-venta,#cancelar-venta{
+	display: none;
 }

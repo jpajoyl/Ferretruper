@@ -26,12 +26,12 @@ $(document).ready(function() {
   function formatData (data) {
     return '<div class="row">'+
     '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">'+
-    '<i><i class="fa fa-mobile"></i><strong>  Cel: </strong>'+data.celular+'</i>'+
+    '<i><i class="fa fa-mobile"></i><strong>  Cel: </strong>'+data[9]+'</i>'+
     '</div>'+
     '</div>'+
     '<div class="row">'+
     '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">'+
-    '<i><i class="fa fa-phone"></i><strong> Tel: </strong>'+data.telefono+'</i>'+
+    '<i><i class="fa fa-phone"></i><strong> Tel: </strong>'+data[7]+'</i>'+
     '</div>'+
     '</div>';
 }
@@ -56,7 +56,7 @@ function loadData(){
             "info": "(_MAX_ proveedores) Pagina _PAGE_ de _PAGES_",
             "search": "Buscar",
             "infoEmpty": "No hay registros disponibles",
-            "infoFiltered": "(registros disponibles _MAX_)"
+            "infoFiltered": ""
         }
     });
     viewProveedor("#table-proveedores tbody",table);
@@ -145,7 +145,7 @@ function loadDataProveedor(){
             "info": "(_MAX_ productos) Pagina _PAGE_ de _PAGES_",
             "search": "Buscar",
             "infoEmpty": "No hay registros disponibles",
-            "infoFiltered": "(registros disponibles _MAX_)"
+            "infoFiltered": ""
         }
     });
     getDataEditProducto("#table-productos-proveedor tbody",tableProductos);
@@ -169,17 +169,17 @@ $('#table-productos-proveedor tbody').on('click', 'td.details-control', function
 function getDataEdit(tbody,table){
     $(tbody).on("click", ".editar-proveedor", function(){
         var data=table.row($(this).parents("tr")).data();
-        $("#nit-proveedor").html(data.numero_identificacion);
-        $("#digitoDeVerificacion").html(data.digito_de_verificacion);
-        $("#input-nit-editar").val(data.numero_identificacion);
-        $("#input-digito-de-verificacion-editar").val(data.digito_de_verificacion);
-        $("#input-nombre-editar").val(data.nombre);
-        $("#input-direccion-editar").val(data.direccion);
-        $("#input-ciudad-editar").val(data.ciudad);
-        $("#input-email-editar").val(data.email);
-        $("#input-telefono-editar").val(data.telefono);
-        $("#input-celular-editar").val(data.celular);
-        $("#input-clasificacion-editar").val(data.clasificacion);           
+        $("#nit-proveedor").html(data[1]);
+        $("#digitoDeVerificacion").html(data[2]);
+        $("#input-nit-editar").val(data[1]);
+        $("#input-digito-de-verificacion-editar").val(data[2]);
+        $("#input-nombre-editar").val(data[3]);
+        $("#input-direccion-editar").val(data[5]);
+        $("#input-ciudad-editar").val(data[6]);
+        $("#input-email-editar").val(data[4]);
+        $("#input-telefono-editar").val(data[7]);
+        $("#input-celular-editar").val(data[9]);
+        $("#input-clasificacion-editar").val(data[10]);           
         $("#modal-editar-proveedor").modal("show");
     });
 }
@@ -189,7 +189,7 @@ function desactivarProveedor(tbody,table){
         var data=table.row($(this).parents("tr")).data();
         Swal({
           title: 'Estas seguro?',
-          text: "Se eliminara el proveedor "+data.nombre+"!",
+          text: "Se eliminara el proveedor "+data[3]+"!",
           type: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -201,7 +201,7 @@ function desactivarProveedor(tbody,table){
             $.ajax({
                 url: '../assets/php/Controllers/CProveedor.php?method=desactivarProveedor',
                 type: 'POST',
-                data: {"nit":data.numero_identificacion},
+                data: {"nit":data[1]},
                 success:function(data){  
                   if(data!=""){
                     if(data==1){
