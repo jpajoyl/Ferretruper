@@ -21,7 +21,7 @@ $(document).ready(function() {
         $(tbody).on("click", ".emitir-factura", function(){
             var data=table.row($(this).parents("tr")).data();
             console.log(data);
-            window.open("../assets/php/Controllers/CVenta.php?method=emitirFactura&id-venta="+data);
+            window.open("../assets/php/Controllers/CVenta.php?method=emitirFactura&id-venta="+data[0]);
         });
     }
     function anularVenta(tbody,table){
@@ -88,6 +88,7 @@ $(document).ready(function() {
                     "infoEmpty": "No hay registros disponibles",
                     "infoFiltered": "(registros disponibles _MAX_)"
                 }
+
             });
             anularVenta("#table-ventas tbody",table);
             emitirFactura("#table-ventas tbody",table);
