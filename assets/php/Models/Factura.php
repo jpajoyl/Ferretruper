@@ -227,11 +227,15 @@ class Factura {
 		$conexion=null;
 		$statement=null;
 	}
-	public function imprimirFacturaCarta(){
+	public function imprimirFacturaCarta($media=false){
 		include_once '../Controllers/CifrasEnLetras.php';
 		require('../fpdf/fpdf.php');
 		ob_start ();
-		$pdf=new FPDF();  //crea el objeto
+		if ($media) {
+			$pdf=new FPDF('L','mm',array(210 ,297/2));
+		}else{
+			$pdf=new FPDF('P','mm',array(210 ,297));  //crea el objeto
+		}
 		$pdf->AddPage();  //añadimos una página. Origen coordenadas, esquina superior izquierda, posición por defeto a 1 cm de los bordes.
 		$pdf->SetFillColor(215, 205, 203);
 		$pdf->Image('../../images/LOGO FERRETRUPER.jpg' , 7 , 7 , 40 , 10,'JPG');
@@ -239,7 +243,11 @@ class Factura {
 			$pdf->Image('../../images/anulado.png' , 25 , 50 , 160 , 160,'PNG');
 		}
 		$numeroDian = $this->getNumeroDian();
-		$archivo="FacturaCarta-$numeroDian.pdf";
+		if ($media) {
+			$archivo="FacturaMediaCarta-$numeroDian.pdf";
+		}else{
+			$archivo="FacturaCarta-$numeroDian.pdf";
+		}
 		$archivo_de_salida=$archivo;
 		$pdf->SetFont('Arial','B',10);
 		$pdf->Cell(115,5,utf8_decode('FERRETRUPER S.A.S'),0,0,'R', false);
@@ -290,13 +298,13 @@ class Factura {
 		}
 		$descuento = $descuento/100;
 		foreach ($array as $item) {
-			$pdf->Cell(15,5, $item['id_producto'],0,0,'J',false);
-			$pdf->Cell(74,5, utf8_decode($item['nombre']),0,0,'J',false);
-			$pdf->Cell(35,5, utf8_decode($item['referencia_fabrica']),0,0,'J',false);
-			$pdf->Cell(20,5, $item['unidades'],0,0,'J',false);
-			$pdf->Cell(23,5, number_format($item['precio_venta']),0,0,'J',false);
+			$pdf->Cell(15,3.5, $item['id_producto'],0,0,'J',false);
+			$pdf->Cell(74,3.5, utf8_decode($item['nombre']),0,0,'J',false);
+			$pdf->Cell(35,3.5, utf8_decode($item['referencia_fabrica']),0,0,'J',false);
+			$pdf->Cell(20,3.5, $item['unidades'],0,0,'J',false);
+			$pdf->Cell(23,3.5, number_format($item['precio_venta']),0,0,'J',false);
 			$valorTotal = $item['unidades'] * $item['precio_venta'];
-			$pdf->Cell(23,5, number_format($valorTotal),0,1,'J',false);
+			$pdf->Cell(23,3.5, number_format($valorTotal),0,1,'J',false);
 			$tieneIva = $item['tiene_iva'];
 
 			if ($tieneIva==1) {
@@ -319,8 +327,8 @@ class Factura {
 
 			}
 		}
-		$pdf->Rect(10, 80, 190, 130);
-		$pdf->ln(120);
+		$pdf->Rect(10, 80, 190, 20);
+		$pdf->ln(10);
 		$pdf->SetFont('Arial','B',10);
 		$pdf->Cell(60,7, "Condiciones de pago: ",0,0,'J',false);//HHHHHHHHHHHHHHHHHHHHHHHH
 		$pdf->SetFont('Arial','',10);
@@ -382,14 +390,14 @@ class Factura {
 		$pdf->line(200,256,10,256);
 		$pdf->SetFont('Arial','',9);
 		$pdf->MultiCell(190,6, utf8_decode($this->getResolucion()),0,"J",false);
-		$fecha=date('Y-m-d');
+/*		$fecha=date('Y-m-d');
 		$carpeta = 'C:/xampp/htdocs/Ferretruper/assets/php/Facturas/'.$fecha;
 		if (!file_exists($carpeta)) {
 		    mkdir($carpeta, 0777, true);
-		}
+		}*/
 
 
-		$pdf->Output('F', $carpeta."/".$archivo);
+		$pdf->Output('I', $archivo);
 		//$pdf->Output('D',$archivo_de_salida,true);
 		ob_end_flush();
 		header("Content-type:application/pdf");
@@ -425,13 +433,13 @@ class Factura {
 			desde el panel de control
 		*/
 
-		$nombre_impresora = "POS"; 
+			$nombre_impresora = "POS"; 
 
 
-		$connector = new WindowsPrintConnector($nombre_impresora);
-		$printer = new Printer($connector);
+			$connector = new WindowsPrintConnector($nombre_impresora);
+			$printer = new Printer($connector);
 		#Mando un numero de respuesta para saber que se conecto correctamente.
-		echo 1;
+			echo 1;
 		/*
 			Vamos a imprimir un logotipo
 			opcional. Recuerda que esto
@@ -445,94 +453,94 @@ class Factura {
 		*/
 
 		# Vamos a alinear al centro lo próximo que imprimamos
-		$printer->setJustification(Printer::JUSTIFY_CENTER);
+			$printer->setJustification(Printer::JUSTIFY_CENTER);
 
 		/*
 			Intentaremos cargar e imprimir
 			el logo
 		*/
-		try{
-			$logo = EscposImage::load("geek.png", false);
-		    $printer->bitImage($logo);
-		}catch(Exception $e){/*No hacemos nada si hay error*/}
+			try{
+				$logo = EscposImage::load("geek.png", false);
+				$printer->bitImage($logo);
+			}catch(Exception $e){/*No hacemos nada si hay error*/}
 
 		/*
 			Ahora vamos a imprimir un encabezado
 		*/
 
-		$printer->text("\n"."Nombre de la Empresa" . "\n");
-		$printer->text("Direccion: Orquídeas #151" . "\n");
-		$printer->text("Tel: 454664544" . "\n");
+			$printer->text("\n"."Nombre de la Empresa" . "\n");
+			$printer->text("Direccion: Orquídeas #151" . "\n");
+			$printer->text("Tel: 454664544" . "\n");
 		#La fecha también
-		date_default_timezone_set("America/Bogota");
-		$printer->text(date("Y-m-d H:i:s") . "\n");
-		$printer->text("-----------------------------" . "\n");
-		$printer->setJustification(Printer::JUSTIFY_LEFT);
-		$printer->text("CANT  DESCRIPCION    P.U   IMP.\n");
-		$printer->text("-----------------------------"."\n");
+			date_default_timezone_set("America/Bogota");
+			$printer->text(date("Y-m-d H:i:s") . "\n");
+			$printer->text("-----------------------------" . "\n");
+			$printer->setJustification(Printer::JUSTIFY_LEFT);
+			$printer->text("CANT  DESCRIPCION    P.U   IMP.\n");
+			$printer->text("-----------------------------"."\n");
 		/*
 			Ahora vamos a imprimir los
 			productos
 		*/
 			/*Alinear a la izquierda para la cantidad y el nombre*/
 			$printer->setJustification(Printer::JUSTIFY_LEFT);
-		    $printer->text("Producto Galletas\n");
-		    $printer->text( "2  pieza    10.00 20.00   \n");
-		    $printer->text("Sabrtitas \n");
-		    $printer->text( "3  pieza    10.00 30.00   \n");
-		    $printer->text("Doritos \n");
-		    $printer->text( "5  pieza    10.00 50.00   \n");
+			$printer->text("Producto Galletas\n");
+			$printer->text( "2  pieza    10.00 20.00   \n");
+			$printer->text("Sabrtitas \n");
+			$printer->text( "3  pieza    10.00 30.00   \n");
+			$printer->text("Doritos \n");
+			$printer->text( "5  pieza    10.00 50.00   \n");
 		/*
 			Terminamos de imprimir
 			los productos, ahora va el total
 		*/
-		$printer->text("-----------------------------"."\n");
-		$printer->setJustification(Printer::JUSTIFY_RIGHT);
-		$printer->text("SUBTOTAL: $100.00\n");
-		$printer->text("IVA: $16.00\n");
-		$printer->text("TOTAL: $116.00\n");
+			$printer->text("-----------------------------"."\n");
+			$printer->setJustification(Printer::JUSTIFY_RIGHT);
+			$printer->text("SUBTOTAL: $100.00\n");
+			$printer->text("IVA: $16.00\n");
+			$printer->text("TOTAL: $116.00\n");
 
 
 		/*
 			Podemos poner también un pie de página
 		*/
-		$printer->setJustification(Printer::JUSTIFY_CENTER);
-		$printer->text("Muchas gracias por su compra\n");
+			$printer->setJustification(Printer::JUSTIFY_CENTER);
+			$printer->text("Muchas gracias por su compra\n");
 
 
 
-		/*Alimentamos el papel 3 veces*/
-		$printer->feed(3);
+			/*Alimentamos el papel 3 veces*/
+			$printer->feed(3);
 
 		/*
 			Cortamos el papel. Si nuestra impresora
 			no tiene soporte para ello, no generará
 			ningún error
 		*/
-		$printer->cut();
+			$printer->cut();
 
 		/*
 			Por medio de la impresora mandamos un pulso.
 			Esto es útil cuando la tenemos conectada
 			por ejemplo a un cajón
 		*/
-		$printer->pulse();
+			$printer->pulse();
 
 		/*
 			Para imprimir realmente, tenemos que "cerrar"
 			la conexión con la impresora. Recuerda incluir esto al final de todos los archivos
 		*/
-		$printer->close();
+			$printer->close();
+
+
+		}
+
+
+
 
 
 	}
 
 
 
-
-
-}
-
-
-
-?>
+	?>

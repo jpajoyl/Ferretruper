@@ -21,7 +21,7 @@ include_once 'Response.php';
 if($method!="" && $objectSession->getEmpleadoActual()!=null){
 	if(!strcmp($method,"obtenerVenta")){
 		if(isset($_COOKIE['venta'])){
-				//unset($_COOKIE["venta"]);
+				//gbtyh67uunset($_COOKIE["venta"]);
 				//setcookie("venta", "",time() - 3600, "/");
 			$venta=unserialize($_COOKIE['venta']);
 			if($venta instanceof Venta){
