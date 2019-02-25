@@ -214,7 +214,7 @@
 				if ($precioVenta != 0){
 					$precioVentaUnitario= $precioVenta/$numeroUnidades;
 				}else{
-					$precioVentaUnitario= $producto->getPrecioMayorInventario();
+					$precioVentaUnitario= $producto->getPrecio();
 				}
 				$productoxventa = new ProductoXVenta($precioVentaUnitario, $numeroUnidades, $producto->getIdProducto(), $this->getIdVenta());
 				$idProductoXVenta=$productoxventa->getIdProductoxventa();

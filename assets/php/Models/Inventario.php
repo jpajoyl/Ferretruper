@@ -6,7 +6,6 @@ class Inventario {
 	
 	private $idInventario;
 	private $producto;
-	private $precioInventario;
 	private $unidades;
 	private $unidadesDefectuosas;
 	private $valorUtilidad;
@@ -21,11 +20,10 @@ class Inventario {
 		}
 	}
 
-	public function __construct0($precioInventario, $precioCompra, $unidades, $unidadesDefectuosas, $id_producto, $id_proveedor,$valorUtilidad){
+	public function __construct0($precioCompra, $unidades, $unidadesDefectuosas, $id_producto, $id_proveedor,$valorUtilidad){
 		$conexion = Conexion::conectar();
-		$statement = $conexion->prepare("INSERT INTO `inventario` (`id_inventario`, `precio_inventario`, `precio_compra`, `unidades`, `unidades_defectuosas`, `valor_utilidad`, `productos_id_producto`, `usuarios_id_usuario`) VALUES (NULL, :precioInventario, :precioCompra,:unidades, :unidadesDefectuosas,:valorUtilidad, :id_producto, :id_proveedor)");
+		$statement = $conexion->prepare("INSERT INTO `inventario` (`id_inventario`, `precio_compra`, `unidades`, `unidades_defectuosas`, `valor_utilidad`, `productos_id_producto`, `usuarios_id_usuario`) VALUES (NULL, :precioCompra,:unidades, :unidadesDefectuosas,:valorUtilidad, :id_producto, :id_proveedor)");
 
-		$this->setPrecioInventario($precioInventario,$statement);
 		$this->setUnidades($unidades,$statement);
 		$this->setUnidadesDefectuosas($unidadesDefectuosas,$statement);
 		$this->setProducto($id_producto,$statement);
@@ -79,7 +77,7 @@ class Inventario {
 
 	}
 
-	public function getPrecioInventario(){
+	/*public function getPrecioInventario(){
 		return $this->precioInventario;
 	}
 
@@ -89,7 +87,7 @@ class Inventario {
 		}
 		$this->precioInventario = $precioInventario;
 
-	}
+	}*/
 
 	public function getPrecioCompra(){
 		return $this->precioCompra;
@@ -158,7 +156,7 @@ class Inventario {
 			$inventario = new Inventario();
 			$inventario->setIdInventario($resultado['id_inventario']);
 			$inventario->setProducto($resultado['productos_id_producto']);
-			$inventario->setPrecioInventario($resultado['precio_inventario']);
+			//$inventario->setPrecioInventario($resultado['precio_inventario']);
 			$inventario->setUnidades($resultado['unidades']);
 			$inventario->setUnidadesDefectuosas($resultado['unidades_defectuosas']);
 			$inventario->setValorUtilidad($resultado['valor_utilidad']);
@@ -217,7 +215,7 @@ class Inventario {
 		return $statement;
 	}
 
-	public function cambiarPrecio($dato,$modo= true){   //modo = True  PrecioInventario -- modo = False ValorUtilidad
+	/*public function cambiarPrecio($dato,$modo= true){   //modo = True  PrecioInventario -- modo = False ValorUtilidad
 		$conexion = Conexion::conectar();
 		$statement="UPDATE `inventario` SET `precio_inventario`=:precioInventario,`valor_utilidad`=:valorUtilidad WHERE `id_inventario` = :idInventario";
 		$statement->bindValue(":idInventario", $this->getIdInventario());
@@ -237,7 +235,7 @@ class Inventario {
 		}else{
 			return ERROR;
 		}
-	} 
+	} /*
 
 
 
