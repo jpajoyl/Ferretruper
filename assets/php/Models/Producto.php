@@ -230,7 +230,7 @@
 
 		}
 
-		public static function verProductosInventario($request,$modo=true){
+		public static function verProductosInventario($request,$papelera=false){
 			// Database connection info
 			$dbDetails = array(
 			    'host' => 'localhost',
@@ -263,25 +263,34 @@
 			        }
 			    ),
 			    array(
-			        'db'        => 'unidades_totales',
+			        'db'        => 'activa',
 			        'dt'        => 7,
-			        'field' => 'unidades_totales',
+			        'field' => 'activa',
 			        'formatter' => function( $d, $row ) {
-			            if($d>0){
-			            	return "<center><button class='btn btn-danger btn-xs rehabilitar-producto'><i class='fa fa-trash-o'></i></center>";
+			            if($d==1){
+			            	return "<center><button class='btn btn-danger btn-xs eliminar-producto'><i class='fa fa-trash-o'></i></center>";
+			            }else if($d==0){
+			            	return "<center><button class='btn btn-success btn-xs rehabilitar-producto'><i class='fa fa-chevron-circle-left'></i></center>";
 			            }else{
 			            	return "";
 			            }
 			        }
-			    )
+			    ),
+			    array( 'db' => 'descripcion',    'dt' => 8,'field' => 'descripcion'),
+			    array( 'db' => 'tiene_iva',    'dt' => 9,'field' => 'tiene_iva')
 			);
 
 			// Include SQL query processing class
             require('../ssp.customized.class.php');
 
+            if(!$papelera){
+	            $whereStatement = '`activa`=1';
+        	}else{
+	            $whereStatement = '`activa`=0';
+        	}
 
             // Output data
-            return SSP::simple( $request, $dbDetails, $table, $primaryKey, $columns);
+            return SSP::simple( $request, $dbDetails, $table, $primaryKey, $columns,null,$whereStatement);
 
 		}
 

@@ -36,6 +36,10 @@ a {
   margin-bottom: 5px !important;
 }
 
+#cambio {
+    font-size: 3.5rem;
+}
+
 .small {
 	font-size: 0.7rem;
 }

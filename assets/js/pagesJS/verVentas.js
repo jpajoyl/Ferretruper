@@ -21,7 +21,7 @@ $(document).ready(function() {
         $(tbody).on("click", ".emitir-factura", function(){
             var data=table.row($(this).parents("tr")).data();
             console.log(data);
-            window.open("../assets/php/Controllers/CVenta.php?method=emitirFactura&id-venta="+data);
+            window.open("../assets/php/Controllers/CVenta.php?method=emitirFactura&id-venta="+data[0]);
         });
     }
     function anularVenta(tbody,table){
@@ -86,8 +86,9 @@ $(document).ready(function() {
                     "info": "(_MAX_ ventas) Pagina _PAGE_ de _PAGES_",
                     "search": "Buscar",
                     "infoEmpty": "No hay registros disponibles",
-                    "infoFiltered": "(registros disponibles _MAX_)"
+                    "infoFiltered": ""
                 }
+
             });
             anularVenta("#table-ventas tbody",table);
             emitirFactura("#table-ventas tbody",table);
@@ -105,7 +106,7 @@ $(document).ready(function() {
                     "info": "(_MAX_ ventas) Pagina _PAGE_ de _PAGES_",
                     "search": "Buscar",
                     "infoEmpty": "No hay registros disponibles",
-                    "infoFiltered": "(registros disponibles _MAX_)"
+                    "infoFiltered": ""
                 }
             });
             emitirFactura("#table-ventas tbody",table);

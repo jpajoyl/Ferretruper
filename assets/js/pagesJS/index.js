@@ -25,23 +25,32 @@ $(document).ready(function() {
                                '<td width="15%"><center><button class="btn btn-danger btn-xs eliminar-producto-seleccionado"><i class="fa fa-trash"></i></button></button></center></td>'+
                                '</tr>';
                              $("#table-venta > tbody").prepend(tbody);
-                            }); 
+                            });
+                            $("#terminar-venta").fadeIn(0);
+                            $("#cancelar-venta").fadeIn(0);
+                            $("#subtotal-preCompra").html(numberWithCommas(data.subtotalVenta));
+                            $("#iva-preCompra").html(numberWithCommas((data.totalVenta-data.subtotalVenta)));
+                            $("#total-preCompra").html(numberWithCommas(data.totalVenta));
                         }else{
                           var tbody='<td colspan="6" class="no-venta"><div class="alert alert-secondary mt" role="alert">'+
                                'Aun no se ha iniciado una venta. Seleccione un producto para iniciar'+
                                '</div></td>';
                           $("#table-venta > tbody").prepend(tbody);
+                          $("#terminar-venta").fadeOut(0);
+                          $("#cancelar-venta").fadeOut(0);
                           $(".no-venta").fadeIn(0);
+                          $("#subtotal-preCompra").html(0);
+                          $("#iva-preCompra").html(0);
+                          $("#total-preCompra").html(0);
                         }
-                        $("#subtotal-preCompra").html(numberWithCommas(data.subtotalVenta));
-                        $("#iva-preCompra").html(numberWithCommas((data.totalVenta-data.subtotalVenta)));
-                        $("#total-preCompra").html(numberWithCommas(data.totalVenta));
                     }else{
                       $("#table-venta > tbody").html("");
                       var tbody='<td colspan="6" class="no-venta"><div class="alert alert-secondary mt" role="alert">'+
                            'Aun no se ha iniciado una venta. Seleccione un producto para iniciar'+
                            '</div></td>';
                       $("#table-venta > tbody").prepend(tbody);
+                      $("#terminar-venta").fadeOut(0);
+                      $("#cancelar-venta").fadeOut(0);
                       $(".no-venta").fadeIn(0);
                       $("#subtotal-preCompra").html(0);
                       $("#iva-preCompra").html(0);
@@ -86,7 +95,7 @@ $(document).ready(function() {
             "info": "(_MAX_ productos) Pagina _PAGE_ de _PAGES_",
             "search": "Buscar",
             "infoEmpty": "No hay registros disponibles",
-            "infoFiltered": "(registros disponibles _MAX_)"
+            "infoFiltered": ""
         }
     });
         añadirProducto("#table-productos tbody",table);
@@ -104,7 +113,7 @@ $(document).ready(function() {
                                 data[1]+
                             '</td>'+
                             '<td width="15%">'+
-                                numberWithCommas(data[5])+'<input type="hidden" id="input-precio-inventario-producto" value="'+data[5]+'">'+
+                                numberWithCommas(data[5])+'<input type="hidden" id="input-precio-inventario-producto" value="'+data[5].replace(/,/g, "")+'">'+
                             '</td>'+
                             '<td width="15%" id="td-cantidad-producto">'+
                                 '<input type="number" class="form-control" id="input-cantidad-producto" placeholder="cantidad" autocomplete="off">'+
@@ -372,22 +381,7 @@ $(document).ready(function() {
    $("#terminar-venta").click(function(event){
     event.preventDefault();
         if($("#body-table-venta tr").length>0){
-          $.ajax({
-              url: '../assets/php/Controllers/CVenta.php?method=terminarVenta',
-              type: 'POST',
-              success:function(data){
-                  if(data==1){
-                   loadData();
-                   getVenta();
-                  }else{
-                      Swal(
-                        'Error!',
-                        'Tenemos un error, recarga y vuelve a intentar!',
-                        'error'
-                      );
-                  }
-              }
-          });
+          $("#form-terminar-venta").submit();
         }
    });
     

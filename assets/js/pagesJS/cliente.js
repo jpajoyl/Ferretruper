@@ -48,7 +48,7 @@ $(document).ready(function() {
                 "info": "(_MAX_ clientes) Pagina _PAGE_ de _PAGES_",
                 "search": "Buscar",
                 "infoEmpty": "No hay registros disponibles",
-                "infoFiltered": "(registros disponibles _MAX_)"
+                "infoFiltered": ""
                 }
             });
         getDataEdit("#table-clientes tbody",table);

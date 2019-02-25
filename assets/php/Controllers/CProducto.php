@@ -145,21 +145,7 @@
 		}else if(!strcmp($method,"verProductosInventario")){
 			echo json_encode(Producto::verProductosInventario($_GET));
 		}else if(!strcmp($method,"verProductosDeshabilitados")){
-			$listaProductos=Producto::verProductos(false);
-			if($listaProductos->rowCount()>0){
-				while ($producto = $listaProductos->fetch(PDO::FETCH_ASSOC)) {
-					$iva=$producto['tiene_iva'];
-					if($iva==1){
-						$producto['tiene_iva']="SI";
-					}else{
-						$producto['tiene_iva']="NO";
-					}
-					$array['productos'][]=$producto;
-				}
-				echo json_encode($array);
-			}else{
-				echo NOT_FOUND;
-			}
+			echo json_encode(Producto::verProductosInventario($_GET,true));
 		}
 	}
  ?>

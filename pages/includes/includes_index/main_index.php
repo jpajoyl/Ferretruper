@@ -49,10 +49,11 @@
 		</div>
 		<div class="row">
 			<div class="col-xs-0 col-sm-0 col-md-6 col-lg-6 col-xl-8">
-				<a role="button" href="#" id="terminar-venta" class="btn btn-success float-right mt">Terminar venta<span class="btn-label btn-label-right"><i class="fa fa-check"></i></span></a>
-				<a role="button" href="#" id="cancelar-venta" class="btn btn-danger float-right mt mr">Cancelar venta<span class="btn-label btn-label-right"><i class="fa fa-trash"></i></span></a>
+				<a role="button" href="#" id="terminar-venta" class="btn btn-success float-right mt mb">Terminar venta<span class="btn-label btn-label-right"><i class="fa fa-check"></i></span></a>
+				<a role="button" href="#" id="cancelar-venta" class="btn btn-danger float-right mt mr mb">Cancelar venta<span class="btn-label btn-label-right"><i class="fa fa-trash"></i></span></a>
 			</div>
 			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 float-right">
+				<form autocomplete="off" action="#" id="form-terminar-venta">
 			      <table id="table-info-venta" class="table mr table-secondary">
 			        <tbody>
 			          <tr class="tr-info-compra">
@@ -90,6 +91,7 @@
 			          </tr>
 			        </tbody>
 			      </table>
+			    </form>
 			</div>
 		</div>
 	</div>
