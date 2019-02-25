@@ -336,7 +336,7 @@ $(document).ready(function() {
     }
 
     function obtenerPrecioVenta(precioUnitario,utilidad,returnDisabled){
-      var precioVenta=precioUnitario*(1+(utilidad/100))+precioUnitario*(1+(utilidad/100))*window.iva;
+      var precioVenta=precioUnitario*window.iva+precioUnitario*window.iva*(1-utilidad/100);
       if(!returnDisabled){
         return (precioVenta);
       }else{
@@ -362,7 +362,7 @@ $(document).ready(function() {
     function calcularValorUtilidad(idProductoxcompra,precioVenta) {
       if(precioVenta>=0){
         var precioUnitario=parseInt($(".input-pu[id-productoxcompra="+idProductoxcompra+"]").val());
-        var utilidad=((precioVenta-(1+window.iva)*precioUnitario)/((1+window.iva)*precioUnitario)*100).toFixed(2);
+        var utilidad=().toFixed(2);
         $(".input-utilidad[id-productoxcompra="+idProductoxcompra+"]").val(utilidad);
       }else{
         calcularValorVenta(idProductoxcompra);
@@ -539,7 +539,6 @@ $(document).ready(function() {
             "nombre" : $("#input-nombre-producto-editar").val(),
             "descripcion" : $("#input-descripcion-producto-editar").val(),
             "referenciaFabrica" : $("#input-referencia-fabrica-editar").val(),
-            "utilidad" : $("#input-valor-utilidad-editar").val(),
             "iva" : $('input:radio[name=IVA-editar]:checked').val(),
             "CodigoDeBarras" : $("#input-codigo-barras-editar").val()
         } 
