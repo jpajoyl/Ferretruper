@@ -8,7 +8,6 @@ class Inventario {
 	private $producto;
 	private $unidades;
 	private $unidadesDefectuosas;
-	private $valorUtilidad;
 	private $proveedor;
 	private $precioCompra;
 
@@ -20,15 +19,14 @@ class Inventario {
 		}
 	}
 
-	public function __construct0($precioCompra, $unidades, $unidadesDefectuosas, $id_producto, $id_proveedor,$valorUtilidad){
+	public function __construct0($precioCompra, $unidades, $unidadesDefectuosas, $id_producto, $id_proveedor){
 		$conexion = Conexion::conectar();
-		$statement = $conexion->prepare("INSERT INTO `inventario` (`id_inventario`, `precio_compra`, `unidades`, `unidades_defectuosas`, `valor_utilidad`, `productos_id_producto`, `usuarios_id_usuario`) VALUES (NULL, :precioCompra,:unidades, :unidadesDefectuosas,:valorUtilidad, :id_producto, :id_proveedor)");
+		$statement = $conexion->prepare("INSERT INTO `inventario` (`id_inventario`, `precio_compra`, `unidades`, `unidades_defectuosas`, `productos_id_producto`, `usuarios_id_usuario`) VALUES (NULL, :precioCompra,:unidades, :unidadesDefectuosas, :id_producto, :id_proveedor)");
 
 		$this->setUnidades($unidades,$statement);
 		$this->setUnidadesDefectuosas($unidadesDefectuosas,$statement);
 		$this->setProducto($id_producto,$statement);
 		$this->setProveedor($id_proveedor,$statement);
-		$this->setValorUtilidad($valorUtilidad,$statement);
 		$this->setPrecioCompra($precioCompra,$statement);
 		$statement->execute();
 		if(!$statement){
@@ -126,7 +124,7 @@ class Inventario {
 
 	}
 
-	public function getValorUtilidad(){
+	/*public function getValorUtilidad(){
 		return $this->valorUtilidad;
 	}
 
@@ -136,7 +134,7 @@ class Inventario {
 		}
 		$this->valorUtilidad = $valorUtilidad;
 
-	}
+	}*/
 
 
 	public static function obtenerInventario($numeroDeConsulta, $id_usuario=-1, $modo=false){
@@ -159,7 +157,7 @@ class Inventario {
 			//$inventario->setPrecioInventario($resultado['precio_inventario']);
 			$inventario->setUnidades($resultado['unidades']);
 			$inventario->setUnidadesDefectuosas($resultado['unidades_defectuosas']);
-			$inventario->setValorUtilidad($resultado['valor_utilidad']);
+			//$inventario->setValorUtilidad($resultado['valor_utilidad']);
 			$inventario->setPrecioCompra($resultado['precio_compra']);
 			$inventario->setProveedor($resultado['usuarios_id_usuario']);
 			$conexion=null;
@@ -206,9 +204,9 @@ class Inventario {
 	{//true->>busca por idProducto     //false busca por idProveedor
 		$conexion = Conexion::conectar();
 		if ($modo) {
-			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE `productos_id_producto` = $numeroDeConsulta AND `unidades` > 0 ORDER BY `inventario`.`precio_inventario` DESC");
+			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE `productos_id_producto` = $numeroDeConsulta AND `unidades` > 0 ORDER BY `inventario`.`unidades` DESC");
 		}else{
-			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE `usuarios_id_usuario` = $numeroDeConsulta AND `unidades` > 0 ORDER BY `inventario`.`precio_inventario` DESC");
+			$statement = $conexion->prepare("SELECT * FROM `inventario` WHERE `usuarios_id_usuario` = $numeroDeConsulta AND `unidades` > 0 ORDER BY `inventario`.`unidades` DESC");
 		}
 		$statement->execute();
 		$conexion=null;

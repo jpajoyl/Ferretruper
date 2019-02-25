@@ -250,22 +250,22 @@
 				$producto=$productoxcompra->getProducto();
 				$idProveedor=$proveedor->getIdUsuario();
 				$idProducto=$producto->getIdProducto();
-				$idProductoxCompra =  $productoxcompra->getIdProductoxCompra();
+				/*$idProductoxCompra =  $productoxcompra->getIdProductoxCompra();
 				
 				$nuevaUtilidad= $array[$idProductoxCompra]["utilidad"];
-				$precioVenta = $array[$idProductoxCompra]["precioVenta"]; 
+				$precioVenta = $array[$idProductoxCompra]["precioVenta"]; */
 
 
 				$inventario=Inventario::obtenerInventario($idProducto,$idProveedor,true);
 				if($inventario){
 					$unidades= $inventario->getUnidades() + $productoxcompra->getNumeroUnidades();
-					$statement = $conexion->prepare(" UPDATE `inventario` SET `precio_compra`=:precioCompra, `unidades`=:unidades,`valor_utilidad`=:valorUtilidad WHERE `productos_id_producto`=:idProducto and `usuarios_id_usuario` = :idUsuario ");
+					$statement = $conexion->prepare(" UPDATE `inventario` SET `precio_compra`=:precioCompra, `unidades`=:unidades WHERE `productos_id_producto`=:idProducto and `usuarios_id_usuario` = :idUsuario ");
 					$inventario->setUnidades($unidades,$statement);
 					$inventario->setPrecioCompra($array[$idProductoxCompra]["precioUnitario"],$statement);
 					//$inventario->setPrecioInventario($precioVenta,$statement);
 					$statement->bindValue(":idProducto", $idProducto);
 					$statement->bindValue(":idUsuario", $idProveedor);
-					$statement->bindValue(":valorUtilidad", $nuevaUtilidad);
+					//$statement->bindValue(":valorUtilidad", $nuevaUtilidad);
 					$statement->execute();
 					if(!$statement){
 						throw new Exception("Error Processing Request", 1);
@@ -273,7 +273,7 @@
 					}
 				}else{
 					$unidades= $productoxcompra->getNumeroUnidades();
-					$inventario = new Inventario($precioVenta,$productoxcompra->getPrecioUnitario(),$unidades,0,$idProducto,$idProveedor,$nuevaUtilidad);
+					$inventario = new Inventario($productoxcompra->getPrecioUnitario(),$unidades,0,$idProducto,$idProveedor);
 				}
 
 				$totalCompra+=($precioVenta*$unidades);

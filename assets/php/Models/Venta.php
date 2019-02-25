@@ -14,7 +14,8 @@
 	date_default_timezone_set("America/Bogota");
 	class Venta {
 		private $arrayDistribucion = array();
-		
+		private $subtotalLibreIva;
+		private $subtotalIva;
 
 		//atributos
 		private $idVenta;
@@ -52,6 +53,9 @@
 				throw new Exception("Error Processing Request", 1);
 
 			}
+			$this->setSubtotalLibreIva(0);
+			$this->setSubtotalIva(0);
+
 			$idVenta = $conexion->lastInsertId();
 			$this->setIdVenta($idVenta);
 			$conexion = NULL;
@@ -174,11 +178,40 @@
 			$this->arrayDistribucion = $ArrayDistribucion;
 		}
 
+
+		public function getSubtotalLibreIva(){
+			return $this->subtotalLibreIva;
+		}
+
+		public function setSubtotalLibreIva($subtotalLibreIva){
+			$this->subtotalLibreIva = $subtotalLibreIva;
+		}
+
+
+		public function getSubtotalIva(){
+			return $this->subtotalIva;
+		}
+
+		public function setSubtotalIva($subtotalIva){
+			$this->subtotalIva = $subtotalIva;
+		}
+
+
+
 		public function setSumaTotal($sumaTotal){
 			$this->total = $this->total + $sumaTotal;
 		}
-		public function setSumaSubTotal($sumaSubTotal){
-			$this->subtotal = $this->subtotal + $sumaSubTotal;
+
+		public function setSumaSubtotal($sumaSubtotal){
+			$this->subtotal = $this->subtotal + $sumaSubtotal;
+		}
+
+		public function setSumaSubtotalLibreIva($subtotalLibreIva){
+			$this->subtotalLibreIva = $this->subtotalLibreIva +  $subtotalLibreIva ;
+		}
+
+		public function setSumaSubtotalIva($subtotalIva){
+			$this->subtotalIva = $this->subtotalIva +  $subtotalIva ;
 		}
 
 		public static function obtenerVenta($idVenta){
@@ -257,11 +290,19 @@
 
 					$total=($numeroUnidades*$precioVentaUnitario);
 					$this->setSumaTotal(round($total));
-					$subtotalIva=$total;
+					$subtotalIva =0;
+					$subtotalLibreIva = 0;
+
 					if($producto->getTieneIva()){
 						$subtotalIva = $total/(1+IVA);
+						$this->setSumaSubtotalIva(round($subtotalIva));
+					}else{
+						$subtotalLibreIva= $total;
+						$this->setSumaSubtotalLibreIva(round($subtotalLibreIva));
 					}
-					$this->setSumaSubTotal(round($subtotalIva));
+					$subtotal=$subtotalIva + $subtotalLibreIva;
+
+					$this->setSumaSubtotal($subtotal)
 					$this->setArrayDistribucion($arrayDistribucion);
 					$producto->calcularUnidades();
 					$conexion = null;
@@ -305,14 +346,23 @@
 
 				$precioProductoxventa=($unidades*$precio);
 				$total=$this->getTotal()-$precioProductoxventa;
-				$subtotalIva=$precioProductoxventa;
+				$this->setTotal(round($total));
 
+				$subtotalIva =0;
+				$subtotalLibreIva = 0;
 				if($producto->getTieneIva()){
 					$subtotalIva = $precioProductoxventa/(1+IVA);
+					$subtotalIva = $this->getSubtotalIva()-$subtotalIva;
+					$this->setSubtotalIva(round($subtotalIva));
+				}else{
+					$subtotalLibreIva=$precioProductoxventa;
+					$subtotalLibreIva = $this->getSubtotalLibreIva()-$subtotalLibreIva;
+					$this->setSubtotalLibreIva(round($subtotalLibreIva));
 				}
-				$subtotal = $this->getSubtotal()-$subtotalIva;
-				$this->setTotal(round($total));
+
+				$subtotal = $subtotalIva + $subtotalLibreIva;
 				$this->setSubtotal(round($subtotal));
+	
 
 				$producto->calcularUnidades();
 				$conexion = null;
@@ -356,15 +406,37 @@
 			return $statement;
 		}
 
-		public function efectuarVenta($resolucion,$idEmpleado, $tipoVenta = "Efectivo", $idCliente = 1){ 
+		public function agregarDescuentoRetefuenteIva($descuento, $retefuente){
+			$subtotalIvaDescuento=$this->getSubtotalIva()-($this->getSubtotalIva()*$descuento/100);
+			$subtotalLibreIvaDescuento=$this->getSubtotalLibreIva()-($this->getSubtotalLibreIva()*$descuento/100);
+
+			$subtotalIvaRetefuente= $subtotalIvaDescuento - ($subtotalIvaDescuento*$retefuente/100);
+			$subtotalLibreIvaRetefuente= $subtotalLibreIvaDescuento - ($subtotalLibreIvaDescuento*$retefuente/100);
+			$subtotal=$subtotalIvaRetefuente + $subtotalLibreIvaRetefuente;
+
+			$this->setSubtotalIva($subtotalIvaRetefuente);
+			$this->setSubtotalLibreIva($subtotalLibreIvaRetefuente);
+			$this->setSubtotal($subtotal);
+
+			$total= $subtotalLibreIvaRetefuente + ($subtotalIvaRetefuente+$subtotalIvaRetefuente*(1+IVA));
+			$this->setTotal($total);
+
+		}
+
+		public function efectuarVenta($resolucion,$idEmpleado, $descuento,$retefuente = 0, $tipoVenta = "Efectivo", $idCliente = 1){ 
 		//Factura
-			$total=$this->getTotal();
 			$conexion = Conexion::conectar();
-			$statement=$conexion->prepare("UPDATE `ventas` SET `subtotal`=:subtotal,`total`=:total WHERE `id_venta` = :idVenta");
-			$subototal=$this->getSubtotal();
+			$this->agregarDescuentoRetefuenteIva($descuento,$retefuente);
+			$total=$this->getTotal();
+			$subtotal=$this->getSubtotal();
 			$idVenta = $this->getIdVenta();
-			$statement->bindValue(':subtotal',$subototal);
+			
+			$statement=$conexion->prepare("UPDATE `ventas` SET `subtotal`=:subtotal,`total`=:total, `descuento` = :descuento , `retefuente` = :retefuente WHERE `id_venta` = :idVenta");
+
+			$statement->bindValue(':subtotal',$subtotal);
 			$statement->bindValue(':total',$total);
+			$statement->bindValue(':descuento',$descuento);
+			$statement->bindValue(':retefuente',$retefuente);
 			$statement->bindValue(':idVenta',$idVenta);
 			$statement->execute();
 
@@ -526,16 +598,17 @@
 					$id_producto = $resultado['PRODUCTOS_id_producto'];
 					$unidades = $resultado['unidades'];
 					$statement2 = null;
-					$statement2 = $conexion->prepare("SELECT * FROM `inventario` WHERE `productos_id_producto` = :idProducto ORDER BY `inventario`.`precio_inventario` DESC");
+					$statement2 = $conexion->prepare("SELECT * FROM `inventario` WHERE `productos_id_producto` = :idProducto ORDER BY `inventario`.`id_inventario` DESC"); //Por ferretruper auxiliar
 					$statement2->bindValue(":idProducto", $id_producto);
 					$statement2->execute();
 					$resultado2 =  $statement2->fetch(PDO::FETCH_ASSOC);
 					if($resultado2){
 						$id_inventario = $resultado2['id_inventario'];
-						$unidades = $resultado2['unidades'] + $unidades;
+						$unidadesTotales = $resultado2['unidades'] + $unidades;
 						$statement2 = null;
-						$statement2 = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidades WHERE 1");
-						$statement2->bindValue(":unidades", $unidades);
+						$statement2 = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidadesTotales WHERE `id_inventario` = :idInventario");
+						$statement2->bindValue(":unidadesTotales", $unidadesTotales);
+						$statement2->bindValue(":idInventario", $$id_inventario);
 						$statement2->execute();
 
 						if(!$statement2){
