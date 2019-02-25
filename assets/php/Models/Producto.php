@@ -31,7 +31,7 @@
 
 		public function __construct0($idProducto, $nombre, $descripcion, $referenciaFabrica, $tieneIva, $clasificacionTributaria, $activa = 1, $codigoBarras = NULL){
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("INSERT INTO `productos` (`id_producto`, `codigo_barras`, `nombre`, `descripcion`, `referencia_fabrica`, `tiene_iva`, `clasificacion_tributaria`, `unidades_totales`, `precio_mayor_inventario`, `activa`) VALUES (:idProducto, :codigoBarras, :nombre, :descripcion, :referenciaFabrica, :tieneIva, :clasificacionTributaria,:unidadesTotales,:precio, :activa)");
+			$statement = $conexion->prepare("INSERT INTO `productos` (`id_producto`, `codigo_barras`, `nombre`, `descripcion`, `referencia_fabrica`, `tiene_iva`, `clasificacion_tributaria`, `unidades_totales`, `precio`, `activa`) VALUES (:idProducto, :codigoBarras, :nombre, :descripcion, :referenciaFabrica, :tieneIva, :clasificacionTributaria,:unidadesTotales,:precio, :activa)");
 
 			$this->setIdProducto($idProducto,$statement);
 			$this->setCodigoBarras($codigoBarras,$statement);
@@ -200,9 +200,9 @@
 			    array( 'db' => 'codigo_barras',     'dt' => 3,'field' => 'codigo_barras'),
 			    array( 'db' => 'unidades_totales',    'dt' => 4,'field' => 'unidades_totales'),
 			    array(
-			        'db'        => 'precio_mayor_inventario',
+			        'db'        => 'precio',
 			        'dt'        => 5,
-			        'field' => 'precio_mayor_inventario',
+			        'field' => 'precio',
 			        'formatter' => function( $d, $row ) {
 			            return number_format($d);
 			        }
@@ -255,9 +255,9 @@
 			    array( 'db' => 'codigo_barras',     'dt' => 4,'field' => 'codigo_barras'),
 			    array( 'db' => 'unidades_totales',    'dt' => 5,'field' => 'unidades_totales'),
 			    array(
-			        'db'        => 'precio_mayor_inventario',
+			        'db'        => 'precio',
 			        'dt'        => 6,
-			        'field' => 'precio_mayor_inventario',
+			        'field' => 'precio',
 			        'formatter' => function( $d, $row ) {
 			            return number_format($d);
 			        }
@@ -360,7 +360,7 @@
 		public function cambiarPrecio($precio) {
 			$conexion = Conexion::conectar();
 			$idProducto = $this->getIdProducto();
-			$statement = $conexion->prepare("UPDATE `productos` SET `precio_mayor_inventario`=:precio WHERE  `id_producto` = :idProducto");
+			$statement = $conexion->prepare("UPDATE `productos` SET `precio`=:precio WHERE  `id_producto` = :idProducto");
 			$statement->bindValue(":idProducto", $idProducto);
 			$statement->bindValue(":precio", $precio);
 			$statement->execute();
@@ -420,7 +420,7 @@
 			$this->setReferenciaFabrica($referenciaFabrica,$statement);
 			$this->setTieneIva($tieneIva,$statement);
 			$this->setClasificacionTributaria($clasificacionTributaria,$statement);
-			$this->setPrecio($precio,$statement)
+			$this->setPrecio($precio,$statement);
 			$statement->execute();
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
@@ -461,9 +461,6 @@
 			
 		}
 
-		public static function cambiarPrecio(){
-			
-		}
 
 	/*	public function igualarPreciosInventario(){
 			$conexion = Conexion::conectar();

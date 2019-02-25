@@ -302,7 +302,7 @@
 					}
 					$subtotal=$subtotalIva + $subtotalLibreIva;
 
-					$this->setSumaSubtotal($subtotal)
+					$this->setSumaSubtotal($subtotal);
 					$this->setArrayDistribucion($arrayDistribucion);
 					$producto->calcularUnidades();
 					$conexion = null;

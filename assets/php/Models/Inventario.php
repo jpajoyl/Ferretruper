@@ -200,7 +200,7 @@ class Inventario {
 	}
 	//"
 
-		public static function obtenerInventariosParaVenta($numeroDeConsulta, $modo=true)
+	public static function obtenerInventariosParaVenta($numeroDeConsulta, $modo=true)
 	{//true->>busca por idProducto     //false busca por idProveedor
 		$conexion = Conexion::conectar();
 		if ($modo) {
@@ -233,7 +233,7 @@ class Inventario {
 		}else{
 			return ERROR;
 		}
-	} /*
+	} */
 
 
 
