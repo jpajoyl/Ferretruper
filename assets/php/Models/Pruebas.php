@@ -16,5 +16,5 @@ include 'comprobanteEgreso.php';
 /*$ce = ComprobanteEgreso::obtenerComprobanteEgreso(1);
 $ce->imprimirComprobante(false);*/
 $ce = Factura::obtenerFactura(1);
-$ce->imprimirFacturaCarta(true);
+$ce->imprimirFacturaCarta();
  ?>
