@@ -16,7 +16,7 @@
 		private $clasificacionTributaria;
 		private $activa;
 		private $unidadesTotales;
-		private $precio;
+		private $precioMayorInventario;
 		
 
 		private $inventario;
@@ -31,7 +31,7 @@
 
 		public function __construct0($idProducto, $nombre, $descripcion, $referenciaFabrica, $tieneIva, $clasificacionTributaria, $activa = 1, $codigoBarras = NULL){
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("INSERT INTO `productos` (`id_producto`, `codigo_barras`, `nombre`, `descripcion`, `referencia_fabrica`, `tiene_iva`, `clasificacion_tributaria`, `unidades_totales`, `precio`, `activa`) VALUES (:idProducto, :codigoBarras, :nombre, :descripcion, :referenciaFabrica, :tieneIva, :clasificacionTributaria,:unidadesTotales,:precio, :activa)");
+			$statement = $conexion->prepare("INSERT INTO `productos` (`id_producto`, `codigo_barras`, `nombre`, `descripcion`, `referencia_fabrica`, `tiene_iva`, `clasificacion_tributaria`, `unidades_totales`, `precio_mayor_inventario`, `activa`) VALUES (:idProducto, :codigoBarras, :nombre, :descripcion, :referenciaFabrica, :tieneIva, :clasificacionTributaria,:unidadesTotales,:precioMayorInventario, :activa)");
 
 			$this->setIdProducto($idProducto,$statement);
 			$this->setCodigoBarras($codigoBarras,$statement);
@@ -42,7 +42,7 @@
 			$this->setClasificacionTributaria($clasificacionTributaria,$statement);
 			$this->setActiva($activa,$statement);
 			$this->setUnidadesTotales(0,$statement);
-			$this->setPrecio(0,$statement);
+			$this->setPrecioMayorInventario(0,$statement);
 			$statement->execute();
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
@@ -161,15 +161,15 @@
 			return $this;
 		}
 
-		public function getPrecio(){
-			return $this->precio;
+		public function getPrecioMayorInventario(){
+			return $this->precioMayorInventario;
 		}
 
-		public function setPrecio($precio, $statement=NULL){
+		public function setPrecioMayorInventario($precioMayorInventario, $statement=NULL){
 			if($statement!=NULL){
-				$statement->bindParam(':precio',$precio,PDO::PARAM_INT);
+				$statement->bindParam(':precioMayorInventario',$precioMayorInventario,PDO::PARAM_INT);
 			}
-			$this->precio = $precio;
+			$this->precioMayorInventario = $precioMayorInventario;
 			return $this;
 		}
 		//metodos
@@ -200,9 +200,9 @@
 			    array( 'db' => 'codigo_barras',     'dt' => 3,'field' => 'codigo_barras'),
 			    array( 'db' => 'unidades_totales',    'dt' => 4,'field' => 'unidades_totales'),
 			    array(
-			        'db'        => 'precio',
+			        'db'        => 'precio_mayor_inventario',
 			        'dt'        => 5,
-			        'field' => 'precio',
+			        'field' => 'precio_mayor_inventario',
 			        'formatter' => function( $d, $row ) {
 			            return number_format($d);
 			        }
@@ -255,9 +255,9 @@
 			    array( 'db' => 'codigo_barras',     'dt' => 4,'field' => 'codigo_barras'),
 			    array( 'db' => 'unidades_totales',    'dt' => 5,'field' => 'unidades_totales'),
 			    array(
-			        'db'        => 'precio',
+			        'db'        => 'precio_mayor_inventario',
 			        'dt'        => 6,
-			        'field' => 'precio',
+			        'field' => 'precio_mayor_inventario',
 			        'formatter' => function( $d, $row ) {
 			            return number_format($d);
 			        }
@@ -332,7 +332,7 @@
 			
 		}
 
-		/*public function obtenerPrecioMayorInventario(){
+		public function obtenerPrecioMayorInventario(){
 			$precioMayor=0;
 			$conexion = Conexion::conectar();
 			$statement = Inventario::obtenerInventarios($this->getIdProducto());
@@ -355,14 +355,14 @@
 			
 
 
-		}*/
+		}
 
-		public function cambiarPrecio($precio) {
+		public function cambiarPrecioMayorInventario($precioMayorInventario) {
 			$conexion = Conexion::conectar();
 			$idProducto = $this->getIdProducto();
-			$statement = $conexion->prepare("UPDATE `productos` SET `precio`=:precio WHERE  `id_producto` = :idProducto");
+			$statement = $conexion->prepare("UPDATE `productos` SET `precio_mayor_inventario`=:precioMayorInventario WHERE  `id_producto` = :idProducto");
 			$statement->bindValue(":idProducto", $idProducto);
-			$statement->bindValue(":precio", $precio);
+			$statement->bindValue(":precioMayorInventario", $precioMayorInventario);
 			$statement->execute();
 			if($statement){
 				return SUCCESS;
@@ -394,7 +394,7 @@
 					$producto->setClasificacionTributaria($resultado['clasificacion_tributaria']);
 					$producto->setActiva($resultado['activa']);
 					$producto->setUnidadesTotales($producto->calcularUnidades());
-					$producto->setPrecio($resultado['precio']);
+					$producto->setPrecioMayorInventario($producto->obtenerPrecioMayorInventario());
 
 					$conexion=null;
 					$statement=null;
@@ -408,11 +408,11 @@
 			}
 
 		}
-		public function editarProducto($codigoBarras, $nombre, $descripcion, $referenciaFabrica, $tieneIva, $clasificacionTributaria,$precio){
+		public function editarProducto($codigoBarras, $nombre, $descripcion, $referenciaFabrica, $tieneIva, $clasificacionTributaria){
 
 			$idProducto=$this->getIdProducto();
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("UPDATE `productos` SET `codigo_barras` = :codigoBarras, `nombre` = :nombre, `descripcion` = :descripcion, `referencia_fabrica` = :referenciaFabrica, `tiene_iva` = :tieneIva, `clasificacion_tributaria` = :clasificacionTributaria, `precio` = :precio  WHERE `productos`.`id_producto` = :idProducto");
+			$statement = $conexion->prepare("UPDATE `productos` SET `codigo_barras` = :codigoBarras, `nombre` = :nombre, `descripcion` = :descripcion, `referencia_fabrica` = :referenciaFabrica, `tiene_iva` = :tieneIva, `clasificacion_tributaria` = :clasificacionTributaria  WHERE `productos`.`id_producto` = :idProducto");
 			$statement->bindValue(":idProducto", $idProducto);
 			$this->setCodigoBarras($codigoBarras,$statement);
 			$this->setNombre($nombre,$statement);
@@ -420,12 +420,12 @@
 			$this->setReferenciaFabrica($referenciaFabrica,$statement);
 			$this->setTieneIva($tieneIva,$statement);
 			$this->setClasificacionTributaria($clasificacionTributaria,$statement);
-			$this->setPrecio($precio,$statement);
 			$statement->execute();
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
 			}
 			$this->calcularUnidades();
+			$this->obtenerPrecioMayorInventario();
 			$conexion = NULL;
 			$statement = NULL;
 
@@ -461,8 +461,7 @@
 			
 		}
 
-
-	/*	public function igualarPreciosInventario(){
+		public function igualarPreciosInventario(){
 			$conexion = Conexion::conectar();
 			$statement=Inventario::obtenerInventarios($this->getIdProducto());
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
@@ -477,10 +476,10 @@
 			}
 			return SUCCESS;
 
-		
+		}
 
 
-	}*/
+	}
 
 	/*
 		public static function verProductos($modo=true){
@@ -495,6 +494,5 @@
 			return $statement;
 		}
 	*/
-	}
 
 	?>
