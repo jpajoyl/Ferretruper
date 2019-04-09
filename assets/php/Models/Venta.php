@@ -1,5 +1,5 @@
 <?php 
-/*	include "../Conexion.php";
+	/*include "../Conexion.php";
 	include "../Controllers/Response.php";
 	include "Usuario.php";
 	include "Proveedor.php";
@@ -391,17 +391,10 @@
 				$resultado=$statement->fetch(PDO::FETCH_ASSOC);
 				if($resultado){
 					$numeroDian = $resultado['numero_dian']+ 1;
-					$statement=null;
-					$resultado=null;
-					$statement = $conexion->prepare("SELECT * FROM `informacion_facturas` WHERE `id_informacion_facturas` = :idInformacionFacturas ");
-					$statement->bindValue(':idInformacionFacturas',1);
-					$statement->execute();
-					$resultado=$statement->fetch(PDO::FETCH_ASSOC);
-					$informacionFactura=$resultado['descripcion'];
-
-					$factura = new factura($total,$fecha,$informacionFactura,$idVenta,$resolucion,$numeroDian); 
+					$idInformacionFactura=$resolucion;
+					$factura = new factura($total,$fecha,$idInformacionFactura,$idVenta,$resolucion,$numeroDian); 
 					$factura = true;
-					if($factura and $informacionFactura){
+					if($factura){
 						$this->asociarTipoVenta($idEmpleado,$tipoVenta,$idCliente);
 						$statement=null;
 						$resultado=null;
@@ -586,7 +579,7 @@
 	}
 
 
-/*	$fecha = date('Y-m-d');
+	/*$fecha = date('Y-m-d');
 	$venta = new Venta($fecha);
 	$venta->seleccionarProducto(1,1);
 	echo "Total 1 : " . $venta->getTotal();
@@ -597,8 +590,7 @@
 	echo "<br>";
 	$array = $venta-> getArrayDistribucion();
 	var_dump($array);
-	$venta->efectuarVenta(1,3,"Efectivo",1);
+	$venta->efectuarVenta(1,3,0,0,"Efectivo",1);*/
 
-*/
 
 	?>

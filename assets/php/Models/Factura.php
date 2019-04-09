@@ -46,25 +46,27 @@ class Factura {
 		$this->setAnulada($anulada,$statement);
 		$this->setFechaAnulada($fechaAnulada,$statement);
 		$this->setInformacionFactura($informacionFactura,$statement);
-		$consulta=$conexion->prepare("SELECT descripcion FROM `informacion_facturas` WHERE id_informacion_facturas = :informacionFactura");
-		$consulta->bindParam(':informacionFactura',$informacionFactura,PDO::PARAM_INT);
-		$consulta->execute();
-		$resultado2 = $consulta->fetch(PDO::FETCH_ASSOC);
-		$this->setInformacionFactura($resultado2['descripcion']);
 		$this->setVenta($venta,$statement);
 		$this->setResolucion($resolucion,$statement);
-		$consulta=$conexion->prepare("SELECT descripcion FROM `resoluciones` WHERE id_resolucion = :idResolucion");
-		$consulta->bindParam(':idResolucion',$resolucion,PDO::PARAM_INT);
-		$consulta->execute();
-		$resultado2 = $consulta->fetch(PDO::FETCH_ASSOC);
-		$this->setResolucion($resultado2['descripcion']);
-		$consulta=null;
 		$this->setNumeroDian($numeroDian,$statement);
 		$statement->execute();
 		$this->setidFactura($conexion->lastInsertId());
 		if(!$statement){
 			throw new Exception("Error Processing Request", 1);
 		}
+
+		/*$consulta=$conexion->prepare("SELECT descripcion FROM `informacion_facturas` WHERE id_informacion_facturas = :informacionFactura");
+		$consulta->bindParam(':informacionFactura',$informacionFactura,PDO::PARAM_INT);
+		$consulta->execute();
+		$resultado2 = $consulta->fetch(PDO::FETCH_ASSOC);
+		$this->setInformacionFactura($resultado2['descripcion']);*/
+
+		/*$consulta=$conexion->prepare("SELECT descripcion FROM `resoluciones` WHERE id_resolucion = :idResolucion");
+		$consulta->bindParam(':idResolucion',$resolucion,PDO::PARAM_INT);
+		$consulta->execute();
+		$resultado2 = $consulta->fetch(PDO::FETCH_ASSOC);
+		$this->setResolucion($resultado2['descripcion']);
+		$consulta=null;*/
 		$conexion = NULL;
 		$statement = NULL;
 	}
