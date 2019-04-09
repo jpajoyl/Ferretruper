@@ -23,7 +23,7 @@ class TipoVenta{
 
 	public function __construct0($id_cliente, $id_empleado, $id_venta, $tipoVenta, $plazo=0){
         $estado = 1;
-        if ($tipoVenta = "Credito"){
+        if ($tipoVenta == "Credito"){
              $estado = 0 ;
              if ($plazo = 0){
                 return ERROR;
@@ -37,7 +37,6 @@ class TipoVenta{
 		$this->setCliente($id_cliente,$statement);
 		$this->setEmpleado($id_empleado,$statement);
 		$this->setVenta($id_venta,$statement);
-
 		$statement->execute();
 		if(!$statement){
 			throw new Exception("Error Processing Request", 1);

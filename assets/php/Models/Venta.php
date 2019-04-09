@@ -361,9 +361,10 @@
 
 			$total=$this->getTotal();
 			$conexion = Conexion::conectar();
-			$statement=$conexion->prepare("UPDATE `ventas` SET `descuento`=:descuento, `retefuente` = :retefuente, `subtotal`=:subtotal,`total`=:total WHERE `id_venta` = :idVenta");
+			$statement=$conexion->prepare("UPDATE `ventas` SET `descuento`=:descuento, `iva` = :iva , `retefuente` = :retefuente, `subtotal`=:subtotal,`total`=:total WHERE `id_venta` = :idVenta");
 			$subtotal=$this->getSubtotal();
 			$idVenta = $this->getIdVenta();
+			$statement->bindValue(':idVenta',$idVenta);
 
 			$statement->bindValue(':descuento',$descuento);
 			$statement->bindValue(':retefuente',$retefuente);
@@ -375,10 +376,12 @@
 			$subtotal-= $subtotal*$descuento;
 			$iva-=$iva*$retefuente;
 			$subtotal-=$subtotal*$retefuente;
+			$total = $subtotal + $iva;
 
-			$statement->bindValue(':subtotal',$subtotal);
-			$statement->bindValue(':total',$total);
-			$statement->bindValue(':idVenta',$idVenta);
+			$this->setSubtotal($subtotal,$statement);
+			$this->setTotal($total,$statement);
+			$this->setIva($iva,$statement);
+			
 			$statement->execute();
 
 			if ( $statement ){
@@ -393,7 +396,6 @@
 					$numeroDian = $resultado['numero_dian']+ 1;
 					$idInformacionFactura=$resolucion;
 					$factura = new factura($total,$fecha,$idInformacionFactura,$idVenta,$resolucion,$numeroDian); 
-					$factura = true;
 					if($factura){
 						$this->asociarTipoVenta($idEmpleado,$tipoVenta,$idCliente);
 						$statement=null;
@@ -405,7 +407,7 @@
 						$statement->execute();
 
 						$conexion =null;
-						return SUCCESS;
+						return $factura;
 
 					}else{
 						return ERROR;
@@ -506,6 +508,7 @@
 		}
 
 		public function asociarTipoVenta($idEmpleado, $tipoVenta = "Efectivo", $idCliente = 1){
+
 			$tipoVenta = new TipoVenta ($idCliente,$idEmpleado,$this->getIdVenta(),$tipoVenta);
 
 		}
@@ -584,13 +587,15 @@
 	$venta->seleccionarProducto(1,1);
 	echo "Total 1 : " . $venta->getTotal();
 	echo "<br>SubTotal 1 : " . $venta->getSubtotal();
-	$venta->seleccionarProducto(1,200);
+	$venta->seleccionarProducto(1,1);
 	echo "<br>Total 2 : " . $venta->getTotal();
 	echo "<br>SubTotal 2 : " . $venta->getSubtotal();
 	echo "<br>";
 	$array = $venta-> getArrayDistribucion();
 	var_dump($array);
-	$venta->efectuarVenta(1,3,0,0,"Efectivo",1);*/
+	$factura = $venta->efectuarVenta(1,64,10,0,"Efectivo",61);
+	echo "<br>SubtotalTotal final : " . $venta->getSubtotal();
+	echo "<br>Total final : " .$venta->getTotal();*/
 
 
 	?>
