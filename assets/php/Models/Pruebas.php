@@ -14,7 +14,8 @@ include 'TipoVenta.php';
 include '../Controllers/Response.php';
 include 'comprobanteEgreso.php';
 /*$ce = ComprobanteEgreso::obtenerComprobanteEgreso(1);
-$ce->imprimirComprobante(false);
+$ce->imprimirComprobante(false);*/
 $ce = Factura::obtenerFactura(1);
-$ce->imprimirFacturaCarta();*/
+$ce->facturaPOSPDF();
+//$ce->imprimirFacturaCarta();
  ?>
