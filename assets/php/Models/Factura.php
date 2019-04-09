@@ -529,7 +529,7 @@ class Factura {
 		$cliente = Cliente::obtenerCliente($tipoVenta->getCliente(),false);
 		$pdf->SetFont('Arial','',4);
 		$pdf->setY(25);
-		$pdf->setX(5);	
+		$pdf->setX(5);
 		$pdf->Cell(10,1.5, utf8_decode("SEÑORES:"),0,0,'J',false);
 		$pdf->Cell(10,1.5, utf8_decode($cliente->getNombre()),0,1,'J',false);
 		$pdf->setX(5);
@@ -549,38 +549,61 @@ class Factura {
 		$pdf->setX(2);
 		$pdf->Cell(5,$textypos,'------------------------------------------------------------------------------------');
 		$statementProductos = $venta->obtenerInfoProductosProductoXVenta();
-		$array = array();
+		$productos = array();
 		while ($producto = $statementProductos->fetch(PDO::FETCH_ASSOC)) {
-			$array[]=$producto;
+			$productos[]=$producto;
 		}
 		$textypos+=6;
 		$pdf->setX(2);
-		$pdf->Cell(5,$textypos,'Cód  Artículo       Referencia  Cantidad  Vr.Unitario  Vr.Total');
-		$total =0;
+		$pdf->Cell(5,$textypos,utf8_decode('Cód    Artículo    Referencia    Cantidad  Vr.Unitario    Vr.Total'));
+		$totalBruto=0;
+		$totalFinal=0;
+		$totalDescuento=0;
+		$totalIva=0;
+		$descuento = $venta->getDescuento();
+		if ($descuento==NULL) {
+			$descuento = 0;
+		}
+		$descuento = $descuento/100;
 		$off = $textypos+6;
-		$producto = array(
-			"q"=>1,
-			"name"=>"Computadora Lenovo i5",
-			"price"=>100
-		);
-		$productos = array($producto, $producto, $producto, $producto, $producto );
-		foreach($productos as $pro){
+		$pdf->SetFont('Arial','',3);
+		foreach($productos as $item){
 			$pdf->setX(2);
-			$pdf->Cell(5,$off,$pro["q"]);
+			$pdf->Cell(5,$off,$item["id_producto"]);
 			$pdf->setX(6);
-			$pdf->Cell(35,$off,  strtoupper(substr($pro["name"], 0,12)) );
-			$pdf->setX(20);
-			$pdf->Cell(11,$off,  "$".number_format($pro["price"],2,".",",") ,0,0,"R");
+			$pdf->Cell(35,$off,  strtoupper(substr($item["nombre"], 0,12)) );
+			$pdf->setX(9);
+			$pdf->Cell(11,$off, $item["referencia_fabrica"] ,0,0,"R");
+			$pdf->setX(16);
+			$pdf->Cell(11,$off,  number_format($item["unidades"],2,".",",") ,0,0,"R");
+			$pdf->setX(24.5);
+			$pdf->Cell(11,$off,  number_format($item["precio_venta"],2,".",",") ,0,0,"R");
 			$pdf->setX(32);
-			$pdf->Cell(11,$off,  "$ ".number_format($pro["q"]*$pro["price"],2,".",",") ,0,0,"R");
-			$total += $pro["q"]*$pro["price"];
-			$off+=6;
+			$pdf->Cell(11,$off,  number_format($item['unidades'] * $item['precio_venta'],2,".",",") ,0,0,"R");
+			$off+=4;
+			$tieneIva = $item['tiene_iva'];
+
+			if ($tieneIva==1) {
+				$descuentoUnitarioSinIva=(($item['precio_venta']/(1+IVA))*$descuento);
+				$descuentoTotalSinIva=$descuentoUnitarioSinIva*$item['unidades'];
+
+				$precioBrutoUnitario=($item['precio_venta']/(1+IVA))-$descuentoUnitarioSinIva;
+				$totalBruto+=($precioBrutoUnitario)*$item['unidades'];
+				$totalFinal+=$precioBrutoUnitario *$item['unidades']* (1+IVA);
+				$totalDescuento+=$descuentoTotalSinIva;
+				$totalIva+=$precioBrutoUnitario*IVA*$item['unidades'];
+			}else{
+				$descuentoUnitario=(($item['precio_venta'])*$descuento);
+				$descuentoTotal=$descuentoUnitario*$item['unidades'];
+
+				$precioBrutoUnitario=$item['precio_venta']-$descuentoUnitario;
+				$totalBruto+=(($precioBrutoUnitario)*$item['unidades']);
+				$totalFinal+=(($precioBrutoUnitario)*$item['unidades']);
+				$totalDescuento+=$descuentoTotal;
+
+			}
 		}
 		$textypos=$off+6;
-		$pdf->setX(2);
-		$pdf->Cell(5,$textypos,"TOTAL: " );
-		$pdf->setX(38);
-		$pdf->Cell(5,$textypos,"$ ".number_format($total,2,".",","),0,0,"R");
 		$pdf->setX(2);
 		$pdf->Cell(5,$textypos+6,'GRACIAS POR TU COMPRA ');
 		$pdf->output();
