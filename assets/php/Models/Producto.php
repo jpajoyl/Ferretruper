@@ -431,6 +431,23 @@
 
 		}
 
+		public function editarPrecioMayorInventarioManual($precioMayorInventario){
+
+			$idProducto=$this->getIdProducto();
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("UPDATE `productos` SET `precio_mayor_inventario` = :precioMayorInventario  WHERE `productos`.`id_producto` = :idProducto");
+			$statement->bindValue(":idProducto", $idProducto);
+			$this->setPrecioMayorInventario($precioMayorInventario,$statement);
+			$statement->execute();
+			if(!$statement){
+				throw new Exception("Error Processing Request", 1);
+			}
+			$this->calcularUnidades();
+			$conexion = NULL;
+			$statement = NULL;
+
+		}
+
 		public function desactivarProducto($modo=true){
 			$conexion = Conexion::conectar();
 			$idProducto=$this->getIdProducto();

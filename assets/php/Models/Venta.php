@@ -356,14 +356,27 @@
 			return $statement;
 		}
 
-		public function efectuarVenta($resolucion,$idEmpleado, $tipoVenta = "Efectivo", $idCliente = 1){ 
+		public function efectuarVenta($resolucion,$idEmpleado, $descuento = 0, $retefuente = 0, $tipoVenta = "Efectivo", $idCliente = 1){ 
 		//Factura
+
 			$total=$this->getTotal();
 			$conexion = Conexion::conectar();
-			$statement=$conexion->prepare("UPDATE `ventas` SET `subtotal`=:subtotal,`total`=:total WHERE `id_venta` = :idVenta");
-			$subototal=$this->getSubtotal();
+			$statement=$conexion->prepare("UPDATE `ventas` SET `descuento`=:descuento, `retefuente` = :retefuente, `subtotal`=:subtotal,`total`=:total WHERE `id_venta` = :idVenta");
+			$subtotal=$this->getSubtotal();
 			$idVenta = $this->getIdVenta();
-			$statement->bindValue(':subtotal',$subototal);
+
+			$statement->bindValue(':descuento',$descuento);
+			$statement->bindValue(':retefuente',$retefuente);
+			$descuento = $descuento / 100;
+			$retefuente = $retefuente / 100;
+
+			$iva= $total - $subtotal;
+			$iva-= $iva*$descuento;
+			$subtotal-= $subtotal*$descuento;
+			$iva-=$iva*$retefuente;
+			$subtotal-=$subtotal*$retefuente;
+
+			$statement->bindValue(':subtotal',$subtotal);
 			$statement->bindValue(':total',$total);
 			$statement->bindValue(':idVenta',$idVenta);
 			$statement->execute();
@@ -571,6 +584,8 @@
 
 		}
 	}
+
+
 /*	$fecha = date('Y-m-d');
 	$venta = new Venta($fecha);
 	$venta->seleccionarProducto(1,1);
