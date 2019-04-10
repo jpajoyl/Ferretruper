@@ -15,7 +15,6 @@
 	class Venta {
 		private $arrayDistribucion = array();
 		
-
 		//atributos
 		private $idVenta;
 		private $subtotal;
@@ -26,7 +25,6 @@
 		private $fecha;
 		private $anulada;//bool
 		private $fechaAnulada;	
-
 		public function __construct(){
 			$params = func_get_args();
 			$num_params = func_num_args();
