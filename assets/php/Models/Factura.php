@@ -373,46 +373,46 @@ class Factura {
 			// $pdf->MultiCell(110,4,"NIT: 900 307 086 - 7"."\n"."Carrera 51 # 40-74"."\n"."TEL:(4) 2327201"."\n".utf8_decode("Medellín - Colombia")."\n"."ferretrupersas@hotmail.com",0,"C",false);
 /*			$pdf->ln(20);
 					
-		$pdf->setY(219);*/
-		$pdf->setX(120);
+$pdf->setY(219);*/
+$pdf->setX(120);
 					// $pdf->Cell(110,7,"",0,0,'J',false);
-		$pdf->SetFont('Arial','B',10);
+$pdf->SetFont('Arial','B',10);
 
-		$pdf->Cell(50,5, "Total Bruto: ",1,0,'J',false);
-		$pdf->SetFont('Arial','',10);
-		$pdf->Cell(30,5,number_format($totalBruto,2),1,1,'R',false);
+$pdf->Cell(50,5, "Total Bruto: ",1,0,'J',false);
+$pdf->SetFont('Arial','',10);
+$pdf->Cell(30,5,number_format($totalBruto,2),1,1,'R',false);
 					// $pdf->Cell(110,7,"",0,0,'J',false);
-		$pdf->SetFont('Arial','B',10);
-		$pdf->setX(120);
-		$pdf->Cell(50,5, "Iva: ",1,0,'J',false);
-		$pdf->SetFont('Arial','',10);
-		$pdf->Cell(30,5,number_format($totalIva,2),1,1,'R',false);
+$pdf->SetFont('Arial','B',10);
+$pdf->setX(120);
+$pdf->Cell(50,5, "Iva: ",1,0,'J',false);
+$pdf->SetFont('Arial','',10);
+$pdf->Cell(30,5,number_format($totalIva,2),1,1,'R',false);
 					// $pdf->Cell(110,7,"",0,0,'J',false);
-		$pdf->SetFont('Arial','B',10);
-		$retefuente=$venta->getRetefuente();
-		if ($retefuente==NULL) {
-			$retefuente=0;
-		}
-		$pdf->setX(120);
-		$pdf->Cell(50,5, "Retefuente ".$retefuente."% : ",1,0,'J',false);
-		$pdf->SetFont('Arial','',10);
-		$totalRetefuente = $totalBruto*($retefuente/100);
-		$pdf->Cell(30,5,number_format($totalRetefuente,2),1,1,'R',false);
+$pdf->SetFont('Arial','B',10);
+$retefuente=$venta->getRetefuente();
+if ($retefuente==NULL) {
+	$retefuente=0;
+}
+$pdf->setX(120);
+$pdf->Cell(50,5, "Retefuente ".$retefuente."% : ",1,0,'J',false);
+$pdf->SetFont('Arial','',10);
+$totalRetefuente = $totalBruto*($retefuente/100);
+$pdf->Cell(30,5,number_format($totalRetefuente,2),1,1,'R',false);
 					// $pdf->Cell(110,7,"",0,0,'J',false);
-		$pdf->SetFont('Arial','B',10);
-		$pdf->setX(120);
-		$pdf->Cell(50,5, "Total: ",1,0,'J',false);
-		$pdf->SetFont('Arial','',10);
-		$pdf->Cell(30,5,number_format($totalFinal-$totalRetefuente,2),1,1,'R',false);
-		$pdf->ln(3);
-		$pdf->SetFont('Arial','',10);
-		$pdf->MultiCell(190,4,utf8_decode($this->getInformacionFactura()) ,0,"C",false);
-		$pdf->SetFont('Arial','',7);
-		$pdf->MultiCell(190,4, utf8_decode($this->getResolucion()),0,"C",false);
-		}else{
-			$pdf->Rect(10, 80, 190, 130);
-			$pdf->ln(119.5);
-			$pdf->SetFont('Arial','B',10);
+$pdf->SetFont('Arial','B',10);
+$pdf->setX(120);
+$pdf->Cell(50,5, "Total: ",1,0,'J',false);
+$pdf->SetFont('Arial','',10);
+$pdf->Cell(30,5,number_format($totalFinal-$totalRetefuente,2),1,1,'R',false);
+$pdf->ln(3);
+$pdf->SetFont('Arial','',10);
+$pdf->MultiCell(190,4,utf8_decode($this->getInformacionFactura()) ,0,"C",false);
+$pdf->SetFont('Arial','',7);
+$pdf->MultiCell(190,4, utf8_decode($this->getResolucion()),0,"C",false);
+}else{
+	$pdf->Rect(10, 80, 190, 130);
+	$pdf->ln(119.5);
+	$pdf->SetFont('Arial','B',10);
 			$pdf->Cell(60,7, "Condiciones de pago: ",0,0,'J',false);//HHHHHHHHHHHHHHHHHHHHHHHH
 			$pdf->SetFont('Arial','',10);
 			$pdf->Cell(50,7, $tipoVenta->getTipoVenta(),0,0,'J',false);
@@ -605,14 +605,66 @@ class Factura {
 
 			}
 		}
-		$textypos=$off+6;
+		$pdf->ln(7);
+		$pdf->SetFont('Arial','',4);
+		$pdf->Text(3, $off+36, "------------------------------------------------------------------------------------");
+		$pdf->setY($off+20);
+		$pdf->setX(4);
+		$pdf->Cell(23,3, "Descuento: ",0,0,'J',false);
+		$pdf->Cell(13,3,number_format($totalDescuento,2),0,1,'R',false);
+		$pdf->setY($off+23);
+		$pdf->setX(4);
+		$pdf->Cell(23,3, "Total Bruto: ",0,0,'J',false);
+		$pdf->Cell(13,3,number_format($totalBruto,2),0,1,'R',false);
+		$pdf->setY($off+26);
+		$pdf->setX(4);
+		$pdf->Cell(23,3, "Iva: ",0,0,'J',false);
+		$pdf->Cell(13,3,number_format($totalIva,2),0,1,'R',false);
+		$pdf->setY($off+29);
+		$pdf->setX(4);
+		$retefuente=$venta->getRetefuente();
+		if ($retefuente==NULL) {
+			$retefuente=0;
+		}
+		$pdf->Cell(23,3, "Retefuente ".$retefuente."% : ",0,0,'J',false);
+		$totalRetefuente = $totalBruto*($retefuente/100);
+		$pdf->Cell(13,3,number_format($totalRetefuente,2),0,1,'R',false);
+		$pdf->setY($off+32);
+		$pdf->setX(4);
+		$pdf->Cell(23,3, "Total: ",0,0,'J',false);
+		$pdf->Cell(13,3,number_format($totalFinal-$totalRetefuente,2),0,1,'R',false);
+		$pdf->setY($off+35);
+		$pdf->setX(4);
+		$pdf->SetFont('Arial','B',4);
+		$pdf->Cell(16,5, "Condiciones de pago: ",0,0,'J',false);//HHHHHHHHHHHHHHHHHHHHHHHH
+		$pdf->SetFont('Arial','',4);
+		$pdf->Cell(12,5, $tipoVenta->getTipoVenta(),0,0,'J',false);
+		$bool=false;
+		if ($tipoVenta->getTipoVenta()=="Credito") {
+			$pdf->ln(4);
+			$plazo=$tipoVenta->getPlazo();
+			$statmentAbonos = Abono::obtenerAbonos($tipoVenta->getIdTipoVenta());
+			$arrayAbonos=array();
+			while ($abono = $statmentAbonos->fetch(PDO::FETCH_ASSOC)) {
+				$pdf->setX(5);
+				$pdf->Cell(4,3,"Cuota:        ".$abono['fecha']."        $".number_format($abono['valor']),0,1,'J',false);
+			}
+		}
 		$pdf->setX(2);
-		$pdf->Cell(5,$textypos+6,'GRACIAS POR TU COMPRA ');
+		$pdf->Cell(1,1, "------------------------------------------------------------------------------------",0,1,'J',false);
+		$pdf->setX(4);
+		$pdf->SetFont('Arial','',5);
+		$pdf->MultiCell(37,2,utf8_decode($this->getInformacionFactura()) ,0,"J",false);
+		$pdf->SetFont('Arial','',4);
+		$pdf->setX(4);
+		$pdf->Cell(1,3, "",0,1,'J',false);
+		$pdf->setX(4);
+		$pdf->MultiCell(37,2, utf8_decode($this->getResolucion()),0,"C",false);
 		$pdf->output();
 		ob_end_flush();
-	}
-	public function imprimirFacturaPOS()
-	{
+				}
+				public function imprimirFacturaPOS()
+				{
 
 
 		require __DIR__ . '/ticket/autoload.php'; //Nota: si renombraste la carpeta a algo diferente de "ticket" cambia el nombre en esta línea
