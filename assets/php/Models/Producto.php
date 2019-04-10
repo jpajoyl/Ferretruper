@@ -495,6 +495,34 @@
 
 		}
 
+		public function agregarInventarioEmergente(){
+			$conexion = Conexion::conectar();
+			$idProducto=$this->getIdProducto();
+			$precio = $this->getPrecioMayorInventario();
+			$inventario = new Inventario($precio, $precio, 0, 0, $idProducto, 0,0);
+			$conexion = null;
+			if($inventario){
+				return $inventario;
+			}else{
+				return false;
+			}
+		}
+
+		public function agregarUnidadesEmergentes($unidades){
+			$conexion = Conexion::conectar();
+			$idProducto=$this->getIdProducto();
+			$inventario = Inventario::obtenerInventario($idProducto,0);
+			if(! $inventario){
+				$inventario = $this->agregarInventarioEmergente();
+			}
+			$idInventario= $inventario->getIdInventario();
+			$conexion = Conexion::conectar();
+			$statement = $conexion->prepare("UPDATE `inventario` SET `unidades`=[value-4] WHERE 1");
+			$statement->bindValue(1, "%$nombre%", PDO::PARAM_STR);
+			$statement->execute();
+			
+		}
+
 
 	}
 
