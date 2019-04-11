@@ -517,7 +517,7 @@
 			}
 			$idInventario= $inventario->getIdInventario();
 			$unidadesInventario= $inventario->getUnidades();
-			$unidadesFinales= $unidades + $unidadesInventario
+			$unidadesFinales= $unidades + $unidadesInventario;
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidades WHERE 1");
 			$statement->bindValue(":unidades", $unidadesFinales);
