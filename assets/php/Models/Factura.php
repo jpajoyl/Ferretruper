@@ -569,20 +569,21 @@ $pdf->MultiCell(190,4, utf8_decode($this->getResolucion()),0,"C",false);
 		$descuento = $descuento/100;
 		$off = $textypos+6;
 		$pdf->SetFont('Arial','',3);
+		$pdf->ln(7);
 		foreach($productos as $item){
 			$pdf->setX(2);
-			$pdf->Cell(5,$off,$item["id_producto"]);
+			$pdf->Cell(5,2,$item["id_producto"]);
 			$pdf->setX(6);
-			$pdf->Cell(35,$off,  strtoupper(substr($item["nombre"], 0,12)) );
+			$pdf->Cell(35,2,  strtoupper(substr($item["nombre"], 0,12)) );
 			$pdf->setX(9);
-			$pdf->Cell(11,$off, $item["referencia_fabrica"] ,0,0,"R");
+			$pdf->Cell(11,2, $item["referencia_fabrica"] ,0,0,"R");
 			$pdf->setX(16);
-			$pdf->Cell(11,$off,  number_format($item["unidades"],2,".",",") ,0,0,"R");
+			$pdf->Cell(11,2,  number_format($item["unidades"],2,".",",") ,0,0,"R");
 			$pdf->setX(24.5);
-			$pdf->Cell(11,$off,  number_format($item["precio_venta"],2,".",",") ,0,0,"R");
+			$pdf->Cell(11,2,  number_format($item["precio_venta"],2,".",",") ,0,0,"R");
 			$pdf->setX(32);
-			$pdf->Cell(11,$off,  number_format($item['unidades'] * $item['precio_venta'],2,".",",") ,0,0,"R");
-			$off+=4;
+			$pdf->Cell(11,2,  number_format($item['unidades'] * $item['precio_venta'],2,".",",") ,0,1,"R");
+			$off+=3;
 			$tieneIva = $item['tiene_iva'];
 
 			if ($tieneIva==1) {
@@ -605,22 +606,17 @@ $pdf->MultiCell(190,4, utf8_decode($this->getResolucion()),0,"C",false);
 
 			}
 		}
-		$pdf->ln(7);
+		$pdf->ln(2);
 		$pdf->SetFont('Arial','',4);
-		$pdf->Text(3, $off+36, "------------------------------------------------------------------------------------");
-		$pdf->setY($off+20);
 		$pdf->setX(4);
 		$pdf->Cell(23,3, "Descuento: ",0,0,'J',false);
 		$pdf->Cell(13,3,number_format($totalDescuento,2),0,1,'R',false);
-		$pdf->setY($off+23);
 		$pdf->setX(4);
 		$pdf->Cell(23,3, "Total Bruto: ",0,0,'J',false);
 		$pdf->Cell(13,3,number_format($totalBruto,2),0,1,'R',false);
-		$pdf->setY($off+26);
 		$pdf->setX(4);
 		$pdf->Cell(23,3, "Iva: ",0,0,'J',false);
 		$pdf->Cell(13,3,number_format($totalIva,2),0,1,'R',false);
-		$pdf->setY($off+29);
 		$pdf->setX(4);
 		$retefuente=$venta->getRetefuente();
 		if ($retefuente==NULL) {
@@ -629,11 +625,11 @@ $pdf->MultiCell(190,4, utf8_decode($this->getResolucion()),0,"C",false);
 		$pdf->Cell(23,3, "Retefuente ".$retefuente."% : ",0,0,'J',false);
 		$totalRetefuente = $totalBruto*($retefuente/100);
 		$pdf->Cell(13,3,number_format($totalRetefuente,2),0,1,'R',false);
-		$pdf->setY($off+32);
 		$pdf->setX(4);
 		$pdf->Cell(23,3, "Total: ",0,0,'J',false);
 		$pdf->Cell(13,3,number_format($totalFinal-$totalRetefuente,2),0,1,'R',false);
-		$pdf->setY($off+35);
+		$pdf->setX(2);
+		$pdf->Cell(1,1, "------------------------------------------------------------------------------------",0,1,'J',false);
 		$pdf->setX(4);
 		$pdf->SetFont('Arial','B',4);
 		$pdf->Cell(16,5, "Condiciones de pago: ",0,0,'J',false);//HHHHHHHHHHHHHHHHHHHHHHHH

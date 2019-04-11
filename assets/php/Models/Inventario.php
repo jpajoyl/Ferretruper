@@ -237,7 +237,23 @@ class Inventario {
 		}else{
 			return ERROR;
 		}
-	} 
+	}
+
+	public function eliminarInventario(){
+		$idInventario = $this->getIdInventario();
+		$conexion = Conexion::conectar();
+		$statement="DELETE FROM `inventario` WHERE `id_inventario` = :idInventario";
+		$statement->bindValue(":idInventario", $idInventario);
+		$statement->execute();
+		if($statement){
+			return true;
+		}else 
+		{
+			return false;
+		}
+	}
+
+
 
 
 

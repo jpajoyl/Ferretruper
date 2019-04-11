@@ -516,11 +516,22 @@
 				$inventario = $this->agregarInventarioEmergente();
 			}
 			$idInventario= $inventario->getIdInventario();
+			$unidadesInventario= $inventario->getUnidades();
+			$unidadesFinales= $unidades + $unidadesInventario;
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("UPDATE `inventario` SET `unidades`=[value-4] WHERE 1");
-			$statement->bindValue(1, "%$nombre%", PDO::PARAM_STR);
+			$statement = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidades WHERE 1");
+			$statement->bindValue(":unidades", $unidadesFinales);
 			$statement->execute();
 			
+		}
+
+		public static function verificarEspecial($idProducto){
+			$inventario = Inventario::obtenerInventario($idProducto,0,true);
+			if(! $inventario){
+				return false;
+			}else{
+				return $inventario;
+			}
 		}
 
 
