@@ -119,8 +119,9 @@ $(document).ready(function() {
                 $.ajax({
                     url: '../assets/php/Controllers/CCliente.php?method=desactivarCliente',
                     type: 'POST',
-                    data: {"id":data.numero_identificacion},
+                    data: {"id":data[1]},
                     success:function(data){  
+                        console.log(data);
                       if(data!=""){
                         if(data==1){
                             loadData();
@@ -161,6 +162,7 @@ $(document).ready(function() {
         var data;
             data = {
                 "id" : $("#input-id-cliente").val(),
+                "tipoId" : $("#input-tipo-id").val(),
                 "digitoDeVerificacion" : $("#input-digito-de-verificacion-cliente").val(),
                 "nombre" : $("#input-nombre-cliente").val(),
                 "direccion" : $("#input-direccion-cliente").val(),

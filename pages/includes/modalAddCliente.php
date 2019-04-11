@@ -12,17 +12,27 @@
 				<form autocomplete="off" action="#" id="form-añadirCliente">
 					<div class="form-row">
 						<div class="form-group col-md-6">
+							<label>Tipo de id <span class="text-danger">*</span></label>
+							<select class="custom-select" id="input-tipo-id" required>
+								<option value="">Selecciona el tipo</option>
+								<option value="CC">CC</option>
+								<option value="NIT">NIT</option>
+							</select>
+						</div>
+						<div class="form-group col-md-6">
 							<label>Identificación<span class="text-danger">*</span></label>
 							<input type="text" class="form-control" id="input-id-cliente" placeholder="Identificacion" autocomplete="off" required>
 						</div>
+					</div>
+					<div class="form-row">
 						<div class="form-group col-md-6">
 							<label>Digito de verificación (Opcional)</label>
 							<input type="number" class="form-control" id="input-digito-de-verificacion-cliente" placeholder="Dig. de verificación" autocomplete="off">
 						</div>
-					</div>
-					<div class="form-group">
-						<label>Nombre<span class="text-danger">*</span></label>
-						<input type="text" class="form-control" id="input-nombre-cliente" placeholder="Nombre" required autocomplete="off">
+						<div class="form-group col-md-6">
+							<label>Nombre<span class="text-danger">*</span></label>
+							<input type="text" class="form-control" id="input-nombre-cliente" placeholder="Nombre" required autocomplete="off">
+						</div>
 					</div>
 					<div class="form-row">
 						<div class="form-group col-md-8">

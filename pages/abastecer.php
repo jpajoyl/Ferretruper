@@ -77,7 +77,6 @@ include_once '../assets/php/Controllers/GetSession.php';
 						</div>
 					</div>
 					<!-- end row -->
-
 					<div class="row">
 						<div class="col-xl-12">
 							<div class="card mb-3">
@@ -87,6 +86,9 @@ include_once '../assets/php/Controllers/GetSession.php';
 								<div class="card-body">
 									<form autocomplete="off" action="#" id="form-abastecer">
 										<div class="form-row">
+											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+												<a role="button" href="#" id="abastecer-especial" class="btn btn-warning float-right mr">Abastecer especial</a>
+											</div>
 											<div class="form-group col-md-6">
 												<label>Numero factura<span class="text-danger">*</span></label>
 												<input type="number" class="form-control" id="input-numero-factura" placeholder="Numero de factura" autocomplete="off" required>

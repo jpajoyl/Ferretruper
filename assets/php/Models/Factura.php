@@ -191,21 +191,14 @@ class Factura {
 			$factura->setResolucion($resultado['resoluciones_id_resolucion']);
 			$factura->setNumeroDian($resultado['numero_dian']);
 			$factura->setVenta(Venta::obtenerVenta($resultado['ventas_id_venta']));
+			$factura->setInformacionFactura($resultado['informacion_facturas_id_informacion_facturas']);
 			$idResolucion = $resultado['resoluciones_id_resolucion'];
-			$consulta=$conexion->prepare("SELECT descripcion FROM `resoluciones` WHERE id_resolucion = :idResolucion");
-			$consulta->bindParam(':idResolucion',$idResolucion,PDO::PARAM_INT);
-			$consulta->execute();
-			$resultado2 = $consulta->fetch(PDO::FETCH_ASSOC);
-			$factura->setResolucion($resultado2['descripcion']);
+			
 
 
 
 			$idInformacionFacturas = $resultado['informacion_facturas_id_informacion_facturas'];
-			$consulta2=$conexion->prepare("SELECT descripcion FROM `informacion_facturas` WHERE id_informacion_facturas = :informacionFactura");
-			$consulta2->bindParam(':informacionFactura',$idInformacionFacturas,PDO::PARAM_INT);
-			$consulta2->execute();
-			$resultado2 = $consulta2->fetch(PDO::FETCH_ASSOC);
-			$factura->setInformacionFactura($resultado2['descripcion']);
+
 			$consulta=null;
 			$conexion=null;
 			$statement=null;
@@ -230,6 +223,7 @@ class Factura {
 		$statement=null;
 	}
 	public function imprimirFacturaCarta($media=false){
+		$conexion = Conexion::conectar();
 		//EL FORMATO MEDIA CARTA ES PARA 3 ARTICULOS O MENOS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		include_once '../Controllers/CifrasEnLetras.php';
 		require('../fpdf/fpdf.php');
@@ -346,14 +340,28 @@ class Factura {
 
 			}
 		}
+		$idResolucion=$this->getResolucion();
+		$idInformacionFacturas=$this->getInformacionFactura();
+		$consulta=$conexion->prepare("SELECT descripcion FROM `resoluciones` WHERE id_resolucion = :idResolucion");
+		$consulta->bindParam(':idResolucion',$idResolucion,PDO::PARAM_INT);
+		$consulta->execute();
+		$resultado2 = $consulta->fetch(PDO::FETCH_ASSOC);
+		$descripcionResolucion=$resultado2['descripcion'];
+		$consulta2=$conexion->prepare("SELECT descripcion FROM `informacion_facturas` WHERE id_informacion_facturas = :informacionFactura");
+		$consulta2->bindParam(':informacionFactura',$idInformacionFacturas,PDO::PARAM_INT);
+		$consulta2->execute();
+		$resultado2 = $consulta2->fetch(PDO::FETCH_ASSOC);
+		$infoFactura=$resultado2['descripcion'];
 		if ($media) {
 			$pdf->Rect(10, 72, 190, 15);
 			$pdf->ln(7);
 			$pdf->SetFont('Arial','B',10);
+			$pdf->setY(91.5);
 			$pdf->Cell(60,5, "Condiciones de pago: ",0,0,'J',false);//HHHHHHHHHHHHHHHHHHHHHHHH
 			$pdf->SetFont('Arial','',10);
 			$pdf->Cell(50,5, $tipoVenta->getTipoVenta(),0,0,'J',false);
 			$pdf->SetFont('Arial','B',10);
+			$pdf->setY(91.5);
 			$pdf->setX(120);
 			$pdf->Cell(50,5, "Descuento: ",1,0,'J',false);
 			$pdf->SetFont('Arial','',10);
@@ -374,20 +382,19 @@ class Factura {
 /*			$pdf->ln(20);
 					
 $pdf->setY(219);*/
+$pdf->setY(96.5);
 $pdf->setX(120);
-					// $pdf->Cell(110,7,"",0,0,'J',false);
 $pdf->SetFont('Arial','B',10);
-
 $pdf->Cell(50,5, "Total Bruto: ",1,0,'J',false);
 $pdf->SetFont('Arial','',10);
 $pdf->Cell(30,5,number_format($totalBruto,2),1,1,'R',false);
-					// $pdf->Cell(110,7,"",0,0,'J',false);
+// $pdf->Cell(110,7,"",0,0,'J',false);
 $pdf->SetFont('Arial','B',10);
 $pdf->setX(120);
 $pdf->Cell(50,5, "Iva: ",1,0,'J',false);
 $pdf->SetFont('Arial','',10);
 $pdf->Cell(30,5,number_format($totalIva,2),1,1,'R',false);
-					// $pdf->Cell(110,7,"",0,0,'J',false);
+												// $pdf->Cell(110,7,"",0,0,'J',false);
 $pdf->SetFont('Arial','B',10);
 $retefuente=$venta->getRetefuente();
 if ($retefuente==NULL) {
@@ -398,7 +405,7 @@ $pdf->Cell(50,5, "Retefuente ".$retefuente."% : ",1,0,'J',false);
 $pdf->SetFont('Arial','',10);
 $totalRetefuente = $totalBruto*($retefuente/100);
 $pdf->Cell(30,5,number_format($totalRetefuente,2),1,1,'R',false);
-					// $pdf->Cell(110,7,"",0,0,'J',false);
+// $pdf->Cell(110,7,"",0,0,'J',false);
 $pdf->SetFont('Arial','B',10);
 $pdf->setX(120);
 $pdf->Cell(50,5, "Total: ",1,0,'J',false);
@@ -406,17 +413,18 @@ $pdf->SetFont('Arial','',10);
 $pdf->Cell(30,5,number_format($totalFinal-$totalRetefuente,2),1,1,'R',false);
 $pdf->ln(3);
 $pdf->SetFont('Arial','',10);
-$pdf->MultiCell(190,4,utf8_decode($this->getInformacionFactura()) ,0,"C",false);
+$pdf->MultiCell(190,4,utf8_decode($infoFactura) ,0,"C",false);
 $pdf->SetFont('Arial','',7);
-$pdf->MultiCell(190,4, utf8_decode($this->getResolucion()),0,"C",false);
+$pdf->MultiCell(190,4, utf8_decode($descripcionResolucion),0,"C",false);
 }else{
 	$pdf->Rect(10, 80, 190, 130);
-	$pdf->ln(119.5);
 	$pdf->SetFont('Arial','B',10);
+	$pdf->setY(212);
 			$pdf->Cell(60,7, "Condiciones de pago: ",0,0,'J',false);//HHHHHHHHHHHHHHHHHHHHHHHH
 			$pdf->SetFont('Arial','',10);
 			$pdf->Cell(50,7, $tipoVenta->getTipoVenta(),0,0,'J',false);
 			$pdf->SetFont('Arial','B',10);
+			$pdf->setY(212);
 			$pdf->setX(120);
 			$pdf->Cell(50,7, "Descuento: ",1,0,'J',false);
 			$pdf->SetFont('Arial','',10);
@@ -434,7 +442,6 @@ $pdf->MultiCell(190,4, utf8_decode($this->getResolucion()),0,"C",false);
 
 
 			// $pdf->MultiCell(110,4,"NIT: 900 307 086 - 7"."\n"."Carrera 51 # 40-74"."\n"."TEL:(4) 2327201"."\n".utf8_decode("Medellín - Colombia")."\n"."ferretrupersas@hotmail.com",0,"C",false);
-			$pdf->ln(20);
 			
 			$pdf->setY(219);
 			$pdf->setX(120);
@@ -469,10 +476,9 @@ $pdf->MultiCell(190,4, utf8_decode($this->getResolucion()),0,"C",false);
 			$pdf->Cell(30,7,number_format($totalFinal-$totalRetefuente,2),1,1,'R',false);
 			$pdf->ln(3);
 			$pdf->SetFont('Arial','',12);
-			$pdf->MultiCell(190,6,utf8_decode($this->getInformacionFactura()) ,0,"C",false);
-			$pdf->line(200,256,10,256);
+			$pdf->MultiCell(190,6,utf8_decode($infoFactura) ,0,"C",false);
 			$pdf->SetFont('Arial','',9);
-			$pdf->MultiCell(190,6, utf8_decode($this->getResolucion()),0,"J",false);
+			$pdf->MultiCell(190,6, utf8_decode($descripcionResolucion),0,"C",false);
 		}
 		
 /*		$fecha=date('Y-m-d');
@@ -499,6 +505,7 @@ $pdf->MultiCell(190,4, utf8_decode($this->getResolucion()),0,"C",false);
 	}
 
 	public function facturaPOSPDF(){
+		$conexion = Conexion::conectar();
 		require('../fpdf/fpdf.php');
 		ob_start ();
 		$numeroDian = $this->getNumeroDian();
@@ -634,10 +641,9 @@ $pdf->MultiCell(190,4, utf8_decode($this->getResolucion()),0,"C",false);
 		$pdf->SetFont('Arial','B',4);
 		$pdf->Cell(16,5, "Condiciones de pago: ",0,0,'J',false);//HHHHHHHHHHHHHHHHHHHHHHHH
 		$pdf->SetFont('Arial','',4);
-		$pdf->Cell(12,5, $tipoVenta->getTipoVenta(),0,0,'J',false);
+		$pdf->Cell(12,5, $tipoVenta->getTipoVenta(),0,1,'J',false);
 		$bool=false;
 		if ($tipoVenta->getTipoVenta()=="Credito") {
-			$pdf->ln(4);
 			$plazo=$tipoVenta->getPlazo();
 			$statmentAbonos = Abono::obtenerAbonos($tipoVenta->getIdTipoVenta());
 			$arrayAbonos=array();
@@ -646,21 +652,33 @@ $pdf->MultiCell(190,4, utf8_decode($this->getResolucion()),0,"C",false);
 				$pdf->Cell(4,3,"Cuota:        ".$abono['fecha']."        $".number_format($abono['valor']),0,1,'J',false);
 			}
 		}
+		$idResolucion=$this->getResolucion();
+		$idInformacionFacturas=$this->getInformacionFactura();
+		$consulta=$conexion->prepare("SELECT descripcion FROM `resoluciones` WHERE id_resolucion = :idResolucion");
+		$consulta->bindParam(':idResolucion',$idResolucion,PDO::PARAM_INT);
+		$consulta->execute();
+		$resultado2 = $consulta->fetch(PDO::FETCH_ASSOC);
+		$descripcionResolucion=$resultado2['descripcion'];
+		$consulta2=$conexion->prepare("SELECT descripcion FROM `informacion_facturas` WHERE id_informacion_facturas = :informacionFactura");
+		$consulta2->bindParam(':informacionFactura',$idInformacionFacturas,PDO::PARAM_INT);
+		$consulta2->execute();
+		$resultado2 = $consulta2->fetch(PDO::FETCH_ASSOC);
+		$infoFactura=$resultado2['descripcion'];
 		$pdf->setX(2);
 		$pdf->Cell(1,1, "------------------------------------------------------------------------------------",0,1,'J',false);
 		$pdf->setX(4);
 		$pdf->SetFont('Arial','',5);
-		$pdf->MultiCell(37,2,utf8_decode($this->getInformacionFactura()) ,0,"J",false);
+		$pdf->MultiCell(37,2,utf8_decode($infoFactura) ,0,"J",false);
 		$pdf->SetFont('Arial','',4);
 		$pdf->setX(4);
 		$pdf->Cell(1,3, "",0,1,'J',false);
 		$pdf->setX(4);
-		$pdf->MultiCell(37,2, utf8_decode($this->getResolucion()),0,"C",false);
+		$pdf->MultiCell(37,2, utf8_decode($descripcionResolucion),0,"C",false);
 		$pdf->output();
 		ob_end_flush();
-				}
-				public function imprimirFacturaPOS()
-				{
+	}
+	public function imprimirFacturaPOS()
+	{
 
 
 		require __DIR__ . '/ticket/autoload.php'; //Nota: si renombraste la carpeta a algo diferente de "ticket" cambia el nombre en esta línea
