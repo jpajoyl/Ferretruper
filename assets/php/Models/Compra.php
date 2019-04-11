@@ -426,7 +426,7 @@
 						$statement2 = $conexion->prepare(" UPDATE `inventario` SET `precio_inventario`=:precioInventario ,`precio_compra`=:precioCompra, `unidades`=:unidades,`valor_utilidad`=:valorUtilidad WHERE `productos_id_producto`=:idProducto and `usuarios_id_usuario` = :idUsuario ");
 						$inventario->setUnidades($unidades,$statement2);
 						$inventario->setPrecioCompra($array[$idProductoxCompra]["precioUnitario"],$statement2);
-						$inventario->setPrecioInventario($precioVenta,$statement2;
+						$inventario->setPrecioInventario($precioVenta,$statement2);
 						$statement2->bindValue(":idProducto", $idProducto);
 						$statement2->bindValue(":idUsuario", $idProveedor);
 						$statement2->bindValue(":valorUtilidad", $nuevaUtilidad);
@@ -476,6 +476,7 @@
 			}
 			return SUCCESS;
 		}
+
 	}
 
 ?>
