@@ -66,20 +66,20 @@
 			          </tr>
 			          <tr class="tr-info-compra">
 			            <th width="50%" scope="row" class="float-right">Total a pagar:</th>
-			            <td width="40%" id="total-preCompra">0</td>
+			            <td width="40%" id="total-preCompra" name="total-venta">0</td>
 			          </tr>
 			          <tr class="tr-info-compra table-info">
-			            <th scope="row" class="float-right">Declara renta:</th>
+			            <th scope="row" class="float-right">Retefuente:</th>
 			            <td>
 			              <label class="form-check-label">
-			            	<input class="form-check-input" type="checkbox" name="Renta" id="renta" value="1">
+			            	<input class="form-check-input" type="checkbox" name="retefuente" id="input-retefuente" value="1">
 			            	Si
 			              </label>
 			            </td>
 			          </tr>
 			          <tr class="tr-info-compra table-success">
 			            <th width="50%" scope="row" class="float-right mt">Descuento:</th>
-			            <td width="40%" id="descuento">
+			            <td width="40%" id="descuento" name="descuento">
 			            	<input type="number" class="form-control mb mr" id="input-descuento" placeholder="3% o 5%" autocomplete="off" disabled>
 			            </td>
 			          </tr>
