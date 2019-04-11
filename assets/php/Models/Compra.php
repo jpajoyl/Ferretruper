@@ -352,20 +352,18 @@
 			$productosxcompra=array();
 			$conexion = Conexion::conectar();
 			$statement= $this->verProductosxCompra();
-			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
-			while($resultado){
-				$idProducto= $resultado["PRODUCTOS_id_producto"];
+			$resultado = $statement->fetchAll();
+			foreach($resultado as $r){
+				$idProducto= $r["PRODUCTOS_id_producto"];
 				$inventarioEspecial = Producto::verificarEspecial($idProducto);
 				if(! $inventarioEspecial){
 					return NOT_FOUND;
 				}
-				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 
 			}
 
-			//resetear resultado (fetch)
-			while($resultado){
-				$idProductoxCompra= $resultado["id_productoxcompra"];
+			foreach($resultado as $r){
+				$idProductoxCompra= $r["id_productoxcompra"];
 				$nuevaUnidades= $array[$idProductoxCompra]["unidades"];
 				$precioUnitario = $array[$idProductoxCompra]["precioUnitario"];
 				
@@ -379,7 +377,6 @@
 
 				$productoxcompra= ProductoXCompra::obtenerProductoXCompra($idProductoxCompra);
 				$productosxcompra[]= $productoxcompra;
-				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			}
 			$totalCompra=0;
 			$statement=null;
@@ -456,6 +453,8 @@
 				$producto->obtenerPrecioMayorInventario();
 
 			}	
+
+			
 			$statement2 = null;
 			$statement = null;
 			$facturaCompra = new FacturaCompra($this->getIdCompra());
