@@ -118,7 +118,7 @@ $(document).ready(function() {
                             '<td width="15%" id="td-cantidad-producto">'+
                                 '<input type="number" class="form-control" id="input-cantidad-producto" placeholder="cantidad" autocomplete="off">'+
                             '</td>'+
-                            '<td width="15%" id="total-venta-producto">'+
+                            '<td width="15%" id="total-venta-producto" name="total-venta-producto">'+
                                 '<input type="text" class="form-control" id="input-total-venta" placeholder="total venta" autocomplete="off" disabled>'+
                             '</td>'+
                             '<td width="10%">'+
@@ -165,8 +165,10 @@ $(document).ready(function() {
         }
     });
 
-   $(document).on("click", "#total-venta-producto", function(){
-        if(!$("#input-total-venta").attr("enviar-total")){
+   $(document).on("click", "#total-venta-producto , #total-preCompra", function(){
+      var attr = $(this).attr('name'); 
+      if (typeof attr !== typeof undefined && attr !== false) {
+        if((!$("#input-total-venta").attr("enviar-total") && attr=="descuento") || (!$("#input-retefuente").attr("enviar-retefuente") && attr=="retefuente")){
             var input='<div class="form-group">'+
                             '<input type="text" class="form-control" id="input-usuario" placeholder="Usuario" required autocomplete="off">'+
                         '</div>'+
@@ -211,6 +213,7 @@ $(document).ready(function() {
                 }
             });
         }
+      }
     });
 
    $("#form-añadir-producto-venta").submit(function(event){
@@ -322,50 +325,78 @@ $(document).ready(function() {
         }
    });
 
-   $(document).on("click", "#descuento", function(){
-    if(!$("#input-descuento").attr("enviar-total")){
-      var input='<div class="form-group">'+
-                              '<input type="text" class="form-control" id="input-usuario" placeholder="Usuario" required autocomplete="off">'+
-                          '</div>'+
-                          '<div class="form-group">'+
-                              '<input type="password" class="form-control" id="input-password" placeholder="Contraseña" required autocomplete="off">'+
-                          '</div>';
-      swal({
-        title: 'Funcion bloqueada',
-        html: input,
-        showCancelButton: true,
-        confirmButtonColor: '#22C13C',
-        cancelButtonColor: '#9A9A9A',
-        confirmButtonText: 'Comprobar!',
-        cancelButtonText: "Cancelar"
-      }).then((result) => {
-          if (result.value) {
-              var data={
-                  'usuario':$("#input-usuario").val(),
-                  'password':$("#input-password").val()
-              }
-              $.ajax({
-                  url: '../assets/php/Controllers/CAdministracion.php?method=comprobarAdministrador',
-                  type: 'POST',
-                  data: data,
-                  success:function(data){
-                      if(data==1){
-                          $("#input-descuento").prop('disabled', false);
-                          $("#input-descuento").attr("enviar-total","si");
-                          $("#input-descuento").focus();
-                      }else if(data==0 || data==3){
-                          setTimeout(function(){
-                              Swal(
-                                'Error!',
-                                'El usuario y/o contraseña son incorrectos',
-                                'error'
-                              );
-                          },100);  
-                      }
-                  }
-              });
-          }
-      });
+   $(document).on("click", "#descuento , #input-retefuente", function(event){
+    event.preventDefault();
+    var attr = $(this).attr('name'); 
+    if (typeof attr !== typeof undefined && attr !== false) {
+      if((!$("#input-descuento").attr("enviar-descuento") && attr=="descuento") || (!$("#input-retefuente").attr("enviar-retefuente") && attr=="retefuente")){
+        var input="";
+        if(attr=="descuento"){
+          input=input+'<div class="form-group">'+
+                                '<input type="text" class="form-control" id="input-usuario" placeholder="Usuario" required autocomplete="off">'+
+                            '</div>'+
+                            '<div class="form-group">'+
+                                '<input type="password" class="form-control" id="input-password" placeholder="Contraseña" required autocomplete="off">'+
+                            '</div>';
+        }else if(attr=="retefuente"){
+          input=input+'<div class="form-group">'+
+                                '<input type="text" class="form-control" id="input-usuario" placeholder="Usuario" required autocomplete="off">'+
+                            '</div>'+
+                            '<div class="form-group">'+
+                                '<input type="password" class="form-control" id="input-password" placeholder="Contraseña" required autocomplete="off">'+
+                            '</div>'+
+                            '<div class="form-group">'+
+                                '<input type="number" class="form-control" id="input-valor-retefuente" placeholder="% retefuente" required autocomplete="off">'+
+                            '</div>';
+        }
+        swal({
+          title: 'Funcion bloqueada',
+          html: input,
+          showCancelButton: true,
+          confirmButtonColor: '#22C13C',
+          cancelButtonColor: '#9A9A9A',
+          confirmButtonText: 'Comprobar!',
+          cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.value) {
+                var data={
+                    'usuario':$("#input-usuario").val(),
+                    'password':$("#input-password").val()
+                }
+                $.ajax({
+                    url: '../assets/php/Controllers/CAdministracion.php?method=comprobarAdministrador',
+                    type: 'POST',
+                    data: data,
+                    success:function(data){
+                        if(data==1){
+                            if(attr=="descuento"){
+                              $("#input-descuento").prop('disabled', false);
+                              $("#input-descuento").attr("enviar-descuento","si");
+                              $("#input-descuento").focus();
+                            }else if(attr=="retefuente"){
+                              $("#input-retefuente").prop('checked', true);
+                              $("#input-retefuente").attr("enviar-retefuente","si");
+                            }
+                        }else if(data==0 || data==3){
+                            setTimeout(function(){
+                                Swal(
+                                  'Error!',
+                                  'El usuario y/o contraseña son incorrectos',
+                                  'error'
+                                );
+                            },100);  
+                        }
+                    }
+                });
+            }
+        });
+      }
+      if(!$("#input-retefuente").prop('checked')){
+        setTimeout(function(){
+          $("#input-retefuente").prop('checked', false);
+        },50); 
+        $("#input-retefuente").removeAttr("enviar-retefuente");
+      }
     }
    });
 
