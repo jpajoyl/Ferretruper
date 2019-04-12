@@ -1,6 +1,6 @@
 <?php 
 
-/*ini_set('max_execution_time', 300);
+ini_set('max_execution_time', 300);
 	require 'PHPExcel-1.8/Classes/PHPExcel/IOFactory.php';
 	$mysqli= new mysqli("localhost", "root", "", "ferretruperbd2");
 	if (mysqli_connect_errno()) {
@@ -20,11 +20,11 @@
 		$precioVenta = $ocjPHPExcel->getActiveSheet()->getCell('H'.$i)->getCalculatedValue();
 		$utilidad = $ocjPHPExcel->getActiveSheet()->getCell('L'.$i)->getCalculatedValue();
 		$sql = "INSERT INTO `productos` (`id_producto`, `codigo_barras`, `nombre`, `descripcion`, `referencia_fabrica`, `tiene_iva`, `clasificacion_tributaria`, `unidades_totales`, `precio_mayor_inventario`, `activa`) VALUES ($codigo, NULL, '$nombre', '', '$marca', '1', 'GRAVADO', '$cantidad', '$precioVenta', '1')";
-		$sql2 = "INSERT INTO `inventario` (`id_inventario`, `precio_inventario`, `precio_compra`, `unidades`, `unidades_defectuosas`, `valor_utilidad`, `productos_id_producto`, `usuarios_id_usuario`) VALUES (NULL, '$precioVenta', '$costo', '$cantidad', '0', '$utilidad', '$codigo', '682')";
+		$sql2 = "INSERT INTO `inventario` (`id_inventario`, `precio_inventario`, `precio_compra`, `unidades`, `unidades_defectuosas`, `valor_utilidad`, `productos_id_producto`, `usuarios_id_usuario`) VALUES (NULL, '$precioVenta', '$costo', '$cantidad', '0', '$utilidad', '$codigo', '0')";
 		$result = $mysqli->query($sql);
 		$result2 = $mysqli->query($sql2);
-	}*/
-	ini_set('max_execution_time', 300);
+	}
+/*	ini_set('max_execution_time', 300);
 		require 'PHPExcel-1.8/Classes/PHPExcel/IOFactory.php';
 		$mysqli= new mysqli("localhost", "root", "", "ferretruperbd2");
 		if (mysqli_connect_errno()) {
@@ -47,5 +47,5 @@
 			$sql2 = "INSERT INTO `inventario` (`id_inventario`, `precio_inventario`, `precio_compra`, `unidades`, `unidades_defectuosas`, `valor_utilidad`, `productos_id_producto`, `usuarios_id_usuario`) VALUES (NULL, '$precioVenta', '$costo', '$cantidad', '0', '$utilidad', '$codigo', '682')";
 			$result = $mysqli->query($sql);
 			$result2 = $mysqli->query($sql2);
-		}
+		}*/
  ?>

@@ -22,17 +22,14 @@ $(document).ready(function() {
     $(tbody).on("click", ".adicionar-producto", function(){
       var data=table.row($(this).parents("tr")).data();
       var input='<div class="form-group">'+
-                      '<input type="text" class="form-control" id="input-usuario" placeholder="Usuario" required autocomplete="off">'+
-                  '</div>'+
-                  '<div class="form-group">'+
-                      '<input type="password" class="form-control" id="input-password" placeholder="Contraseña" required autocomplete="off">'+
+                      '<input type="text" class="form-control" id="input-unidades" placeholder="Unidades para agregar al producto" required autocomplete="off">'+
                   '</div>';
       swal({
-        title: 'Funcion bloqueada',
+        title: 'Agregar unidades a '+data[2],
         html: input,
         showCancelButton: true,
-        confirmButtonColor: '#22C13C',
-        cancelButtonColor: '#9A9A9A',
+        confirmButtonColor: '#FF0000',
+        cancelButtonColor: '#FF0000',
         confirmButtonText: 'Comprobar!',
         cancelButtonText: "Cancelar"
       }).then((result) => {
