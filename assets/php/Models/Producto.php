@@ -268,9 +268,9 @@
 			        'field' => 'activa',
 			        'formatter' => function( $d, $row ) {
 			            if($d==1){
-			            	return "<center><button class='btn btn-danger btn-xs eliminar-producto'><i class='fa fa-trash-o'></i></center>";
+			            	return "<center><button class='btn btn-danger btn-xs eliminar-producto'><i class='fa fa-trash-o'></i></button><button class='btn btn-warning btn-xs adicionar-producto'><i class='fa fa-plus'></i></button></center>";
 			            }else if($d==0){
-			            	return "<center><button class='btn btn-success btn-xs rehabilitar-producto'><i class='fa fa-chevron-circle-left'></i></center>";
+			            	return "<center><button class='btn btn-success btn-xs rehabilitar-producto'><i class='fa fa-chevron-circle-left'></button></i></center>";
 			            }else{
 			            	return "";
 			            }
