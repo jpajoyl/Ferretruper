@@ -30,12 +30,12 @@
 	display: none;
 }
 
-.tr-info-compra th{
+.tr-info-venta th{
 	text-align: right;
 	padding: 2px !important;
 }
 
-.tr-info-compra td{
+.tr-info-venta td{
 	text-align: center;
 	padding: 2px !important
 }
@@ -44,6 +44,14 @@
 	cursor: pointer;
 }
 
-#terminar-venta,#cancelar-venta{
+#terminar-venta,#cancelar-venta,#valor-descuento{
 	display: none;
+}
+
+.mb{
+	margin-bottom: 5px;
+}
+#total-venta{
+	font-weight: bold;
+	font-size: 1.3em;
 }

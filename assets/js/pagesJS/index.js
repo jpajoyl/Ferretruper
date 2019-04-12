@@ -5,6 +5,30 @@ $(document).ready(function() {
        getVenta();
    });
 
+  function noVenta(){
+    $("#table-venta > tbody").html("");
+    var tbody='<td colspan="6" class="no-venta"><div class="alert alert-secondary mt" role="alert">'+
+         'Aun no se ha iniciado una venta. Seleccione un producto para iniciar'+
+         '</div></td>';
+    $("#table-venta > tbody").prepend(tbody);
+    $("#terminar-venta").fadeOut(0);
+    $("#cancelar-venta").fadeOut(0);
+    $(".no-venta").fadeIn(0);
+    $("#subtotal-venta").html(0);
+    $("#iva-venta").html(0);
+    $("#total-venta").html(0);
+    $("#total-venta").removeAttr("enviar-total-venta");
+    $("#input-total-venta-modificada").val("");
+    $("#descuento-venta").html("");
+    $("#input-descuento-venta").val("");
+    $("#valor-descuento").fadeOut(0);
+    $("#input-descuento").prop('disabled', true);
+    $("#input-descuento").removeAttr("enviar-descuento");
+    $("#input-retefuente").prop('checked', false);
+    $("#input-retefuente").removeAttr("enviar-retefuente");
+    $("#input-retefuente-venta").val("");
+  }
+
 	function getVenta(){
 		$.ajax({
             url: '../assets/php/Controllers/CVenta.php?method=obtenerVenta',
@@ -28,33 +52,19 @@ $(document).ready(function() {
                             });
                             $("#terminar-venta").fadeIn(0);
                             $("#cancelar-venta").fadeIn(0);
-                            $("#subtotal-preCompra").html(numberWithCommas(data.subtotalVenta));
-                            $("#iva-preCompra").html(numberWithCommas((data.totalVenta-data.subtotalVenta)));
-                            $("#total-preCompra").html(numberWithCommas(data.totalVenta));
+                            $("#subtotal-venta").html(numberWithCommas(data.subtotalVenta));
+                            $("#iva-venta").html(numberWithCommas((data.totalVenta-data.subtotalVenta)));
+                            $("#total-venta").html(numberWithCommas(data.totalVenta));
+                            $("#total-venta").removeAttr("enviar-total-venta");
+                            $("#total-venta").attr("total-venta-no-modificada",data.totalVenta);
+                            $("#descuento-venta").html("");
+                            $("#input-descuento-venta").val("");
+                            $("#valor-descuento").fadeOut(0);
                         }else{
-                          var tbody='<td colspan="6" class="no-venta"><div class="alert alert-secondary mt" role="alert">'+
-                               'Aun no se ha iniciado una venta. Seleccione un producto para iniciar'+
-                               '</div></td>';
-                          $("#table-venta > tbody").prepend(tbody);
-                          $("#terminar-venta").fadeOut(0);
-                          $("#cancelar-venta").fadeOut(0);
-                          $(".no-venta").fadeIn(0);
-                          $("#subtotal-preCompra").html(0);
-                          $("#iva-preCompra").html(0);
-                          $("#total-preCompra").html(0);
+                          noVenta();
                         }
                     }else{
-                      $("#table-venta > tbody").html("");
-                      var tbody='<td colspan="6" class="no-venta"><div class="alert alert-secondary mt" role="alert">'+
-                           'Aun no se ha iniciado una venta. Seleccione un producto para iniciar'+
-                           '</div></td>';
-                      $("#table-venta > tbody").prepend(tbody);
-                      $("#terminar-venta").fadeOut(0);
-                      $("#cancelar-venta").fadeOut(0);
-                      $(".no-venta").fadeIn(0);
-                      $("#subtotal-preCompra").html(0);
-                      $("#iva-preCompra").html(0);
-                      $("#total-preCompra").html(0);
+                      noVenta();
                     }
                 }else{
                     Swal(
@@ -119,7 +129,7 @@ $(document).ready(function() {
                                 '<input type="number" class="form-control" id="input-cantidad-producto" placeholder="cantidad" autocomplete="off">'+
                             '</td>'+
                             '<td width="15%" id="total-venta-producto" name="total-venta-producto">'+
-                                '<input type="text" class="form-control" id="input-total-venta" placeholder="total venta" autocomplete="off" disabled>'+
+                                '<input type="text" class="form-control" id="input-total-venta-producto" placeholder="total producto" autocomplete="off" disabled>'+
                             '</td>'+
                             '<td width="10%">'+
                                 '<center><button class="btn btn-danger btn-xs eliminar-producto-no-seleccionado"><i class="fa fa-trash"></i></button></button></center>'+
@@ -152,30 +162,88 @@ $(document).ready(function() {
     });
 
     $('#form-añadir-producto-venta').bind("change keyup", function(e) {
-        if(!$("#input-total-venta").attr("enviar-total")){
+        if(!$("#input-total-venta-producto").attr("enviar-total-producto")){
             var precio=parseInt($("#input-precio-inventario-producto").val());
             var cantidad=parseInt($("#input-cantidad-producto").val());
             var total=precio*cantidad;
             if(total>0){
-                $("#input-total-venta").val(numberWithCommas(total.toString()));
+                $("#input-total-venta-producto").val(numberWithCommas(total.toString()));
             }else{
                 $("#input-cantidad-producto").val("");
-                $("#input-total-venta").val("");
+                $("#input-total-venta-producto").val("");
             }
         }
     });
 
-   $(document).on("click", "#total-venta-producto , #total-preCompra", function(){
+    function calcularDescuento(input){
+      var totalVentaNoModificada=parseInt($(input).attr("total-venta-no-modificada"));
+      var totalVenta=parseInt($("#input-total-venta").val());
+      var descuento=totalVentaNoModificada-totalVenta;
+      return descuento;
+    }
+
+    $('#total-venta').bind("change keyup", function(e) {
+        if($("#total-venta").attr("enviar-total-venta")){
+            descuento=calcularDescuento('#total-venta');
+            if(descuento>0 || descuento<0){
+              $("#descuento-venta").html(numberWithCommas(descuento));
+              $("#input-descuento-venta").val(descuento);
+              $("#valor-descuento").fadeIn(50);
+            }else{
+              if(descuento==0){
+                $("#descuento-venta").html("");
+                $("#input-descuento-venta").val("");
+                $("#valor-descuento").fadeOut(0);
+              }else{
+                setTimeout(function(){
+                  descuento=calcularDescuento('#total-venta');
+                  if(!(descuento>0 || descuento<0)){
+                    if(descuento!=0){
+                      var totalVentaNoModificada=parseInt($('#total-venta').attr("total-venta-no-modificada"));
+                      $("#total-venta").html(numberWithCommas(totalVentaNoModificada));
+                      $("#total-venta").removeAttr("enviar-total-venta");
+                    }
+                    $("#descuento-venta").html("");
+                    $("#input-descuento-venta").val("");
+                    $("#valor-descuento").fadeOut(0);
+                  }
+                },1500);
+              }
+            }
+        }
+    });
+
+    function calcularTotalVenta(){
+      var totalVentaNoModificada=parseInt($('#total-venta').attr("total-venta-no-modificada"));
+      var descuento=$("#input-descuento-venta").val();
+      descuento=(descuento=="")?0:parseInt(descuento);
+      var retefuente=$("#input-retefuente-venta").val();
+      retefuente=(retefuente=="")?0:parseInt(retefuente);
+      var plusDescuento=$("#input-descuento").val();
+      plusDescuento=(plusDescuento=="")?0:parseInt(plusDescuento);
+      var totalVenta=(totalVentaNoModificada-descuento)*(1-(plusDescuento)/100)*(1-(retefuente)/100);
+
+      $("#total-venta").html(numberWithCommas(totalVenta));
+      $("#input-total-venta-modificada").val(totalVenta);
+      $("#total-venta").removeAttr("enviar-total-venta");
+    }
+
+    $('#total-venta').bind("keyup", function(e) {
+      if(e.keyCode==13){
+        calcularTotalVenta();
+      }
+    });
+
+   $(document).on("click", "#total-venta-producto , #total-venta", function(){
       var attr = $(this).attr('name'); 
       if (typeof attr !== typeof undefined && attr !== false) {
-        if((!$("#input-total-venta").attr("enviar-total") && attr=="descuento") || (!$("#input-retefuente").attr("enviar-retefuente") && attr=="retefuente")){
+        if((!$("#input-total-venta-producto").attr("enviar-total-producto") && attr=="total-venta-producto") || (!$("#total-venta").attr("enviar-total-venta") && attr=="total-venta")){
             var input='<div class="form-group">'+
                             '<input type="text" class="form-control" id="input-usuario" placeholder="Usuario" required autocomplete="off">'+
                         '</div>'+
                         '<div class="form-group">'+
                             '<input type="password" class="form-control" id="input-password" placeholder="Contraseña" required autocomplete="off">'+
                         '</div>';
-                        
             swal({
               title: 'Funcion bloqueada',
               html: input,
@@ -196,9 +264,16 @@ $(document).ready(function() {
                         data: data,
                         success:function(data){
                             if(data==1){
-                                $("#input-total-venta").prop('disabled', false);
-                                $("#input-total-venta").attr("enviar-total","si");
-                                $("#input-total-venta").focus();
+                              if(attr=="total-venta-producto"){
+                                $("#input-total-venta-producto").prop('disabled', false);
+                                $("#input-total-venta-producto").attr("enviar-total-producto","si");
+                                $("#input-total-venta-producto").focus();
+                              }else if(attr=="total-venta"){
+                                var total=$("#total-venta").text().replace(/,/g, "");
+                                var inputTotal='<input type="number" class="form-control mb mr" id="input-total-venta" placeholder="Total" autocomplete="off" value="'+parseInt(total)+'">';
+                                $("#total-venta").html(inputTotal);
+                                $("#total-venta").attr("enviar-total-venta","si");
+                              } 
                             }else if(data==0 || data==3){
                                 setTimeout(function(){
                                     Swal(
@@ -227,9 +302,9 @@ $(document).ready(function() {
             añadirProducto=false;
         }
         data.unidades=cantidad;
-        if($("#input-total-venta").attr("enviar-total")){
+        if($("#input-total-venta-producto").attr("enviar-total-producto")){
             try{
-                var totalVenta=parseInt($("#input-total-venta").val().replace(/,/g, ""));
+                var totalVenta=parseInt($("#input-total-venta-producto").val().replace(/,/g, ""));
                 if(totalVenta>0){
                     data.totalVenta=totalVenta;
                 }else{
@@ -283,7 +358,6 @@ $(document).ready(function() {
         if($("#body-table-venta tr").length==0){
             $(".no-venta").fadeIn(0);
         }
-        console.log(idProductoXVenta);
         $.ajax({
             url: '../assets/php/Controllers/CVenta.php?method=deseleccionarProducto',
             type: 'POST',
@@ -375,7 +449,10 @@ $(document).ready(function() {
                               $("#input-descuento").focus();
                             }else if(attr=="retefuente"){
                               $("#input-retefuente").prop('checked', true);
+                              var retefuente=$("#input-valor-retefuente").val();
+                              $("#input-retefuente-venta").val(retefuente);
                               $("#input-retefuente").attr("enviar-retefuente","si");
+                              calcularTotalVenta();
                             }
                         }else if(data==0 || data==3){
                             setTimeout(function(){
@@ -396,17 +473,20 @@ $(document).ready(function() {
           $("#input-retefuente").prop('checked', false);
         },50); 
         $("#input-retefuente").removeAttr("enviar-retefuente");
+        $("#input-retefuente-venta").val("");
+        calcularTotalVenta();
       }
     }
    });
 
    $('#input-descuento').bind("change keyup", function(e) {
-        if(!$("#input-total-venta").attr("enviar-total")){
+        if($("#input-descuento").attr("enviar-descuento")){
             var descuento=parseInt($('#input-descuento').val());
-            if(descuento!=0 &&descuento!=3 && descuento!=5){
+            if(descuento!=0 && descuento!=3 && descuento!=5){
               $('#input-descuento').val("");
             }
         }
+        calcularTotalVenta();
     });
 
    $("#terminar-venta").click(function(event){
