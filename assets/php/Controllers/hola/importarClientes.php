@@ -1,5 +1,5 @@
 <?php 
-/*
+
 ini_set('max_execution_time', 300);
 	require 'PHPExcel-1.8/Classes/PHPExcel/IOFactory.php';
 	$mysqli= new mysqli("localhost", "root", "", "ferretruperbd2");
@@ -23,5 +23,5 @@ ini_set('max_execution_time', 300);
 		$sql = "INSERT INTO `usuarios` (`id_usuario`, `tipo_usuario`, `tipo_identificacion`, `numero_identificacion`, `digito_de_verificacion`, `nombre`, `direccion`, `email`, `ciudad`, `celular`, `telefono`, `activa`, `clasificacion`) VALUES (NULL, 'cliente', 'NIT', '$numeroIdentificacion', '$dVerificacion', '$nombre', '$direccion', NULL, '$ciudad', '', '$telefono', '1', '$clasificacion')";
 		$result = $mysqli->query($sql);
 	}
-*/
+
  ?>

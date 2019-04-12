@@ -115,7 +115,11 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 	}else if (!strcmp($method,"emitirFactura")) {
 		$idVenta=$_GET['id-venta'];
 		$factura = Factura::obtenerFactura($idVenta,false);
-		$factura->imprimirFacturaCarta();
+		if ($factura->getResolucion()==1) {
+			$factura->imprimirFacturaCarta();
+		}else{
+			$factura->facturaPOSPDF();
+		}
 	}
 }
 ?>

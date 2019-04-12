@@ -93,7 +93,7 @@ class Cliente extends Usuario {
 
 
                 );
-            $whereStatement = 'tipo_usuario= "cliente"';
+            $whereStatement = 'tipo_usuario= "cliente" AND activa="1"';
             
             // Include SQL query processing class
             require('../ssp.customized.class.php');

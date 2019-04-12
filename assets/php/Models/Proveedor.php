@@ -95,7 +95,7 @@
 
 
 			            );
-			        $whereStatement = 'tipo_usuario= "proveedor"';
+			        $whereStatement = 'tipo_usuario= "proveedor" AND activa=1';
 		        	
 		            // Include SQL query processing class
 		            require('../ssp.customized.class.php');

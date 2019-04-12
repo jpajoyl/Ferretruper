@@ -11,6 +11,7 @@
 			echo json_encode(Cliente::verClientes($_GET));
 		}else if(!strcmp($method,"registrarCliente")){
 			$id=$_POST['id'];
+			$tipoId=$_POST['tipoId'];
 			$digitoDeVerificacion=$_POST['digitoDeVerificacion'];
 			$nombre=$_POST['nombre'];
 			$direccion=$_POST['direccion'];
@@ -22,7 +23,7 @@
 
 			if(Cliente::obtenerCliente($id)==false){
 				try{
-					$cliente = new Cliente("CC", $id, $nombre, $direccion, $ciudad, $telefono, $clasificacion, $digitoDeVerificacion, $email, $celular);
+					$cliente = new Cliente($tipoId, $id, $nombre, $direccion, $ciudad, $telefono, $clasificacion, $digitoDeVerificacion, $email, $celular);
 					echo SUCCESS;
 				}catch(Exception $e){
 					echo ERROR;
