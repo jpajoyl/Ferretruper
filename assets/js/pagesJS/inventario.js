@@ -20,45 +20,43 @@ $(document).ready(function() {
   });
   function agregarUnidadesEmergentes(tbody,table){
     $(tbody).on("click", ".adicionar-producto", function(){
-      var data=table.row($(this).parents("tr")).data();
+      var tabla=table.row($(this).parents("tr")).data();
       var input='<div class="form-group">'+
                       '<input type="text" class="form-control" id="input-unidades" placeholder="Unidades para agregar al producto" required autocomplete="off">'+
                   '</div>';
       swal({
-        title: 'Agregar unidades a '+data[2],
+        title: 'Agregar unidades a '+tabla[2],
         html: input,
         showCancelButton: true,
-        confirmButtonColor: '#FF0000',
+        confirmButtonColor: '#FFE000',
         cancelButtonColor: '#FF0000',
-        confirmButtonText: 'Comprobar!',
+        confirmButtonText: 'Agregar!',
         cancelButtonText: "Cancelar"
       }).then((result) => {
           if (result.value) {
               var data={
-                  'usuario':$("#input-usuario").val(),
-                  'password':$("#input-password").val()
+                  'idProducto':tabla[1],
+                  'unidades':$("#input-unidades").val()
               }
               $.ajax({
-                  url: '../assets/php/Controllers/CAdministracion.php?method=comprobarAdministrador',
+                  url: '../assets/php/Controllers/CInventario.php?method=agregarUnidadesEmergentes',
                   type: 'POST',
                   data: data,
                   success:function(data){
                       if(data==1){
-                        if(attr=="total-venta-producto"){
-                          $("#input-total-venta-producto").prop('disabled', false);
-                          $("#input-total-venta-producto").attr("enviar-total-producto","si");
-                          $("#input-total-venta-producto").focus();
-                        }else if(attr=="total-venta"){
-                          var total=$("#total-venta").text().replace(/,/g, "");
-                          var inputTotal='<input type="number" class="form-control mb mr" id="input-total-venta" placeholder="Total" autocomplete="off" value="'+parseInt(total)+'">';
-                          $("#total-venta").html(inputTotal);
-                          $("#total-venta").attr("enviar-total-venta","si");
-                        } 
-                      }else if(data==0 || data==3){
+                        setTimeout(function(){
+                          Swal(
+                            'Satisfactorio!',
+                            'Se han agregado unidades emergentes al producto',
+                            'success'
+                            );
+                        },100); 
+
+                      }else if(data==0){
                           setTimeout(function(){
                               Swal(
                                 'Error!',
-                                'El usuario y/o contraseña son incorrectos',
+                                'Ha ocurrido un error inesperado.',
                                 'error'
                               );
                           },100);  

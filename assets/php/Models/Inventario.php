@@ -154,7 +154,7 @@ class Inventario {
 		$statement->bindValue(":numeroDeConsulta", $numeroDeConsulta);
 		$statement->execute();
 		$resultado = $statement->fetch(PDO::FETCH_ASSOC);
-		if($resultado!=false){
+		if($resultado!=false){	
 			$inventario = new Inventario();
 			$inventario->setIdInventario($resultado['id_inventario']);
 			$inventario->setProducto($resultado['productos_id_producto']);

@@ -57,7 +57,7 @@
 				$statement->bindParam(':idCompra',$idCompra,PDO::PARAM_INT);
 			}
 			$this->idCompra = $idCompra;
-		
+
 		}
 
 		public function getNumeroFactura()
@@ -71,7 +71,7 @@
 				$statement->bindParam(':numeroFactura',$numeroFactura,PDO::PARAM_STR,45);
 			}
 			$this->numeroFactura = $numeroFactura;
-		
+
 		}
 
 		public function getFecha()
@@ -85,7 +85,7 @@
 				$statement->bindParam(':fecha',$fecha,PDO::PARAM_STR,45);
 			}
 			$this->fecha = $fecha;
-		
+
 		}
 
 		public function getDescuento()
@@ -113,7 +113,7 @@
 				$statement->bindParam(':totalCompra',$totalCompra,PDO::PARAM_INT);
 			}
 			$this->totalCompra = $totalCompra;
-		
+
 		}
 
 
@@ -359,9 +359,7 @@
 				if(! $inventarioEspecial){
 					return NOT_FOUND;
 				}
-
 			}
-
 			foreach($resultado as $r){
 				$idProductoxCompra= $r["id_productoxcompra"];
 				$nuevaUnidades= $array[$idProductoxCompra]["unidades"];
@@ -478,4 +476,4 @@
 
 	}
 
-?>
+	?>

@@ -511,18 +511,21 @@
 		public function agregarUnidadesEmergentes($unidades){
 			$conexion = Conexion::conectar();
 			$idProducto=$this->getIdProducto();
-			$inventario = Inventario::obtenerInventario($idProducto,0);
+			$inventario = Inventario::obtenerInventario($idProducto,0,true);
 			if(! $inventario){
 				$inventario = $this->agregarInventarioEmergente();
 			}
+			$id_usuario=$inventario->getProveedor()->getIdUsuario();
 			$idInventario= $inventario->getIdInventario();
 			$unidadesInventario= $inventario->getUnidades();
 			$unidadesFinales= $unidades + $unidadesInventario;
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidades WHERE 1");
+			$statement = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidades WHERE  `productos_id_producto` = :idProducto and `usuarios_id_usuario` = :id_usuario");
+			$statement->bindValue(":id_usuario", $id_usuario);
+			$statement->bindValue(":idProducto", $idProducto);
 			$statement->bindValue(":unidades", $unidadesFinales);
 			$statement->execute();
-			
+			$this->calcularUnidades();
 		}
 
 		public static function verificarEspecial($idProducto){

@@ -146,6 +146,17 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		}
 	}else if(!strcmp($method,"obtenerIva")){
 		echo IVA;
+	}elseif (!strcmp($method,"agregarUnidadesEmergentes")) {
+		$idProducto=$_POST['idProducto'];
+		$unidades=$_POST['unidades'];
+		$producto=Producto::obtenerProducto($idProducto);
+		try {
+			$producto->agregarUnidadesEmergentes($unidades);
+			echo SUCCESS;
+		} catch (Exception $e) {
+			echo ERROR;
+		}
+
 	}
 }
 
