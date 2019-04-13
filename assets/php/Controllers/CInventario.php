@@ -157,6 +157,30 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 			echo ERROR;
 		}
 
+	}elseif (!strcmp($method,"abastecerEspecial")) {
+		$arrayProductosxcompraUtilidad=$_POST['data'];
+		$arrayUtilidad=array();
+		foreach ($arrayProductosxcompraUtilidad as $productoxcompra) {
+			$arrayUtilidad[$productoxcompra["id_productoxcompra"]]['precioUnitario']=$productoxcompra["precioUnitario"];
+			$arrayUtilidad[$productoxcompra["id_productoxcompra"]]['unidades']=$productoxcompra["unidades"];
+			$arrayUtilidad[$productoxcompra["id_productoxcompra"]]['utilidad']=$productoxcompra["utilidad"];
+			$arrayUtilidad[$productoxcompra["id_productoxcompra"]]['precioVenta']=$productoxcompra["precioVenta"];
+		}
+		if(isset($_COOKIE['compra'])){
+			$compra=unserialize($_COOKIE['compra']);
+			if($compra instanceof Compra){
+				try {
+					if($compra->abastecerEspecial($arrayUtilidad)==SUCCESS){
+						setcookie("compra", "",time() - 3600, "/");;
+						echo SUCCESS;
+					}else{
+						echo ERROR;
+					}
+				} catch (Exception $e) {
+					echo $e->getMessage();
+				}
+			}
+		}
 	}
 }
 

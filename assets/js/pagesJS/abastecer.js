@@ -104,6 +104,7 @@ $(document).ready(function() {
                       if (result.value) {
                         $("#alert-informacion").fadeOut(100);
                         $("#card-productos-proveedor").fadeIn(100);
+                        $("#abastecer-especial").fadeIn(100);
                         $("#card-productos-compra").fadeIn(100);
                         loadDataProveedor(idProveedor);
                         loadDataCompra();
@@ -116,6 +117,7 @@ $(document).ready(function() {
                   $("#alert-informacion").fadeOut(100);
                   $("#card-productos-proveedor").fadeIn(100);
                   $("#card-productos-compra").fadeIn(100);
+                  $("#abastecer-especial").fadeIn(100);
                   loadDataProveedor(idProveedor);
                   loadDataCompra();
                   $(".nombre-proveedor").html(data.nombre);
@@ -415,6 +417,7 @@ $(document).ready(function() {
               if(data==1){
                 $("#card-productos-proveedor").fadeOut(100);
                 $("#card-productos-compra").fadeOut(100);
+                $("#abastecer-especial").fadeOut(100);
                 $("#alert-informacion").fadeIn(100); 
                 Swal({
                   title: 'Satisfactorio!',
@@ -645,7 +648,78 @@ $(document).ready(function() {
       }
     });
   }
-
+  $("#abastecer-especial").click(function(event){
+    event.preventDefault();
+    Swal({
+      title:'Abastecer',
+      text: "Al aceptar confirma que los datos de compra son correctos. Este boton es únicamente para los productos que fueron ingresados de manera forzosa ¿Esta seguro que desea abastecer especial?",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',  
+      confirmButtonText: 'Si, abastecer!',
+      cancelButtonText: "No"
+    }).then((result) => {
+      if (result.value) {
+        var data = [];
+        $("#table-productos-compra tbody tr").each(function(e){
+          var producto = new Object();
+          producto.id_productoxcompra=$(this).attr("id-productoxcompra");
+          $(this).children("td").each(function(e){
+            var inputPU = $(this).find('.input-pu');
+            var inputUds = $(this).find('.input-uds');
+            var inputUtilidad = $(this).find('.input-utilidad');
+            var inputPV = $(this).find('.input-pv');
+            if (inputPU[0]){
+              producto.precioUnitario=inputPU.val();
+            }
+            if (inputUds[0]){
+              producto.unidades=inputUds.val();
+            }
+            if (inputUtilidad[0]){
+              producto.utilidad=inputUtilidad.val();
+            }
+            if (inputPV[0]){
+              producto.precioVenta=inputPV.val();
+            }
+          });
+          data.push(producto);
+        });
+        $.ajax({
+          url: '../assets/php/Controllers/CInventario.php?method=abastecerEspecial',
+          type: 'POST',
+          data: {"data":data},
+          success:function(data){
+            if(data!=""){
+              if(data==1){
+                $("#card-productos-proveedor").fadeOut(100);
+                $("#card-productos-compra").fadeOut(100);
+                $("#abastecer-especial").fadeOut(100);
+                $("#alert-informacion").fadeIn(100); 
+                Swal({
+                  title: 'Satisfactorio!',
+                  text: "Se ha abastecido el inventario exitoxamente",
+                  type: 'success',
+                  confirmButtonColor: '#088A08',
+                  confirmButtonText: 'Terminar'
+                }).then((result) => {
+                  if (result.value) {
+                    location.reload(true);
+                  }
+                })
+              }else if(data==0){
+                Swal(
+                  'Error!',
+                  'Ha ocurrido un error, recargue la pagina y vuelva a intentar',
+                  'error'
+                  );
+              }
+            }
+          }   
+        });
+      }
+    });
+  });
 
 
 
