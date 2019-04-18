@@ -171,7 +171,7 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 			if($compra instanceof Compra){
 				try {
 					if($compra->abastecerEspecial($arrayUtilidad)==SUCCESS){
-						setcookie("compra", "",time() - 3600, "/");;
+						setcookie("compra", "",time() - 3600, "/");
 						echo SUCCESS;
 					}else{
 						echo ERROR;

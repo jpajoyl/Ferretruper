@@ -220,7 +220,6 @@ class Usuario{
 		$conexion = null;
 		$statement = null;
 		return $resultado;
-
 	}
 
 

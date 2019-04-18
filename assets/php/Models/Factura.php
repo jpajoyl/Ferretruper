@@ -222,6 +222,38 @@ class Factura {
 		$conexion=null;
 		$statement=null;
 	}
+
+
+	public static function obtenerInfoFactura($tipo){
+		//carta es el id 1!!!!
+		//pos es el id 2!!!!
+		$conexion = Conexion::conectar();
+		$statement = $conexion->prepare("SELECT * FROM informacion_facturas, resoluciones WHERE informacion_facturas.id_informacion_facturas = $tipo and resoluciones.id_resolucion = $tipo");
+		$statement->execute();
+		$conexion=null;
+		return $statement;
+	}
+
+	public static function editarInfoFactura($tipo, $numeroDian, $IDescripcion, $RDescripcion)
+	{
+		$conexion = Conexion::conectar();
+		$statement1 = $conexion->prepare("UPDATE `informacion_facturas` SET `i_descripcion` = :IDescripcion WHERE `informacion_facturas`.`id_informacion_facturas` = :tipo");
+		$statement1->bindParam(':IDescripcion',$IDescripcion,PDO::PARAM_STR,500);
+		$statement1->bindParam(':tipo',$tipo,PDO::PARAM_INT);
+		$statement1->execute();
+		$statement2 = $conexion->prepare("UPDATE `resoluciones` SET `r_descripcion` = :RDescripcion, `numero_dian` = :numeroDian WHERE `resoluciones`.`id_resolucion` = :tipo");
+		$statement2->bindParam(':RDescripcion',$RDescripcion,PDO::PARAM_STR,500);
+		$statement2->bindParam(':tipo',$tipo,PDO::PARAM_INT);
+		$statement2->bindParam(':numeroDian',$numeroDian,PDO::PARAM_INT);
+		$statement2->execute();
+		if ($statement1 and $statement2) {
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+
 	public function imprimirFacturaCarta($media=false){
 		$conexion = Conexion::conectar();
 		//EL FORMATO MEDIA CARTA ES PARA 3 ARTICULOS O MENOS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -581,7 +613,9 @@ $pdf->MultiCell(190,4, utf8_decode($descripcionResolucion),0,"C",false);
 			$pdf->setX(2);
 			$pdf->Cell(5,2,$item["id_producto"]);
 			$pdf->setX(6);
-			$pdf->Cell(35,2,  strtoupper(substr($item["nombre"], 0,12)) );
+			$pdf->Cell(11,2,  strtoupper(substr($item["nombre"], 0,7)),0,1 );
+			$pdf->setX(6);
+			$pdf->Cell(11,2,  strtoupper(substr($item["nombre"], 7,7))."..." );
 			$pdf->setX(9);
 			$pdf->Cell(11,2, $item["referencia_fabrica"] ,0,0,"R");
 			$pdf->setX(16);

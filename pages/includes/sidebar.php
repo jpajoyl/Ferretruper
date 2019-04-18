@@ -40,7 +40,10 @@
                             </ul>
                     </li>
                     <li class="submenu">
-                        <a <?php if(!strcmp(basename($_SERVER['PHP_SELF']),"comprobantesEgreso.php")){?> class="active" <?php } ?> href="comprobantesEgreso.php"><i class="fa fa-fw fa-user-plus"></i><span> Comprobantes de egreso </span> </a>
+                        <a <?php if(!strcmp(basename($_SERVER['PHP_SELF']),"comprobantesEgreso.php")){?> class="active" <?php } ?> href="comprobantesEgreso.php"><i class="fa fa-print bigfonts"></i><span> Comprobantes de egreso </span> </a>
+                    </li>
+                    <li class="submenu">
+                        <a <?php if(!strcmp(basename($_SERVER['PHP_SELF']),"informacionFacturas.php")){?> class="active" <?php } ?> href="informacionFacturas.php"><i class="fa fa-exclamation-triangle bigfonts"></i><span> Informacion Facturas </span> </a>
                     </li>
 					
             </ul>
