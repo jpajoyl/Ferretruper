@@ -224,9 +224,10 @@
 			// Include SQL query processing class
             require('../ssp.customized.class.php');
 
+            $whereStatement = '`activa`=1';
 
             // Output data
-            return SSP::simple( $request, $dbDetails, $table, $primaryKey, $columns);
+            return SSP::simple( $request, $dbDetails, $table, $primaryKey, $columns,null,$whereStatement);
 
 		}
 

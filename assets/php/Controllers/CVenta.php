@@ -89,7 +89,31 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 	}else if (!strcmp($method,"verVentas")) {
 		echo json_encode(Venta::verVentas($_GET,false));
 	}else if(!strcmp($method,"terminarVenta")){
-		
+		$idCliente=$_POST['idCliente'];
+		$resolucion=$_POST['resolucion'];
+		$descuento=$_POST['descuento'];
+		$retefuente=$_POST['retefuente'];
+		$tipoVenta=$_POST['tipoVenta'];
+
+		$cliente=Cliente::obtenerCliente($idCliente);
+		if($cliente!=false){
+			if(isset($_COOKIE['venta'])){
+				$venta=unserialize($_COOKIE['venta']);
+				if($venta instanceof Venta){
+					$empleado=$objectSession->getEmpleadoActual();
+					$factura=$venta->efectuarVenta($resolucion,$empleado,$descuento,$retefuente,$tipoVenta,$idCliente);
+					if($factura instanceof Factura){
+						return SUCCESS;
+					}else{
+						return ERROR;
+					}
+				}else{
+					echo ERROR;
+				}
+			}
+		}else{
+			echo NOT_FOUND;
+		}
 	}else if(!strcmp($method,"cancelarVenta")){
 		if(isset($_COOKIE['venta'])){
 			$venta=unserialize($_COOKIE['venta']);

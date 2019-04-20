@@ -55,3 +55,15 @@
 	font-weight: bold;
 	font-size: 1.3em;
 }
+
+#content-cambio{
+	background-color: #51C24D;
+	color: #fff;
+}
+
+#cambio {
+   top: 25%;
+   overflow: auto;
+   overflow-y: auto;
+}
+

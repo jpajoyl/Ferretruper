@@ -37,7 +37,7 @@
 				</thead>
 				<tbody id="body-table-venta">
 					<td colspan="6" class="no-venta"><div class="alert alert-secondary mt" role="alert">
-					  Aun no se ha iniciado una venta. Seleccione un producto para iniciar
+						Aun no se ha iniciado una venta. Seleccione un producto para iniciar
 					</div></td>
 				</tbody>
 			</table>
@@ -54,61 +54,77 @@
 			</div>
 			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 float-right">
 				<form autocomplete="off" action="#" id="form-terminar-venta">
-			      <table id="table-info-venta" class="table mr table-secondary">
-			        <tbody>
-			          <tr class="tr-info-venta">
-			            <th width="50%" scope="row" class="float-right">Sub Total:</th>
-			            <td width="40%" id="subtotal-venta">0</td>
-			          </tr>
-			          <tr class="tr-info-venta">
-			            <th width="30%" scope="row" class="float-right">Iva:</th>
-			            <td width="40%" id="iva-venta">0</td>
-			          </tr>
-			          <tr class="tr-info-venta" id="valor-descuento">
-			            <th width="50%" scope="row" class="float-right">Descuento:</th>
-			            <td width="40%" id="descuento-venta" name="descuento-venta">0</td>
-			            <input type="hidden" class="form-control mb mr" id="input-descuento-venta"disabled>
-			          </tr>
-			          <tr class="tr-info-venta">
-			            <th width="50%" scope="row" class="float-right">Total a pagar:</th>
-			            <td width="40%" id="total-venta" name="total-venta" total-venta-no-modificada="">0</td>
-			            <input type="hidden" class="form-control mb mr" id="input-total-venta-modificada"disabled>
-			          </tr>
-			          <tr class="tr-info-venta table-info">
-			            <th scope="row" class="float-right">Retefuente:</th>
-			            <td>
-			              <label class="form-check-label">
-			            	<input class="form-check-input" type="checkbox" name="retefuente" id="input-retefuente" value="1">
-			            	<input type="hidden" class="form-control mb mr" id="input-retefuente-venta"disabled>
-			            	Si
-			              </label>
-			            </td>
-			          </tr>
-			          <tr class="tr-info-venta table-success">
-			            <th width="50%" scope="row" class="float-right mt">+Descuento %:</th>
-			            <td width="40%" id="descuento" name="descuento">
-			            	<input type="number" class="form-control mb mr" id="input-descuento" placeholder="3% o 5%" autocomplete="off" disabled>
-			            </td>
-			          </tr>
-			          <tr class="tr-info-venta table-success">
-			            <th width="50%" scope="row" class="float-right mt">Impresión:</th>
-			            <td width="40%" id="efectivo">
-			            	<select class="custom-select mb" id="input-impresion" required>
-			            		<option value="1">POS</option>
-			            		<option value="2">CARTA</option>
-			            	</select>
-			            </td>
-			          </tr>
-			          <tr class="tr-info-venta table-success">
-			            <th width="50%" scope="row" class="float-right mt">Efectivo:</th>
-			            <td width="40%" id="efectivo">
-			            	<input type="number" class="form-control mb mr" id="input-efectivo" placeholder="Efectivo" autocomplete="off">
-			            </td>
-			          </tr>
-			        </tbody>
-			      </table>
-			    </form>
+					<table id="table-info-venta" class="table mr table-secondary">
+						<tbody>
+							<tr class="tr-info-venta" id="valor-descuento">
+								<th width="50%" scope="row" class="float-right">Descuento:</th>
+								<td width="40%" id="descuento-venta" name="descuento-venta">0</td>
+								<input type="hidden" class="form-control mb mr" id="input-descuento-venta"disabled>
+							</tr>
+							<tr class="tr-info-venta">
+								<th width="50%" scope="row" class="float-right">Sub Total:</th>
+								<td width="40%" id="subtotal-venta">0</td>
+								<input type="hidden" class="form-control mb mr" id="input-subtotal-venta"disabled>
+							</tr>
+							<tr class="tr-info-venta">
+								<th width="30%" scope="row" class="float-right">Iva:</th>
+								<td width="40%" id="iva-venta">0</td>
+								<input type="hidden" class="form-control mb mr" id="input-iva-venta"disabled>
+							</tr>
+							<tr class="tr-info-venta">
+								<th width="50%" scope="row" class="float-right">Total a pagar:</th>
+								<td width="40%" id="total-venta" name="total-venta" total-venta-no-modificada="">0</td>
+								<input type="hidden" class="form-control mb mr" id="input-total-venta-modificada"disabled>
+							</tr>
+							<tr class="tr-info-venta table-info">
+								<th scope="row" class="float-right">Retefuente:</th>
+								<td>
+									<label class="form-check-label">
+										<input class="form-check-input" type="checkbox" name="retefuente" id="input-retefuente" value="1">
+										<input type="hidden" class="form-control mb mr" id="input-retefuente-venta"disabled>
+										Si
+									</label>
+								</td>
+							</tr>
+							<tr class="tr-info-venta table-success">
+								<th width="50%" scope="row" class="float-right mt">+Descuento %:</th>
+								<td width="40%" id="descuento" name="descuento">
+									<input type="number" class="form-control mb mr" id="input-descuento" placeholder="3% o 5%" autocomplete="off" disabled>
+								</td>
+							</tr>
+							<tr class="tr-info-venta table-success">
+								<th width="50%" scope="row" class="float-right mt">Impresión:</th>
+								<td width="40%" id="efectivo">
+									<select class="custom-select mb" id="input-impresion" required>
+										<option value="1">POS</option>
+										<option value="2">CARTA</option>
+									</select>
+								</td>
+							</tr>
+							<tr class="tr-info-venta table-success">
+								<th width="50%" scope="row" class="float-right mt">Efectivo:</th>
+								<td width="40%" id="efectivo">
+									<input type="number" class="form-control mb mr" id="input-efectivo" placeholder="Efectivo" autocomplete="off">
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
 			</div>
 		</div>
 	</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="cambio" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body" id="content-cambio">
+        <center><h2>CAMBIO: <span id="value-cambio">5.300 COP</span></h2></center>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-dismiss="modal">Terminar</button>
+      </div>
+    </div>
+  </div>
 </div>
