@@ -88,7 +88,7 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		}
 	}else if (!strcmp($method,"verVentas")) {
 		echo json_encode(Venta::verVentas($_GET,false));
-	}else if(!strcmp($method,"terminarVenta")){
+	}else if(!strcmp($method,"terminarVenta")){ //----------------TERMINAR VENTA--------------
 		$idCliente=$_POST['idCliente'];
 		$resolucion=$_POST['resolucion'];
 		$descuento=$_POST['descuento'];

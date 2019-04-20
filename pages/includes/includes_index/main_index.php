@@ -116,11 +116,11 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="cambio" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-cambio" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-body" id="content-cambio">
-        <center><h2>CAMBIO: <span id="value-cambio">5.300 COP</span></h2></center>
+        <center><h2>CAMBIO: <span id="value-cambio"></span></h2></center>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" data-dismiss="modal">Terminar</button>

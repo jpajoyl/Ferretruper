@@ -604,6 +604,12 @@ $(document).ready(function() {
                           '<div class="form-group col-md-6">'+
                               '<a role="button" href="#" id="añadir-cliente" class="btn btn-primary">Registrar cliente<span class="btn-label btn-label-right"><i class="fa fa-user-plus"></i></span></a>'+
                           '</div>'+
+                        '</div>'+
+                        '<div class="form-group">'+
+                            '<input type="text" class="form-control" id="input-usuario" placeholder="Usuario Administracion" required autocomplete="off">'+
+                        '</div>'+
+                        '<div class="form-group">'+
+                            '<input type="password" class="form-control" id="input-password" placeholder="Contraseña Administracion" required autocomplete="off">'+
                         '</div>';
       Swal({
         title:'Iniciar Credito',
@@ -624,27 +630,70 @@ $(document).ready(function() {
               'error'
             );
           }else{
-            var resolucion=1;
-            var descuento=$("#input-descuento").val();
-            descuento=(descuento=="")?0:parseFloat(descuento);
-            var retefuente=$("#input-retefuente");
-            retefuente=(retefuente=="")?0:parseFloat(retefuente);
-            var tipoVenta="Credito";
-            var data={
-                'idCliente':idUsuario,
-                'resolucion':resolucion,
-                'descuento':descuento,
-                'retefuente':retefuente,
-                'tipoVenta':tipoVenta
+            var dataAdministracion={
+                'usuario':$("#input-usuario").val(),
+                'password':$("#input-password").val()
             }
             $.ajax({
-                url: '../assets/php/Controllers/CVenta.php?method=terminarVenta',
+                url: '../assets/php/Controllers/CAdministracion.php?method=comprobarAdministrador',
                 type: 'POST',
-                data: data,
+                data: dataAdministracion,
                 success:function(data){
-                    console.log(data);
+                    if(data==1){
+                      var resolucion=1;
+                      var descuento=$("#input-descuento").val();
+                      descuento=(descuento=="")?0:parseFloat(descuento);
+                      var retefuente=$("#input-retefuente");
+                      retefuente=(retefuente=="")?0:parseFloat(retefuente);
+                      var tipoVenta="Credito";
+                      var data={
+                          'idCliente':idUsuario,
+                          'resolucion':resolucion,
+                          'descuento':descuento,
+                          'retefuente':retefuente,
+                          'tipoVenta':tipoVenta
+                      }
+                      $.ajax({
+                          url: '../assets/php/Controllers/CVenta.php?method=terminarVenta',
+                          type: 'POST',
+                          data: data,
+                          success:function(data){
+                              if(data!=""){
+                                if(data==1){
+                                  Swal(
+                                    'Error!',
+                                    'Se ha registrado satisfactoriamente la venta a credito,!',
+                                    'error'
+                                  );
+                                }else if(data==0){
+                                  Swal(
+                                    'Error!',
+                                    'Ha ocurrido un error, revisa y vuelve a intentar!',
+                                    'error'
+                                  );
+                                }else if(data==3){
+                                  Swal(
+                                    'Error!',
+                                    'El cliente no se encuentra registrado!',
+                                    'error'
+                                  );
+                                }else{
+                                  console.log(data);
+                                }
+                              }
+                          }
+                      });
+                    }else if(data==0 || data==3){
+                        setTimeout(function(){
+                            Swal(
+                              'Error!',
+                              'El usuario y/o contraseña son incorrectos',
+                              'error'
+                            );
+                        },100);  
+                    }
                 }
-            });
+            }); 
           }
         }
       });
@@ -653,8 +702,29 @@ $(document).ready(function() {
 
   $(document).on("click", "#añadir-cliente", function(event){
     event.preventDefault();
-    swal.close();
-    $("#añadirCliente").modal("show");
+    var dataAdministracion={
+        'usuario':$("#input-usuario").val(),
+        'password':$("#input-password").val()
+    }
+    $.ajax({
+        url: '../assets/php/Controllers/CAdministracion.php?method=comprobarAdministrador',
+        type: 'POST',
+        data: dataAdministracion,
+        success:function(data){
+            if(data==1){
+              swal.close();
+              $("#añadirCliente").modal("show");
+            }else if(data==0 || data==3){
+                setTimeout(function(){
+                    Swal(
+                      'Error!',
+                      'El usuario y/o contraseña son incorrectos',
+                      'error'
+                    );
+                },100);  
+            }
+        }
+    });
   });
     
 });
