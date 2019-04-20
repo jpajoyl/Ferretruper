@@ -4,6 +4,7 @@ $(document).ready(function(){
         var data;
             data = {
                 "id" : $("#input-id-cliente").val(),
+                "tipoId" : $("#input-tipo-id").val(),
                 "digitoDeVerificacion" : $("#input-digito-de-verificacion-cliente").val(),
                 "nombre" : $("#input-nombre-cliente").val(),
                 "direccion" : $("#input-direccion-cliente").val(),
@@ -28,7 +29,12 @@ $(document).ready(function(){
                               'success'
                             );
                             document.getElementById("form-añadirCliente").reset();
-                            loadData(); 
+                            try {
+                              loadData();
+                            }
+                            catch(error) {
+                              
+                            } 
                         },500); 
                     }else if(data==0){
                         $("#añadirCliente").modal("hide");
@@ -39,7 +45,12 @@ $(document).ready(function(){
                               'error'
                             );
                             document.getElementById("form-añadirCliente").reset();
-                            loadData();  
+                            try {
+                              loadData();
+                            }
+                            catch(error) {
+                              
+                            } 
                         },500);
                     }else if(data==2){
                         setTimeout(function(){
