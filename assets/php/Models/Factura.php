@@ -1,5 +1,7 @@
 <?php 
-
+use ticket\src\Mike42\Escpos\Printer;
+use ticket\src\Mike42\Escpos\EscposImage;
+use ticket\src\Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 /**
  * 
  */
@@ -374,16 +376,16 @@ class Factura {
 		}
 		$idResolucion=$this->getResolucion();
 		$idInformacionFacturas=$this->getInformacionFactura();
-		$consulta=$conexion->prepare("SELECT descripcion FROM `resoluciones` WHERE id_resolucion = :idResolucion");
+		$consulta=$conexion->prepare("SELECT r_descripcion FROM `resoluciones` WHERE id_resolucion = :idResolucion");
 		$consulta->bindParam(':idResolucion',$idResolucion,PDO::PARAM_INT);
 		$consulta->execute();
 		$resultado2 = $consulta->fetch(PDO::FETCH_ASSOC);
-		$descripcionResolucion=$resultado2['descripcion'];
-		$consulta2=$conexion->prepare("SELECT descripcion FROM `informacion_facturas` WHERE id_informacion_facturas = :informacionFactura");
+		$descripcionResolucion=$resultado2['r_descripcion'];
+		$consulta2=$conexion->prepare("SELECT i_descripcion FROM `informacion_facturas` WHERE id_informacion_facturas = :informacionFactura");
 		$consulta2->bindParam(':informacionFactura',$idInformacionFacturas,PDO::PARAM_INT);
 		$consulta2->execute();
 		$resultado2 = $consulta2->fetch(PDO::FETCH_ASSOC);
-		$infoFactura=$resultado2['descripcion'];
+		$infoFactura=$resultado2['i_descripcion'];
 		if ($media) {
 			$pdf->Rect(10, 72, 190, 15);
 			$pdf->ln(7);
@@ -564,8 +566,8 @@ $pdf->MultiCell(190,4, utf8_decode($descripcionResolucion),0,"C",false);
 		$pdf->MultiCell(110,4,"NIT: 900 307 086 - 7"."\n"."Carrera 51 # 40-74"."\n"."TEL:(4) 2327201"."\n".utf8_decode("Medellín - Colombia")."\n"."ferretrupersas@hotmail.com",0,"C",false);
 		$pdf->SetFont('Arial','',4);
 		$pdf->Text(17,23,utf8_decode("Régimen común"));
-		$venta = $this->getVenta();
-		$idVenta = $venta->getIdVenta();
+		$venta = Venta::obtenerVenta($this->getVenta());
+		$idVenta = $this->getVenta();
 		$tipoVenta = TipoVenta::obtenerTipoVenta($idVenta);
 		$cliente = Cliente::obtenerCliente($tipoVenta->getCliente(),false);
 		$pdf->SetFont('Arial','',4);
@@ -688,16 +690,16 @@ $pdf->MultiCell(190,4, utf8_decode($descripcionResolucion),0,"C",false);
 		}
 		$idResolucion=$this->getResolucion();
 		$idInformacionFacturas=$this->getInformacionFactura();
-		$consulta=$conexion->prepare("SELECT descripcion FROM `resoluciones` WHERE id_resolucion = :idResolucion");
+		$consulta=$conexion->prepare("SELECT r_descripcion FROM `resoluciones` WHERE id_resolucion = :idResolucion");
 		$consulta->bindParam(':idResolucion',$idResolucion,PDO::PARAM_INT);
 		$consulta->execute();
 		$resultado2 = $consulta->fetch(PDO::FETCH_ASSOC);
-		$descripcionResolucion=$resultado2['descripcion'];
-		$consulta2=$conexion->prepare("SELECT descripcion FROM `informacion_facturas` WHERE id_informacion_facturas = :informacionFactura");
+		$descripcionResolucion=$resultado2['r_descripcion'];
+		$consulta2=$conexion->prepare("SELECT i_descripcion FROM `informacion_facturas` WHERE id_informacion_facturas = :informacionFactura");
 		$consulta2->bindParam(':informacionFactura',$idInformacionFacturas,PDO::PARAM_INT);
 		$consulta2->execute();
 		$resultado2 = $consulta2->fetch(PDO::FETCH_ASSOC);
-		$infoFactura=$resultado2['descripcion'];
+		$infoFactura=$resultado2['i_descripcion'];
 		$pdf->setX(2);
 		$pdf->Cell(1,1, "------------------------------------------------------------------------------------",0,1,'J',false);
 		$pdf->setX(4);
@@ -716,9 +718,7 @@ $pdf->MultiCell(190,4, utf8_decode($descripcionResolucion),0,"C",false);
 
 
 		require __DIR__ . '/ticket/autoload.php'; //Nota: si renombraste la carpeta a algo diferente de "ticket" cambia el nombre en esta línea
-/*		use Mike42\Escpos\Printer;
-		use Mike42\Escpos\EscposImage;
-		use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;*/
+
 
 		/*
 			Este ejemplo imprime un
@@ -752,6 +752,7 @@ $pdf->MultiCell(190,4, utf8_decode($descripcionResolucion),0,"C",false);
 		*/
 
 		# Vamos a alinear al centro lo próximo que imprimamos
+			$numeroDian = $this->getNumeroDian();
 			$printer->setJustification(Printer::JUSTIFY_CENTER);
 
 		/*
@@ -759,52 +760,132 @@ $pdf->MultiCell(190,4, utf8_decode($descripcionResolucion),0,"C",false);
 			el logo
 		*/
 			try{
-				$logo = EscposImage::load("geek.png", false);
+				$logo = EscposImage::load("../../images/LOGO FERRETRUPER.jpg", false);
 				$printer->bitImage($logo);
 			}catch(Exception $e){/*No hacemos nada si hay error*/}
 
 		/*
 			Ahora vamos a imprimir un encabezado
 		*/
-
-			$printer->text("\n"."Nombre de la Empresa" . "\n");
-			$printer->text("Direccion: Orquídeas #151" . "\n");
-			$printer->text("Tel: 454664544" . "\n");
+			$printer->text("\n"."FERRETRUPER S.A.S" . "\n");
+			$printer->text("NIT: 900 307 086 - 7" . "\n");
+			$printer->text("Direccion: Carrera 51 # 40-74" . "\n");
+			$printer->text("Tel:(4) 2327201" . "\n");
+			$printer->text("Medellín - Colombia" . "\n");
+			$printer->text("ferretrupersas@hotmail.com" . "\n");
 		#La fecha también
-			date_default_timezone_set("America/Bogota");
-			$printer->text(date("Y-m-d H:i:s") . "\n");
+			$printer->setJustification(Printer::JUSTIFY_LEFT);
+			$printer->text(date($this->getFecha()));
+			$printer->setJustification(Printer::JUSTIFY_RIGHT);
+			$printer->text(utf8_decode("Régimen común") . "\n");
+			$printer->text(utf8_decode("SEÑORES: ") . $cliente->getNombre() ."\n");
+			$numeroIdentificacion = $cliente->getNumeroDeIdentificacion()." - ".$cliente->getDigitoDeVerificacion();
+			$printer->text(utf8_decode("NIT: "). $numeroIdentificacion. "\n");
+			$printer->text(utf8_decode("TELÉFONO: "). $cliente->getTelefono() . "\n");
+			$printer->text(utf8_decode("DIRECCIÓN: "). $cliente->getDireccion() . "\n");
+			$printer->text(utf8_decode("CIUDAD: "). $cliente->getCiudad() . "\n");
+
+			$printer->setJustification(Printer::JUSTIFY_CENTER);
+			$statementProductos = $venta->obtenerInfoProductosProductoXVenta();
+			$productos = array();
+			while ($producto = $statementProductos->fetch(PDO::FETCH_ASSOC)) {
+				$productos[]=$producto;
+			}
 			$printer->text("-----------------------------" . "\n");
 			$printer->setJustification(Printer::JUSTIFY_LEFT);
-			$printer->text("CANT  DESCRIPCION    P.U   IMP.\n");
+			$venta = Venta::obtenerVenta($this->getVenta());
+			$idVenta = $this->getVenta();
+			$tipoVenta = TipoVenta::obtenerTipoVenta($idVenta);
+			$cliente = Cliente::obtenerCliente($tipoVenta->getCliente(),false);
+
+			$printer->text("Cód    Artículo    Referencia    Cantidad  Vr.Unitario    Vr.Total"."\n");
 			$printer->text("-----------------------------"."\n");
 		/*
 			Ahora vamos a imprimir los
 			productos
 		*/
 			/*Alinear a la izquierda para la cantidad y el nombre*/
+			$totalBruto=0;
+			$totalFinal=0;
+			$totalDescuento=0;
+			$totalIva=0;
+			$descuento = $venta->getDescuento();
+			if ($descuento==NULL) {
+				$descuento = 0;
+			}
+			$descuento = $descuento/100;
 			$printer->setJustification(Printer::JUSTIFY_LEFT);
-			$printer->text("Producto Galletas\n");
-			$printer->text( "2  pieza    10.00 20.00   \n");
-			$printer->text("Sabrtitas \n");
-			$printer->text( "3  pieza    10.00 30.00   \n");
-			$printer->text("Doritos \n");
-			$printer->text( "5  pieza    10.00 50.00   \n");
+			foreach ($productos as $item) {
+				$printer->text($item["id_producto"]." ".strtoupper(substr($item["nombre"], 0,7))." " .$item["referencia_fabrica"]." ". number_format($item["unidades"],2,".",","). " ". number_format($item["precio_venta"],2,".",","). " ". number_format($item['unidades'] * $item['precio_venta'],2,".",",")."\n");
+				$tieneIva = $item['tiene_iva'];
+
+				if ($tieneIva==1) {
+					$descuentoUnitarioSinIva=(($item['precio_venta']/(1+IVA))*$descuento);
+					$descuentoTotalSinIva=$descuentoUnitarioSinIva*$item['unidades'];
+
+					$precioBrutoUnitario=($item['precio_venta']/(1+IVA))-$descuentoUnitarioSinIva;
+					$totalBruto+=($precioBrutoUnitario)*$item['unidades'];
+					$totalFinal+=$precioBrutoUnitario *$item['unidades']* (1+IVA);
+					$totalDescuento+=$descuentoTotalSinIva;
+					$totalIva+=$precioBrutoUnitario*IVA*$item['unidades'];
+				}else{
+					$descuentoUnitario=(($item['precio_venta'])*$descuento);
+					$descuentoTotal=$descuentoUnitario*$item['unidades'];
+
+					$precioBrutoUnitario=$item['precio_venta']-$descuentoUnitario;
+					$totalBruto+=(($precioBrutoUnitario)*$item['unidades']);
+					$totalFinal+=(($precioBrutoUnitario)*$item['unidades']);
+					$totalDescuento+=$descuentoTotal;
+
+				}
+
+			}
 		/*
 			Terminamos de imprimir
 			los productos, ahora va el total
 		*/
 			$printer->text("-----------------------------"."\n");
 			$printer->setJustification(Printer::JUSTIFY_RIGHT);
-			$printer->text("SUBTOTAL: $100.00\n");
-			$printer->text("IVA: $16.00\n");
-			$printer->text("TOTAL: $116.00\n");
-
-
+			$printer->text("Descuento: ".number_format($totalDescuento,2)."\n");
+			$printer->text("Total Bruto: ".number_format($totalBruto,2)."\n");
+			$printer->text("Iva: ".number_format($totalIva,2)."\n");
+			$retefuente=$venta->getRetefuente();
+			if ($retefuente==NULL) {
+				$retefuente=0;
+			}
+			$totalRetefuente = $totalBruto*($retefuente/100);
+			$printer->text("Retefuente: ".number_format($totalRetefuente,2)."\n");
+			$printer->text("Total: ".number_format($totalFinal-$totalRetefuente,2)."\n");
+			$printer->text("-----------------------------"."\n");
+			$printer->text("Condiciones de pago: ".$tipoVenta->getTipoVenta()."\n");
+			if ($tipoVenta->getTipoVenta()=="Credito") {
+				$plazo=$tipoVenta->getPlazo();
+				$statmentAbonos = Abono::obtenerAbonos($tipoVenta->getIdTipoVenta());
+				$arrayAbonos=array();
+				while ($abono = $statmentAbonos->fetch(PDO::FETCH_ASSOC)) {
+					$printer->text("Cuota: ".$abono['fecha']." $".number_format($abono['valor'])."\n");
+				}
+			}
+			$printer->text("-----------------------------"."\n");
 		/*
 			Podemos poner también un pie de página
 		*/
+			$idResolucion=$this->getResolucion();
+			$idInformacionFacturas=$this->getInformacionFactura();
+			$consulta=$conexion->prepare("SELECT r_descripcion FROM `resoluciones` WHERE id_resolucion = :idResolucion");
+			$consulta->bindParam(':idResolucion',$idResolucion,PDO::PARAM_INT);
+			$consulta->execute();
+			$resultado2 = $consulta->fetch(PDO::FETCH_ASSOC);
+			$descripcionResolucion=$resultado2['r_descripcion'];
+			$consulta2=$conexion->prepare("SELECT i_descripcion FROM `informacion_facturas` WHERE id_informacion_facturas = :informacionFactura");
+			$consulta2->bindParam(':informacionFactura',$idInformacionFacturas,PDO::PARAM_INT);
+			$consulta2->execute();
+			$resultado2 = $consulta2->fetch(PDO::FETCH_ASSOC);
+			$infoFactura=$resultado2['i_descripcion'];
+
 			$printer->setJustification(Printer::JUSTIFY_CENTER);
-			$printer->text("Muchas gracias por su compra\n");
+			$printer->text(utf8_decode($infoFactura)."\n");
+			$printer->text(utf8_decode($descripcionResolucion)."\n");
 
 
 
