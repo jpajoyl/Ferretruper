@@ -393,7 +393,7 @@
 				if($resultado){
 					$numeroDian = $resultado['numero_dian']+ 1;
 					$idInformacionFactura=$resolucion;
-					$factura = new factura($total,$fecha,$idInformacionFactura,$this,$resolucion,$numeroDian); 
+					$factura = new factura($total,$fecha,$idInformacionFactura,$idVenta,$resolucion,$numeroDian); 
 					if($factura){
 						$this->asociarTipoVenta($idEmpleado,$tipoVenta,$idCliente);
 						$statement=null;

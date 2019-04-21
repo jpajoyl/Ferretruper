@@ -190,7 +190,7 @@ class Factura {
 			$factura->setFechaAnulada($resultado['fecha_anulada']);
 			$factura->setResolucion($resultado['resoluciones_id_resolucion']);
 			$factura->setNumeroDian($resultado['numero_dian']);
-			$factura->setVenta(Venta::obtenerVenta($resultado['ventas_id_venta']));
+			$factura->setVenta($resultado['ventas_id_venta']);
 			$factura->setInformacionFactura($resultado['informacion_facturas_id_informacion_facturas']);
 			$idResolucion = $resultado['resoluciones_id_resolucion'];
 			
@@ -288,8 +288,8 @@ class Factura {
 		$pdf->SetFont('Arial','',10);
 		$pdf->MultiCell(110,4,"NIT: 900 307 086 - 7"."\n"."Carrera 51 # 40-74"."\n"."TEL:(4) 2327201"."\n".utf8_decode("Medellín - Colombia")."\n"."ferretrupersas@hotmail.com",0,"C",false);
 		$pdf->ln();
-		$venta = $this->getVenta();
-		$idVenta = $venta->getIdVenta();
+		$venta = Venta::obtenerVenta($this->getVenta());
+		$idVenta = $this->getVenta();
 		$tipoVenta = TipoVenta::obtenerTipoVenta($idVenta);
 		$cliente = Cliente::obtenerCliente($tipoVenta->getCliente(),false);
 		if ($media) {
