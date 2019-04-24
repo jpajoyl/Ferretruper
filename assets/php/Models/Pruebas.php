@@ -18,10 +18,10 @@ $ce->imprimirComprobante(false);
 $ce = Factura::obtenerFactura(1);
 $ce->facturaPOSPDF();
 $ce->imprimirFacturaCarta();*/
-//$venta=Venta::obtenerVenta(13);
-//$Factura=$venta->efectuarVenta(1,64);
-$ce = Factura::obtenerFactura(2);
-$ce->facturaPOSPDF();
+$venta=Venta::obtenerVenta(17);
+$Factura=$venta->efectuarVenta(1,64);
+/*$ce = Factura::obtenerFactura(2);
+$ce->facturaPOSPDF();*/
 
 
  ?>
