@@ -92,11 +92,6 @@ CREATE TABLE `credenciales_de_acceso` (
 --
 -- Volcado de datos para la tabla `credenciales_de_acceso`
 --
-
-INSERT INTO `credenciales_de_acceso` (`id_credencial`, `USUARIOS_id_usuario`, `usuario`, `password`, `permiso`) VALUES
-(8, 63, 'juan', '1234', 0),
-(9, 64, 'fredy', '1234', 1);
-
 -- --------------------------------------------------------
 
 --
