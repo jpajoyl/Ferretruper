@@ -67,3 +67,6 @@
    overflow-y: auto;
 }
 
+#identificacion-usuario-venta{
+	display: none;
+}

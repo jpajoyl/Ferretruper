@@ -94,7 +94,7 @@
 							</tr>
 							<tr class="tr-info-venta table-success">
 								<th width="50%" scope="row" class="float-right mt">Impresión:</th>
-								<td width="40%" id="efectivo">
+								<td width="40%" id="impresion">
 									<select class="custom-select mb" id="input-impresion" required>
 										<option value="1">POS</option>
 										<option value="2">CARTA</option>
@@ -105,6 +105,12 @@
 								<th width="50%" scope="row" class="float-right mt">Efectivo:</th>
 								<td width="40%" id="efectivo">
 									<input type="number" class="form-control mb mr" id="input-efectivo" placeholder="Efectivo" autocomplete="off">
+								</td>
+							</tr>
+							<tr class="tr-info-venta table-success" id="identificacion-usuario-venta">
+								<th width="50%" scope="row" class="float-right mt">Usuario:</th>
+								<td width="40%" id="usuario">
+									<input type="number" class="form-control mb mr" id="input-identificacion-usuario-venta" placeholder="Identificacion" autocomplete="off">
 								</td>
 							</tr>
 						</tbody>

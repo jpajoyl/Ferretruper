@@ -582,6 +582,17 @@ $(document).ready(function() {
         }
     });
 
+   $('#input-efectivo').bind("change keyup", function(e) {
+        if (e.keyCode == 190) {             
+          var efectivo=$(this).val();
+          console.log(efectivo);
+          $(this).val();
+        }else{
+          var efectivo=parseInt($(this).val());
+          console.log(efectivo);
+        }
+    });
+
    $("#terminar-venta").click(function(event){
     event.preventDefault();
     if(calcularTotalVenta(false,true)>0 && $("#body-table-venta tr").length>0){
@@ -697,6 +708,71 @@ $(document).ready(function() {
           }
         }
       });
+    }else{
+      var totalVenta=calcularTotalVenta(false,true);
+      if(efectivo>=totalVenta){
+        swal({
+          title: 'Terminar Venta!',
+          text: "Esta seguro de desear terminar la venta",
+          showCancelButton: true,
+          confirmButtonColor: '#22C13C',
+          cancelButtonColor: '#9A9A9A',
+          confirmButtonText: 'Terminar!',
+          cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.value) {
+               var resolucion=0;
+               var descuento=$("#input-descuento").val();
+               descuento=(descuento=="")?0:parseFloat(descuento);
+               var retefuente=$("#input-retefuente");
+               retefuente=(retefuente=="")?0:parseFloat(retefuente);
+               var tipoVenta="Efectivo";
+               var data={
+                   'idCliente':idUsuario,
+                   'resolucion':resolucion,
+                   'descuento':descuento,
+                   'retefuente':retefuente,
+                   'tipoVenta':tipoVenta
+               }
+               $.ajax({
+                   url: '../assets/php/Controllers/CVenta.php?method=terminarVenta',
+                   type: 'POST',
+                   data: data,
+                   success:function(data){
+                       if(data!=""){
+                         if(data==1){
+                           Swal(
+                             'Error!',
+                             'Se ha registrado satisfactoriamente la venta a credito,!',
+                             'error'
+                           );
+                         }else if(data==0){
+                           Swal(
+                             'Error!',
+                             'Ha ocurrido un error, revisa y vuelve a intentar!',
+                             'error'
+                           );
+                         }else if(data==3){
+                           Swal(
+                             'Error!',
+                             'El cliente no se encuentra registrado!',
+                             'error'
+                           );
+                         }else{
+                           console.log(data);
+                         }
+                       }
+                   }
+               });
+            }
+        });
+      }else{
+        Swal(
+          'Error!',
+          'Se debe ingresar el efectivo correcto para pagar',
+          'error'
+        );
+      }
     }
   });
 
