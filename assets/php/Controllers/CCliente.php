@@ -69,6 +69,16 @@
 			}else{
 				echo NOT_FOUND;
 			}
+		}else if(!strcmp($method,"buscarCliente")){
+			$id=$_POST['id'];
+			$cliente=Cliente::obtenerCliente($id);
+			if($cliente!=false){
+				$response['response'] = SUCCESS;
+				$response['nombre'] = $cliente->getNombre();
+				echo json_encode($response);
+			}else{
+				echo NOT_FOUND;
+			}
 		}
 
 	}

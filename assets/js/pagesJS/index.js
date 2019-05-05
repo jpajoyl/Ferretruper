@@ -583,14 +583,15 @@ $(document).ready(function() {
     });
 
    $('#input-efectivo').bind("change keyup", function(e) {
-        if (e.keyCode == 190) {             
-          var efectivo=$(this).val();
-          console.log(efectivo);
-          $(this).val();
+        var efectivo=parseInt($(this).val());
+        if(efectivo>0){
+          $("#identificacion-usuario-venta").fadeIn(50);
         }else{
-          var efectivo=parseInt($(this).val());
-          console.log(efectivo);
+          $(this).val("");
+          $("#input-identificacion-usuario-venta").val("");
+          $("#identificacion-usuario-venta").fadeOut(0);
         }
+
     });
 
    $("#terminar-venta").click(function(event){
@@ -599,6 +600,66 @@ $(document).ready(function() {
       $("#form-terminar-venta").submit();
     }
    });
+
+   function terminarVentaContadoUsuario(nombre,idCliente,totalVenta,efectivo){
+    swal({
+      title: 'Terminar Venta!',
+      html: "<p>Esta seguro de desear terminar la venta</p><p> CLIENTE: <strong>"+nombre+"</strong></p>",
+      showCancelButton: true,
+      confirmButtonColor: '#22C13C',
+      cancelButtonColor: '#9A9A9A',
+      confirmButtonText: 'Terminar!',
+      cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.value) {
+           var resolucion=0;
+           var descuentoPorcentual=$("#input-descuento").val();
+           descuentoPorcentual=(descuentoPorcentual=="")?0:parseFloat(descuentoPorcentual);
+           var descuento=$("#input-descuento-venta").val();
+           descuento=(descuento=="")?0:parseFloat(descuento);
+           var retefuente=$("#input-retefuente");
+           retefuente=(retefuente=="")?0:parseFloat(retefuente);
+           var tipoVenta="Efectivo";
+           var data={
+               'idCliente':idCliente,
+               'resolucion':resolucion,
+               'descuentoPorcentual':descuentoPorcentual,
+               'descuento':descuento,
+               'retefuente':retefuente,
+               'tipoVenta':tipoVenta
+           }
+           $.ajax({
+               url: '../assets/php/Controllers/CVenta.php?method=terminarVenta',
+               type: 'POST',
+               data: data,
+               success:function(data){
+                   if(data!=""){
+                     if(data==1){
+                       $("#value-cambio").html((efectivo-totalVenta));
+                       $("#modal-cambio").modal("show");
+                       loadData();
+                       getVenta();
+                     }else if(data==0){
+                       Swal(
+                         'Error!',
+                         'Ha ocurrido un error, revisa y vuelve a intentar!',
+                         'error'
+                       );
+                     }else if(data==3){
+                       Swal(
+                         'Error!',
+                         'El cliente no se encuentra registrado!',
+                         'error'
+                       );
+                     }else{
+                       console.log(data);
+                     }
+                   }
+               }
+           });
+        }
+    });
+   }
 
   $("#form-terminar-venta").submit(function(event){
     event.preventDefault();
@@ -652,14 +713,17 @@ $(document).ready(function() {
                 success:function(data){
                     if(data==1){
                       var resolucion=1;
-                      var descuento=$("#input-descuento").val();
+                      var descuentoPorcentual=$("#input-descuento").val();
+                      descuentoPorcentual=(descuentoPorcentual=="")?0:parseFloat(descuentoPorcentual);
+                      var descuento=$("#input-descuento-venta").val();
                       descuento=(descuento=="")?0:parseFloat(descuento);
                       var retefuente=$("#input-retefuente");
                       retefuente=(retefuente=="")?0:parseFloat(retefuente);
                       var tipoVenta="Credito";
                       var data={
-                          'idCliente':idUsuario,
+                          'idCliente':idCliente,
                           'resolucion':resolucion,
+                          'descuentoPorcentual':descuentoPorcentual,
                           'descuento':descuento,
                           'retefuente':retefuente,
                           'tipoVenta':tipoVenta
@@ -672,10 +736,12 @@ $(document).ready(function() {
                               if(data!=""){
                                 if(data==1){
                                   Swal(
-                                    'Error!',
+                                    'Completado!',
                                     'Se ha registrado satisfactoriamente la venta a credito,!',
-                                    'error'
+                                    'success'
                                   );
+                                  loadData();
+                                  getVenta();
                                 }else if(data==0){
                                   Swal(
                                     'Error!',
@@ -711,61 +777,43 @@ $(document).ready(function() {
     }else{
       var totalVenta=calcularTotalVenta(false,true);
       if(efectivo>=totalVenta){
-        swal({
-          title: 'Terminar Venta!',
-          text: "Esta seguro de desear terminar la venta",
-          showCancelButton: true,
-          confirmButtonColor: '#22C13C',
-          cancelButtonColor: '#9A9A9A',
-          confirmButtonText: 'Terminar!',
-          cancelButtonText: "Cancelar"
-        }).then((result) => {
-            if (result.value) {
-               var resolucion=0;
-               var descuento=$("#input-descuento").val();
-               descuento=(descuento=="")?0:parseFloat(descuento);
-               var retefuente=$("#input-retefuente");
-               retefuente=(retefuente=="")?0:parseFloat(retefuente);
-               var tipoVenta="Efectivo";
-               var data={
-                   'idCliente':idUsuario,
-                   'resolucion':resolucion,
-                   'descuento':descuento,
-                   'retefuente':retefuente,
-                   'tipoVenta':tipoVenta
-               }
-               $.ajax({
-                   url: '../assets/php/Controllers/CVenta.php?method=terminarVenta',
-                   type: 'POST',
-                   data: data,
-                   success:function(data){
-                       if(data!=""){
-                         if(data==1){
-                           Swal(
-                             'Error!',
-                             'Se ha registrado satisfactoriamente la venta a credito,!',
-                             'error'
-                           );
-                         }else if(data==0){
-                           Swal(
-                             'Error!',
-                             'Ha ocurrido un error, revisa y vuelve a intentar!',
-                             'error'
-                           );
-                         }else if(data==3){
-                           Swal(
-                             'Error!',
-                             'El cliente no se encuentra registrado!',
-                             'error'
-                           );
-                         }else{
-                           console.log(data);
-                         }
-                       }
-                   }
-               });
+        var idCliente=$("#input-identificacion-usuario-venta").val();
+        idCliente=(idCliente!="")?idCliente:1;
+        $.ajax({
+            url: '../assets/php/Controllers/CCliente.php?method=buscarCliente',
+            type: 'POST',
+            data: {"id":idCliente},
+            success:function(data){
+              if(data!=3){
+                data=$.parseJSON(data);
+                if(data.response==1){
+                  var nombre="";
+                  if(idCliente==1){
+                    nombre="Ferretruper";
+                  }else{
+                    nombre=data.nombre;
+                  }
+                  terminarVentaContadoUsuario(nombre,idCliente,totalVenta,efectivo);
+                }
+              }else{
+                Swal({
+                  title: 'Registrar?',
+                  html: "<p>No se ha encontrado el usuario con identificacion: <strong>"+idCliente+"</strong> Desea registrarlo?</p>",
+                  type: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Si, registrar!',
+                  cancelButtonText: "Cancelar"
+                }).then((result) => {
+                  if (result.value) {
+                    $("#input-id-cliente").val(idCliente);
+                    $("#añadirCliente").modal("show");
+                  }
+                });
+              }
             }
-        });
+          });
       }else{
         Swal(
           'Error!',

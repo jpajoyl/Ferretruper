@@ -70,3 +70,7 @@
 #identificacion-usuario-venta{
 	display: none;
 }
+
+#modal-cambio{
+	margin-top: 15% !important;
+}

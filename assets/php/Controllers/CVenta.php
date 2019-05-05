@@ -4,6 +4,7 @@ if(!isset($include)){
 	include_once 'SesionEmpleado.php';
 	include_once '../Models/Inventario.php';
 	include_once '../Models/Usuario.php';
+	include_once '../Models/Empleado.php';
 	include_once '../Models/Cliente.php';
 	include_once '../Models/Proveedor.php';
 	include_once '../Models/Producto.php';
@@ -88,24 +89,38 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		}
 	}else if (!strcmp($method,"verVentas")) {
 		echo json_encode(Venta::verVentas($_GET,false));
-	}else if(!strcmp($method,"terminarVenta")){ //----------------TERMINAR VENTA--------------
+	}else if(!strcmp($method,"terminarVenta")){ 
+	//----------------TERMINAR VENTA--------------
 		$idCliente=$_POST['idCliente'];
 		$resolucion=$_POST['resolucion'];
 		$descuento=$_POST['descuento'];
+		$descuentoPorcentual=$_POST['descuentoPorcentual'];
 		$retefuente=$_POST['retefuente'];
 		$tipoVenta=$_POST['tipoVenta'];
 
 		$cliente=Cliente::obtenerCliente($idCliente);
+		$empleado=Empleado::obtenerEmpleado($objectSession->getEmpleadoActual());
+
 		if($cliente!=false){
+
 			if(isset($_COOKIE['venta'])){
 				$venta=unserialize($_COOKIE['venta']);
 				if($venta instanceof Venta){
-					$empleado=$objectSession->getEmpleadoActual();
-					$factura=$venta->efectuarVenta($resolucion,$empleado,$descuento,$retefuente,$tipoVenta,$idCliente);
-					if($factura instanceof Factura){
-						return SUCCESS;
-					}else{
-						return ERROR;
+					try {
+						$factura=$venta->efectuarVenta($resolucion,$empleado->getIdUsuario(),$descuento,$descuentoPorcentual,$retefuente,$tipoVenta,$cliente->getIdUsuario());
+						if($factura instanceof Factura){
+							try {
+								unset($_COOKIE["venta"]);
+								setcookie("venta", "",time() - 3600, "/");
+								echo SUCCESS;
+							} catch (Exception $e) {
+								echo ERROR;
+							}
+						}else{
+							echo ERROR;
+						}
+					} catch (Exception $e) {
+						echo ERROR;
 					}
 				}else{
 					echo ERROR;
