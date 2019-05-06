@@ -354,32 +354,19 @@
 			return $statement;
 		}
 
-		public function efectuarVenta($resolucion,$idEmpleado, $descuento = 0, $retefuente = 0, $tipoVenta = "Efectivo", $idCliente = 1){ 
+		public function efectuarVenta($resolucion,$idEmpleado,$iva,$subtotal, $descuento = 0, $retefuente = 0, $tipoVenta = "Efectivo", $idCliente = 1){ //$resolucion,$empleado->getIdUsuario(),$iva,$subtotal,$descuento,$descuentoPorcentual,$retefuente,$tipoVenta,$cliente->getIdUsuario());
 		//Factura
 
-			$total=$this->getTotal();
+			$total=$iva+$subtotal;
 			$conexion = Conexion::conectar();
 			$statement=$conexion->prepare("UPDATE `ventas` SET `descuento`=:descuento, `iva` = :iva , `retefuente` = :retefuente, `subtotal`=:subtotal,`total`=:total WHERE `id_venta` = :idVenta");
-			$subtotal=$this->getSubtotal();
 			$idVenta = $this->getIdVenta();
 			$statement->bindValue(':idVenta',$idVenta);
-
 			$statement->bindValue(':descuento',$descuento);
 			$statement->bindValue(':retefuente',$retefuente);
-			$descuento = $descuento / 100;
-			$retefuente = $retefuente / 100;
-
-			$iva= $total - $subtotal;
-			$iva-= $iva*$descuento;
-			$subtotal-= $subtotal*$descuento;
-			$iva-=$iva*$retefuente;
-			$subtotal-=$subtotal*$retefuente;
-			$total = $subtotal + $iva;
-
 			$this->setSubtotal($subtotal,$statement);
 			$this->setTotal($total,$statement);
 			$this->setIva($iva,$statement);
-			
 			$statement->execute();
 
 			if ( $statement ){
