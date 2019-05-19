@@ -390,7 +390,7 @@
 				$precioVenta = $array[$idProductoxCompra]["precioVenta"]; 
 				$inventarioEspecial = Producto::verificarEspecial($idProducto);
 				$idInventarioEspecial = $inventarioEspecial->getIdInventario();
-				$unidadesDebidas = $inventarioEspecial->getUnidades();
+				$unidadesDebidas = $producto->getUnidadesDeuda();
 
 				$unidadesFinales =$unidadesDebidas - $productoxcompra->getNumeroUnidades();
 				if($unidadesFinales >0){

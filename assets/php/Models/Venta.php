@@ -354,7 +354,7 @@
 			return $statement;
 		}
 
-		public function efectuarVenta($resolucion,$idEmpleado,$iva,$subtotal, $descuento = 0, $retefuente = 0, $tipoVenta = "Efectivo", $idCliente = 1){ //$resolucion,$empleado->getIdUsuario(),$iva,$subtotal,$descuento,$descuentoPorcentual,$retefuente,$tipoVenta,$cliente->getIdUsuario());
+		public function efectuarVenta($resolucion,$idEmpleado,$iva,$subtotal, $descuento = 0, $retefuente = 0, $tipoVenta = "Efectivo", $idCliente = 1,$plazo=Null){ //$resolucion,$empleado->getIdUsuario(),$iva,$subtotal,$descuento,$descuentoPorcentual,$retefuente,$tipoVenta,$cliente->getIdUsuario());
 		//Factura
 
 			$total=$iva+$subtotal;
@@ -382,7 +382,7 @@
 					$idInformacionFactura=$resolucion;
 					$factura = new factura($total,$fecha,$idInformacionFactura,$idVenta,$resolucion,$numeroDian); 
 					if($factura){
-						$this->asociarTipoVenta($idEmpleado,$tipoVenta,$idCliente);
+						$this->asociarTipoVenta($idEmpleado,$tipoVenta,$idCliente,$plazo);
 						$statement=null;
 						$resultado=null;
 						$numeroNuevoDian = $numeroDian;
@@ -492,9 +492,9 @@
 			return $statement;
 		}
 
-		public function asociarTipoVenta($idEmpleado, $tipoVenta = "Efectivo", $idCliente = 1){
+		public function asociarTipoVenta($idEmpleado, $tipoVenta = "Efectivo", $idCliente = 1,$plazo){
 
-			$tipoVenta = new TipoVenta ($idCliente,$idEmpleado,$this->getIdVenta(),$tipoVenta);
+			$tipoVenta = new TipoVenta ($idCliente,$idEmpleado,$this->getIdVenta(),$tipoVenta,$plazo);
 
 		}
 

@@ -17,6 +17,7 @@
 		private $activa;
 		private $unidadesTotales;
 		private $precioMayorInventario;
+		private $unidadesDeuda;
 		
 
 		private $inventario;
@@ -31,7 +32,7 @@
 
 		public function __construct0($idProducto, $nombre, $descripcion, $referenciaFabrica, $tieneIva, $clasificacionTributaria, $activa = 1, $codigoBarras = NULL){
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("INSERT INTO `productos` (`id_producto`, `codigo_barras`, `nombre`, `descripcion`, `referencia_fabrica`, `tiene_iva`, `clasificacion_tributaria`, `unidades_totales`, `precio_mayor_inventario`, `activa`) VALUES (:idProducto, :codigoBarras, :nombre, :descripcion, :referenciaFabrica, :tieneIva, :clasificacionTributaria,:unidadesTotales,:precioMayorInventario, :activa)");
+			$statement = $conexion->prepare("INSERT INTO `productos` (`id_producto`, `codigo_barras`, `nombre`, `descripcion`, `referencia_fabrica`, `tiene_iva`, `clasificacion_tributaria`, `unidades_totales`, `precio_mayor_inventario`, `activa`,`unidades_deuda`) VALUES (:idProducto, :codigoBarras, :nombre, :descripcion, :referenciaFabrica, :tieneIva, :clasificacionTributaria,:unidadesTotales,:precioMayorInventario, :activa,:unidadesDeuda)");
 
 			$this->setIdProducto($idProducto,$statement);
 			$this->setCodigoBarras($codigoBarras,$statement);
@@ -43,6 +44,7 @@
 			$this->setActiva($activa,$statement);
 			$this->setUnidadesTotales(0,$statement);
 			$this->setPrecioMayorInventario(0,$statement);
+			$this->setUnidadesDeuda(0,$statement);
 			$statement->execute();
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
@@ -170,6 +172,18 @@
 				$statement->bindParam(':precioMayorInventario',$precioMayorInventario,PDO::PARAM_INT);
 			}
 			$this->precioMayorInventario = $precioMayorInventario;
+			return $this;
+		}
+
+		public function getUnidadesDeuda(){
+			return $this->unidadesDeuda;
+		}
+
+		public function setUnidadesDeuda($unidadesDeuda, $statement=NULL){
+			if($statement!=NULL){
+				$statement->bindParam(':unidadesDeuda',$unidadesDeuda,PDO::PARAM_INT);
+			}
+			$this->unidadesDeuda = $unidadesDeuda;
 			return $this;
 		}
 		//metodos
@@ -396,6 +410,7 @@
 					$producto->setActiva($resultado['activa']);
 					$producto->setUnidadesTotales($producto->calcularUnidades());
 					$producto->setPrecioMayorInventario($producto->obtenerPrecioMayorInventario());
+					$producto->setUnidadesDeuda($resultado['unidades_deuda']);
 
 					$conexion=null;
 					$statement=null;
@@ -526,6 +541,12 @@
 			$statement->bindValue(":idProducto", $idProducto);
 			$statement->bindValue(":unidades", $unidadesFinales);
 			$statement->execute();
+			$statement=null;
+			$statement = $conexion->prepare("UPDATE `productos` SET `unidades_deuda`=`unidades_deuda`+ :unidadesNuevas WHERE `id_producto` = :idProducto");
+			$statement->bindValue(":unidadesNuevas", $unidades);
+			$statement->bindValue(":idProducto", $this->getIdProducto());
+			$statement->execute();
+			$statement=null;
 			$this->calcularUnidades();
 		}
 
