@@ -354,9 +354,9 @@
 			return $statement;
 		}
 
-		public function efectuarVenta($resolucion,$idEmpleado,$iva,$subtotal, $descuento = 0, $retefuente = 0, $tipoVenta = "Efectivo", $idCliente = 1,$plazo=0){ //$resolucion,$empleado->getIdUsuario(),$iva,$subtotal,$descuento,$descuentoPorcentual,$retefuente,$tipoVenta,$cliente->getIdUsuario());
+		public function efectuarVenta($idEmpleado,$iva,$subtotal, $descuento = 0, $retefuente = 0, $tipoVenta = "Efectivo", $idCliente = 1,$plazo=0){ //$resolucion,$empleado->getIdUsuario(),$iva,$subtotal,$descuento,$descuentoPorcentual,$retefuente,$tipoVenta,$cliente->getIdUsuario());
 		//Factura
-
+			$resolucion=1;
 			$total=$iva+$subtotal;
 			$conexion = Conexion::conectar();
 			$statement=$conexion->prepare("UPDATE `ventas` SET `descuento`=:descuento, `iva` = :iva , `retefuente` = :retefuente, `subtotal`=:subtotal,`total`=:total WHERE `id_venta` = :idVenta");
@@ -401,7 +401,7 @@
 					return ERROR;
 				}
 			}else{
-				return ERROR;
+				return Error;
 			}
 
 
