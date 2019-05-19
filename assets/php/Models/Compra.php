@@ -354,13 +354,6 @@
 			$statement= $this->verProductosxCompra();
 			$resultado = $statement->fetchAll();
 			foreach($resultado as $r){
-				$idProducto= $r["PRODUCTOS_id_producto"];
-				$inventarioEspecial = Producto::verificarEspecial($idProducto);
-				if(! $inventarioEspecial){
-					return NOT_FOUND;
-				}
-			}
-			foreach($resultado as $r){
 				$idProductoxCompra= $r["id_productoxcompra"];
 				$nuevaUnidades= $array[$idProductoxCompra]["unidades"];
 				$precioUnitario = $array[$idProductoxCompra]["precioUnitario"];
@@ -389,73 +382,96 @@
 				$nuevaUtilidad= $array[$idProductoxCompra]["utilidad"];
 				$precioVenta = $array[$idProductoxCompra]["precioVenta"]; 
 				$inventarioEspecial = Producto::verificarEspecial($idProducto);
-				$idInventarioEspecial = $inventarioEspecial->getIdInventario();
-				$unidadesDebidas = $producto->getUnidadesDeuda();
+				if($inventarioEspecial){
+					$idInventarioEspecial = $inventarioEspecial->getIdInventario();
+					$unidadesDebidas = $producto->getUnidadesDeuda();
 
-				$unidadesFinales =$unidadesDebidas - $productoxcompra->getNumeroUnidades();
-				if($unidadesFinales >0){
-					$statement = $conexion->prepare("UPDATE `productos` SET `unidades_deuda`=:unidadesDeuda WHERE `id_producto` = :idProducto");
-					$statement->bindValue(":unidadesDeuda", $unidadesFinales);
-					$statement->bindValue(":idProducto", $idProducto);
-					$statement->execute();
-					$statement=null;
-					$statement = $conexion->prepare(" UPDATE `inventario` SET `precio_inventario`=:precioInventario ,`precio_compra`=:precioCompra, `unidades`=:unidades,`valor_utilidad`=:valorUtilidad WHERE `id_inventario` = :idInventario ");
-					$inventario->setUnidades($unidadesFinales,$statement);
-					$inventario->setPrecioCompra($array[$idProductoxCompra]["precioUnitario"],$statement);
-					$inventario->setPrecioInventario($precioVenta,$statement);
-					$statement->bindValue(":idInventario", $idInventarioEspecial);
-					$statement->bindValue(":valorUtilidad", $nuevaUtilidad);
-					$statement->execute();
-					if(!$statement){
-						throw new Exception("Error Processing Request", 1);
-						return ERROR;
+					$unidadesFinales =$unidadesDebidas - $productoxcompra->getNumeroUnidades();
+					if($unidadesFinales >0){
+						$statement = $conexion->prepare("UPDATE `productos` SET `unidades_deuda`=:unidadesDeuda WHERE `id_producto` = :idProducto");
+						$statement->bindValue(":unidadesDeuda", $unidadesFinales);
+						$statement->bindValue(":idProducto", $idProducto);
+						$statement->execute();
+						$statement=null;
+						$statement = $conexion->prepare(" UPDATE `inventario` SET `precio_inventario`=:precioInventario ,`precio_compra`=:precioCompra, `unidades`=:unidades,`valor_utilidad`=:valorUtilidad WHERE `id_inventario` = :idInventario ");
+						$inventario->setUnidades($unidadesFinales,$statement);
+						$inventario->setPrecioCompra($array[$idProductoxCompra]["precioUnitario"],$statement);
+						$inventario->setPrecioInventario($precioVenta,$statement);
+						$statement->bindValue(":idInventario", $idInventarioEspecial);
+						$statement->bindValue(":valorUtilidad", $nuevaUtilidad);
+						$statement->execute();
+						if(!$statement){
+							throw new Exception("Error Processing Request", 1);
+							return ERROR;
+						}
+					}else if($unidadesFinales < 0){
+						$unidadesFinales = (-1)*$unidadesFinales;
+						$statement = $conexion->prepare("UPDATE `productos` SET `unidades_deuda`=:unidadesDeuda WHERE `id_producto` = :idProducto");
+						$statement->bindValue(":unidadesDeuda", 0);
+						$statement->bindValue(":idProducto", $idProducto);
+						$statement->execute();
+						$statement=null;
+						$statement = $conexion->prepare(" DELETE FROM `inventario` WHERE `id_inventario` = :idInventario ");
+						$statement->bindValue(":idInventario", $idInventarioEspecial);
+						$statement->execute();
+						if(!$statement){
+							throw new Exception("Error Processing Request", 1);
+							return ERROR;
+						}
+
+						$inventario=Inventario::obtenerInventario($idProducto,$idProveedor,true);
+						if($inventario){
+							$unidades= $inventario->getUnidades() + $unidadesFinales;
+							$statement2 = $conexion->prepare(" UPDATE `inventario` SET `precio_inventario`=:precioInventario ,`precio_compra`=:precioCompra, `unidades`=:unidades,`valor_utilidad`=:valorUtilidad WHERE `productos_id_producto`=:idProducto and `usuarios_id_usuario` = :idUsuario ");
+							$inventario->setUnidades($unidades,$statement2);
+							$inventario->setPrecioCompra($array[$idProductoxCompra]["precioUnitario"],$statement2);
+							$inventario->setPrecioInventario($precioVenta,$statement2);
+							$statement2->bindValue(":idProducto", $idProducto);
+							$statement2->bindValue(":idUsuario", $idProveedor);
+							$statement2->bindValue(":valorUtilidad", $nuevaUtilidad);
+							$statement2->execute();
+							if(!$statement2){
+								throw new Exception("Error Processing Request", 1);
+								return ERROR;
+							}
+						}else{
+							$unidades= $unidadesFinales;
+							$inventario = new Inventario($precioVenta,$productoxcompra->getPrecioUnitario(),$unidades,0,$idProducto,$idProveedor,$nuevaUtilidad);
+						}
+					}else{
+						$statement = $conexion->prepare("UPDATE `productos` SET `unidades_deuda`=:unidadesDeuda WHERE `id_producto` = :idProducto");
+						$statement->bindValue(":unidadesDeuda", 0);
+						$statement->bindValue(":idProducto", $idProducto);
+						$statement->execute();
+						$statement=null;
+						$statement = $conexion->prepare(" DELETE FROM `inventario` WHERE `id_inventario` = :idInventario ");
+						$statement->bindValue(":idInventario", $idInventarioEspecial);
+						$statement->execute();
+						if(!$statement){
+							throw new Exception("Error Processing Request", 1);
+							return ERROR;
+						}
 					}
-				}else if($unidadesFinales < 0){
-					$unidadesFinales = (-1)*$unidadesFinales;
-					$statement = $conexion->prepare("UPDATE `productos` SET `unidades_deuda`=:unidadesDeuda WHERE `id_producto` = :idProducto");
-					$statement->bindValue(":unidadesDeuda", 0);
-					$statement->bindValue(":idProducto", $idProducto);
-					$statement->execute();
-					$statement=null;
-					$statement = $conexion->prepare(" DELETE FROM `inventario` WHERE `id_inventario` = :idInventario ");
-					$statement->bindValue(":idInventario", $idInventarioEspecial);
-					$statement->execute();
-					if(!$statement){
-						throw new Exception("Error Processing Request", 1);
-						return ERROR;
-					}
+				}else{
 
 					$inventario=Inventario::obtenerInventario($idProducto,$idProveedor,true);
 					if($inventario){
-						$unidades= $inventario->getUnidades() + $unidadesFinales;
-						$statement2 = $conexion->prepare(" UPDATE `inventario` SET `precio_inventario`=:precioInventario ,`precio_compra`=:precioCompra, `unidades`=:unidades,`valor_utilidad`=:valorUtilidad WHERE `productos_id_producto`=:idProducto and `usuarios_id_usuario` = :idUsuario ");
-						$inventario->setUnidades($unidades,$statement2);
-						$inventario->setPrecioCompra($array[$idProductoxCompra]["precioUnitario"],$statement2);
-						$inventario->setPrecioInventario($precioVenta,$statement2);
-						$statement2->bindValue(":idProducto", $idProducto);
-						$statement2->bindValue(":idUsuario", $idProveedor);
-						$statement2->bindValue(":valorUtilidad", $nuevaUtilidad);
-						$statement2->execute();
-						if(!$statement2){
+						$unidades= $inventario->getUnidades() + $productoxcompra->getNumeroUnidades();
+						$statement = $conexion->prepare(" UPDATE `inventario` SET `precio_inventario`=:precioInventario ,`precio_compra`=:precioCompra, `unidades`=:unidades,`valor_utilidad`=:valorUtilidad WHERE `productos_id_producto`=:idProducto and `usuarios_id_usuario` = :idUsuario ");
+						$inventario->setUnidades($unidades,$statement);
+						$inventario->setPrecioCompra($array[$idProductoxCompra]["precioUnitario"],$statement);
+						$inventario->setPrecioInventario($precioVenta,$statement);
+						$statement->bindValue(":idProducto", $idProducto);
+						$statement->bindValue(":idUsuario", $idProveedor);
+						$statement->bindValue(":valorUtilidad", $nuevaUtilidad);
+						$statement->execute();
+						if(!$statement){
 							throw new Exception("Error Processing Request", 1);
 							return ERROR;
 						}
 					}else{
-						$unidades= $unidadesFinales;
+						$unidades= $productoxcompra->getNumeroUnidades();
 						$inventario = new Inventario($precioVenta,$productoxcompra->getPrecioUnitario(),$unidades,0,$idProducto,$idProveedor,$nuevaUtilidad);
-					}
-				}else{
-					$statement = $conexion->prepare("UPDATE `productos` SET `unidades_deuda`=:unidadesDeuda WHERE `id_producto` = :idProducto");
-					$statement->bindValue(":unidadesDeuda", 0);
-					$statement->bindValue(":idProducto", $idProducto);
-					$statement->execute();
-					$statement=null;
-					$statement = $conexion->prepare(" DELETE FROM `inventario` WHERE `id_inventario` = :idInventario ");
-					$statement->bindValue(":idInventario", $idInventarioEspecial);
-					$statement->execute();
-					if(!$statement){
-						throw new Exception("Error Processing Request", 1);
-						return ERROR;
 					}
 				}
 
