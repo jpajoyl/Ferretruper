@@ -394,6 +394,11 @@
 
 				$unidadesFinales =$unidadesDebidas - $productoxcompra->getNumeroUnidades();
 				if($unidadesFinales >0){
+					$statement = $conexion->prepare("UPDATE `productos` SET `unidades_deuda`=:unidadesDeuda WHERE `id_producto` = :idProducto");
+					$statement->bindValue(":unidadesDeuda", $unidadesFinales);
+					$statement->bindValue(":idProducto", $idProducto);
+					$statement->execute();
+					$statement=null;
 					$statement = $conexion->prepare(" UPDATE `inventario` SET `precio_inventario`=:precioInventario ,`precio_compra`=:precioCompra, `unidades`=:unidades,`valor_utilidad`=:valorUtilidad WHERE `id_inventario` = :idInventario ");
 					$inventario->setUnidades($unidadesFinales,$statement);
 					$inventario->setPrecioCompra($array[$idProductoxCompra]["precioUnitario"],$statement);
@@ -407,6 +412,11 @@
 					}
 				}else if($unidadesFinales < 0){
 					$unidadesFinales = (-1)*$unidadesFinales;
+					$statement = $conexion->prepare("UPDATE `productos` SET `unidades_deuda`=:unidadesDeuda WHERE `id_producto` = :idProducto");
+					$statement->bindValue(":unidadesDeuda", 0);
+					$statement->bindValue(":idProducto", $idProducto);
+					$statement->execute();
+					$statement=null;
 					$statement = $conexion->prepare(" DELETE FROM `inventario` WHERE `id_inventario` = :idInventario ");
 					$statement->bindValue(":idInventario", $idInventarioEspecial);
 					$statement->execute();
@@ -435,6 +445,11 @@
 						$inventario = new Inventario($precioVenta,$productoxcompra->getPrecioUnitario(),$unidades,0,$idProducto,$idProveedor,$nuevaUtilidad);
 					}
 				}else{
+					$statement = $conexion->prepare("UPDATE `productos` SET `unidades_deuda`=:unidadesDeuda WHERE `id_producto` = :idProducto");
+					$statement->bindValue(":unidadesDeuda", 0);
+					$statement->bindValue(":idProducto", $idProducto);
+					$statement->execute();
+					$statement=null;
 					$statement = $conexion->prepare(" DELETE FROM `inventario` WHERE `id_inventario` = :idInventario ");
 					$statement->bindValue(":idInventario", $idInventarioEspecial);
 					$statement->execute();
