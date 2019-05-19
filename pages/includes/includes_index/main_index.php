@@ -96,7 +96,7 @@
 							<tr class="tr-info-venta table-success">
 								<th width="50%" scope="row" class="float-right mt">Impresión:</th>
 								<td width="40%" id="impresion">
-									<select class="custom-select mb" id="input-impresion" required>
+									<select class="custom-select mb" id="input-resolucion" required>
 										<option value="1">CARTA</option>
 										<option value="2">POS</option>
 									</select>
