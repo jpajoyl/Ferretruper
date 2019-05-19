@@ -447,13 +447,13 @@
 
 		}
 
-		public function editarPrecioMayorInventarioManualIgualados($precioMayorInventario){
+		public function editarPrecioMayorInventarioManualIgualados($precioMayorInventarioNuevo){
 
 			$idProducto=$this->getIdProducto();
 			$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("UPDATE `productos` SET `precio_mayor_inventario` = :precioMayorInventario  WHERE `productos`.`id_producto` = :idProducto");
 			$statement->bindValue(":idProducto", $idProducto);
-			$this->setPrecioMayorInventario($precioMayorInventario,$statement);
+			$statement->bindValue(":precioMayorInventario", $precioMayorInventarioNuevo);
 			$statement->execute();
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
