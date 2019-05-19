@@ -93,8 +93,9 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 	//----------------TERMINAR VENTA--------------
 		$idCliente=$_POST['idCliente'];
 		$resolucion=$_POST['resolucion'];
+		$iva=$_POST['iva'];
+		$subtotal=$_POST['subtotal'];
 		$descuento=$_POST['descuento'];
-		$descuentoPorcentual=$_POST['descuentoPorcentual'];
 		$retefuente=$_POST['retefuente'];
 		$tipoVenta=$_POST['tipoVenta'];
 
@@ -102,12 +103,16 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		$empleado=Empleado::obtenerEmpleado($objectSession->getEmpleadoActual());
 
 		if($cliente!=false){
-
+			// HOLA
 			if(isset($_COOKIE['venta'])){
 				$venta=unserialize($_COOKIE['venta']);
 				if($venta instanceof Venta){
 					try {
-						$factura=$venta->efectuarVenta($resolucion,$empleado->getIdUsuario(),$descuento,$descuentoPorcentual,$retefuente,$tipoVenta,$cliente->getIdUsuario());
+						$plazo=Null;
+						if($tipoVenta=="Credito"){
+							$plazo=$_POST['plazo'];
+						}
+						$factura=$venta->efectuarVenta($resolucion,$empleado->getIdUsuario(),$iva,$subtotal,$descuento,$retefuente,$tipoVenta,$cliente->getIdUsuario(),$plazo);
 						if($factura instanceof Factura){
 							try {
 								unset($_COOKIE["venta"]);

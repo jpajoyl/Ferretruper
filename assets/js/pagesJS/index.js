@@ -195,8 +195,6 @@ $(document).ready(function() {
       var descuentos=new Object();
       var totalVentaNoModificada=parseInt($(input).attr("total-venta-no-modificada"));
       var totalVenta=parseInt($("#input-total-venta").val());
-      var retefuente=$("#input-retefuente-venta").val();
-      retefuente=(retefuente=="")?0:parseFloat(retefuente);
       totalVenta=totalVenta;
       var descuento=totalVentaNoModificada-totalVenta;
       descuentos.descuento=descuento;
@@ -256,9 +254,11 @@ $(document).ready(function() {
 
     function calcularSubtotal(subtotal,descuento,retefuente){
       var subtotalNuevo=Math.floor((subtotal*(1-descuento/100)*(1-retefuente/100)));
+      var retefuenteValor=Math.floor((subtotal*(1-descuento/100)*(retefuente/100)));
       if(!(Number.isNaN(subtotalNuevo))){
         $("#subtotal-venta").html(numberWithCommas(subtotalNuevo));
         $("#input-subtotal-venta").val(subtotalNuevo);
+        $("#input-retefuente-valor-venta").val(retefuenteValor);
       }
       return subtotalNuevo;
     }
@@ -601,7 +601,7 @@ $(document).ready(function() {
     }
    });
 
-   function terminarVentaContadoUsuario(nombre,idCliente,totalVenta,efectivo){
+   function terminarVentaContadoUsuario(nombre,idCliente,iva,subtotal,descuento,retefuente,totalVenta,efectivo){
     swal({
       title: 'Terminar Venta!',
       html: "<p>Esta seguro de desear terminar la venta</p><p> CLIENTE: <strong>"+nombre+"</strong></p>",
@@ -613,21 +613,16 @@ $(document).ready(function() {
     }).then((result) => {
         if (result.value) {
            var resolucion=0;
-           var descuentoPorcentual=$("#input-descuento").val();
-           descuentoPorcentual=(descuentoPorcentual=="")?0:parseFloat(descuentoPorcentual);
-           var descuento=$("#input-descuento-venta").val();
-           descuento=(descuento=="")?0:parseFloat(descuento);
-           var retefuente=$("#input-retefuente");
-           retefuente=(retefuente=="")?0:parseFloat(retefuente);
            var tipoVenta="Efectivo";
            var data={
-               'idCliente':idCliente,
-               'resolucion':resolucion,
-               'descuentoPorcentual':descuentoPorcentual,
-               'descuento':descuento,
-               'retefuente':retefuente,
-               'tipoVenta':tipoVenta
-           }
+                'idCliente':idCliente,
+                'resolucion':resolucion,
+                'iva':iva,
+                'subtotal':subtotal,
+                'descuento':descuento,
+                'retefuente':retefuente,
+                'tipoVenta':tipoVenta
+            }
            $.ajax({
                url: '../assets/php/Controllers/CVenta.php?method=terminarVenta',
                type: 'POST',
@@ -660,11 +655,25 @@ $(document).ready(function() {
         }
     });
    }
+   $(document).on("change keyup", "#input-plazo", function(e){
+    var plazo=parseInt($(this).val());
+    if(plazo<=0){
+      $(this).val("");
+    }
+  });
 
   $("#form-terminar-venta").submit(function(event){
     event.preventDefault();
     var efectivo=$("#input-efectivo").val();
     efectivo=(efectivo=="")?0:parseInt(efectivo);
+    var iva=$("#input-iva-venta").val();
+    iva=(iva=="")?0:parseInt(iva);
+    var subtotal=$("#input-subtotal-venta").val();
+    subtotal=(subtotal=="")?0:parseInt(subtotal);
+    var descuento=$("#input-descuento-venta").val();
+    descuento=(descuento=="")?0:parseInt(descuento);
+    var retefuente=$("#input-retefuente-valor-venta");
+    retefuente=(retefuente=="")?0:parseInt(retefuente);
     if(efectivo==0){
       var input='<div class="form-group">'+
                             '<center><p>Se iniciara un credito, ingrese el numero de identificacion del cliente. En caso de no ser un credito presione cancelar e ingrese el efectivo</p></center>'+
@@ -682,6 +691,9 @@ $(document).ready(function() {
                         '</div>'+
                         '<div class="form-group">'+
                             '<input type="password" class="form-control" id="input-password" placeholder="Contraseña Administracion" required autocomplete="off">'+
+                        '</div>'+
+                        '<div class="form-group">'+
+                            '<input type="number" class="form-control" id="input-plazo" placeholder="plazo en dias (30 dias)" autocomplete="off">'+
                         '</div>';
       Swal({
         title:'Iniciar Credito',
@@ -706,6 +718,7 @@ $(document).ready(function() {
                 'usuario':$("#input-usuario").val(),
                 'password':$("#input-password").val()
             }
+            
             $.ajax({
                 url: '../assets/php/Controllers/CAdministracion.php?method=comprobarAdministrador',
                 type: 'POST',
@@ -713,20 +726,18 @@ $(document).ready(function() {
                 success:function(data){
                     if(data==1){
                       var resolucion=1;
-                      var descuentoPorcentual=$("#input-descuento").val();
-                      descuentoPorcentual=(descuentoPorcentual=="")?0:parseFloat(descuentoPorcentual);
-                      var descuento=$("#input-descuento-venta").val();
-                      descuento=(descuento=="")?0:parseFloat(descuento);
-                      var retefuente=$("#input-retefuente");
-                      retefuente=(retefuente=="")?0:parseFloat(retefuente);
                       var tipoVenta="Credito";
+                      var plazo=$("#input-plazo");
+                      plazo=(plazo=="")?30:parseInt(plazo);
                       var data={
                           'idCliente':idCliente,
                           'resolucion':resolucion,
-                          'descuentoPorcentual':descuentoPorcentual,
+                          'iva':iva,
+                          'subtotal':subtotal,
                           'descuento':descuento,
                           'retefuente':retefuente,
-                          'tipoVenta':tipoVenta
+                          'tipoVenta':tipoVenta,
+                          'plazo':plazo
                       }
                       $.ajax({
                           url: '../assets/php/Controllers/CVenta.php?method=terminarVenta',
@@ -793,7 +804,7 @@ $(document).ready(function() {
                   }else{
                     nombre=data.nombre;
                   }
-                  terminarVentaContadoUsuario(nombre,idCliente,totalVenta,efectivo);
+                  terminarVentaContadoUsuario(nombre,idCliente,iva,subtotal,descuento,retefuente,totalVenta,efectivo);
                 }
               }else{
                 Swal({

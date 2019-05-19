@@ -75,13 +75,14 @@
 								<th width="50%" scope="row" class="float-right">Total a pagar:</th>
 								<td width="40%" id="total-venta" name="total-venta" total-venta-no-modificada="">0</td>
 								<input type="hidden" class="form-control mb mr" id="input-total-venta-modificada"disabled>
-							</tr>
+							</tr> 
 							<tr class="tr-info-venta table-info">
 								<th scope="row" class="float-right">Retefuente:</th>
 								<td>
 									<label class="form-check-label">
 										<input class="form-check-input" type="checkbox" name="retefuente" id="input-retefuente" value="1">
 										<input type="hidden" class="form-control mb mr" id="input-retefuente-venta"disabled>
+										<input type="hidden" class="form-control mb mr" id="input-retefuente-valor-venta"disabled>
 										Si
 									</label>
 								</td>
