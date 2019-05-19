@@ -123,6 +123,7 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 							}
 						}else{
 							echo "ERROR2";
+							echo (instanceof $factura);
 						}
 					} catch (Exception $e) {
 						echo "ERROR3";
