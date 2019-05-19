@@ -394,9 +394,9 @@
 						$statement->execute();
 						$statement=null;
 						$statement = $conexion->prepare(" UPDATE `inventario` SET `precio_inventario`=:precioInventario ,`precio_compra`=:precioCompra, `unidades`=:unidades,`valor_utilidad`=:valorUtilidad WHERE `id_inventario` = :idInventario ");
-						$inventario->setUnidades($unidadesFinales,$statement);
-						$inventario->setPrecioCompra($array[$idProductoxCompra]["precioUnitario"],$statement);
-						$inventario->setPrecioInventario($precioVenta,$statement);
+						$statement->bindValue(":precioInventario", $precioVenta);
+						$statement->bindValue(":precioCompra", $array[$idProductoxCompra]["precioUnitario"]);
+						$statement->bindValue(":unidades", $unidadesFinales);
 						$statement->bindValue(":idInventario", $idInventarioEspecial);
 						$statement->bindValue(":valorUtilidad", $nuevaUtilidad);
 						$statement->execute();

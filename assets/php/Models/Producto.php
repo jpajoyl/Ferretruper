@@ -494,11 +494,16 @@
 			
 		}
 
-		public function igualarPreciosInventario(){
+		public function igualarPreciosInventario($modo=true,$nuevoPrecio=0){ //modo false admite un nuevo precio como precio a igualar.
 			$conexion = Conexion::conectar();
 			$statement=Inventario::obtenerInventarios($this->getIdProducto());
 			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
-			$precioMayor=$this->obtenerPrecioMayorInventario();
+			if($modo){
+				$precioMayor=$this->obtenerPrecioMayorInventario();
+			}else{
+				$precioMayor=$nuevoPrecio;
+			}
+
 			while($resultado){
 				$inventario=Inventario::obtenerInventario($resultado['id_inventario']);
 				$result= $inventario->cambiarPrecio($precioMayor);
@@ -507,6 +512,7 @@
 				}
 				$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 			}
+
 			return SUCCESS;
 
 		}
