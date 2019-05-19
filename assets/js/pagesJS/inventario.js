@@ -90,6 +90,7 @@ $(document).ready(function() {
           "infoFiltered": ""
         }
       });
+      modificarPrecio("#table-productos tbody",table);
       desactivarProducto("#table-productos tbody",table);
       agregarUnidadesEmergentes("#table-productos tbody",table);
     }else{
@@ -117,7 +118,56 @@ $(document).ready(function() {
       reactivarProducto("#table-productos tbody",table);
     }
   }
+  function modificarPrecio(tbody,table){
+    $(tbody).on("click", ".modificar-precio-producto", function(){
+      var tabla=table.row($(this).parents("tr")).data();
+      var input='<div class="form-group">'+
+                      '<input type="text" class="form-control" id="input-nuevo-precio" placeholder="Escriba el nuevo precio" required autocomplete="off">'+
+                  '</div>';
+      swal({
+        title: 'Precio nuevo de '+tabla[2],
+        html: input,
+        showCancelButton: true,
+        confirmButtonColor: '#FFE000',
+        cancelButtonColor: '#FF0000',
+        confirmButtonText: 'Cambiar!',
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+          if (result.value) {
+              var data={
+                  'idProducto':tabla[1],
+                  'precio':$("#input-nuevo-precio").val()
+              }
+              $.ajax({
+                  url: '../assets/php/Controllers/CInventario.php?method=modificarPrecio',
+                  type: 'POST',
+                  data: data,
+                  success:function(data){
+                    console.log(data);
+                      if(data==1){
+                        setTimeout(function(){
+                          Swal(
+                            'Satisfactorio!',
+                            'Se ha editado el precio del producto',
+                            'success'
+                            );
+                        },100); 
 
+                      }else if(data==0){
+                          setTimeout(function(){
+                              Swal(
+                                'Error!',
+                                'Ha ocurrido un error inesperado.',
+                                'error'
+                              );
+                          },100);  
+                      }
+                  }
+              });
+          }
+      });
+    });
+  }
   function desactivarProducto(tbody,table){
     $(tbody).on("click", ".eliminar-producto", function(){
       var data=table.row($(this).parents("tr")).data();

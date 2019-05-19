@@ -181,6 +181,16 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 				}
 			}
 		}
+	}else if(!strcmp($method,"modificarPrecio")){
+		$idProducto=$_POST['idProducto'];
+		$nuevoPrecio=(int)$_POST['precio'];
+		$producto=Producto::obtenerProducto($idProducto);
+		try {
+			$producto->editarPrecioMayorInventarioManualIgualados($nuevoPrecio);
+			echo SUCCESS;
+		} catch (Exception $e) {
+			echo ERROR;
+		}
 	}
 }
 
