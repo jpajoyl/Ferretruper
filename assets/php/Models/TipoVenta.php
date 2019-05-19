@@ -21,11 +21,11 @@ class TipoVenta{
 		}
 	}
 
-	public function __construct0($id_cliente, $id_empleado, $id_venta, $tipoVenta, $plazo=0){
+	public function __construct0($id_cliente, $id_empleado, $id_venta, $tipoVenta, $plazo){
         $estado = 1;
         if ($tipoVenta == "Credito"){
              $estado = 0 ;
-             if ($plazo = 0){
+             if ($plazo == 0){
                 return ERROR;
              }
         }

@@ -1,5 +1,5 @@
 <?php 
-	/*include "../Conexion.php";
+	include "../Conexion.php";
 	include "../Controllers/Response.php";
 	include "Usuario.php";
 	include "Proveedor.php";
@@ -7,7 +7,7 @@
 	include "Inventario.php";
 	include "Factura.php";
 	include "ProductoXVenta.php";
-	include "TipoVenta.php";*/
+	include "TipoVenta.php";
 	/**
 	 * 
 	 */
@@ -354,7 +354,7 @@
 			return $statement;
 		}
 
-		public function efectuarVenta($resolucion,$idEmpleado,$iva,$subtotal, $descuento = 0, $retefuente = 0, $tipoVenta = "Efectivo", $idCliente = 1,$plazo=Null){ //$resolucion,$empleado->getIdUsuario(),$iva,$subtotal,$descuento,$descuentoPorcentual,$retefuente,$tipoVenta,$cliente->getIdUsuario());
+		public function efectuarVenta($resolucion,$idEmpleado,$iva,$subtotal, $descuento = 0, $retefuente = 0, $tipoVenta = "Efectivo", $idCliente = 1,$plazo=0){ //$resolucion,$empleado->getIdUsuario(),$iva,$subtotal,$descuento,$descuentoPorcentual,$retefuente,$tipoVenta,$cliente->getIdUsuario());
 		//Factura
 
 			$total=$iva+$subtotal;
@@ -567,20 +567,20 @@
 	}
 
 
-	/*$fecha = date('Y-m-d');
+	$fecha = date('Y-m-d');
 	$venta = new Venta($fecha);
-	$venta->seleccionarProducto(1,1);
+	$venta->seleccionarProducto(1,15);
 	echo "Total 1 : " . $venta->getTotal();
 	echo "<br>SubTotal 1 : " . $venta->getSubtotal();
-	$venta->seleccionarProducto(1,1);
+	$venta->seleccionarProducto(2,15);
 	echo "<br>Total 2 : " . $venta->getTotal();
 	echo "<br>SubTotal 2 : " . $venta->getSubtotal();
 	echo "<br>";
 	$array = $venta-> getArrayDistribucion();
 	var_dump($array);
-	$factura = $venta->efectuarVenta(1,64,10,0,"Efectivo",61);
+	$factura = $venta->efectuarVenta(1,64,($venta->getTotal()-$venta->getSubtotal()),$venta->getSubtotal(),0,0,"Credito",61,35);//$resolucion,$idEmpleado,$iva,$subtotal, $descuento = 0, $retefuente = 0, $tipoVenta = "Efectivo", $idCliente = 1,$plazo=Null
 	echo "<br>SubtotalTotal final : " . $venta->getSubtotal();
-	echo "<br>Total final : " .$venta->getTotal();*/
+	echo "<br>Total final : " .$venta->getTotal();
 
 
 	?>

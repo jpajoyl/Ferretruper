@@ -447,7 +447,7 @@
 
 		}
 
-		public function editarPrecioMayorInventarioManual($precioMayorInventario){
+		public function editarPrecioMayorInventarioManualIgualados($precioMayorInventario){
 
 			$idProducto=$this->getIdProducto();
 			$conexion = Conexion::conectar();
@@ -458,6 +458,7 @@
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
 			}
+			$this->igualarPreciosInventario(false,$precioMayorInventario);
 			$this->calcularUnidades();
 			$conexion = NULL;
 			$statement = NULL;
