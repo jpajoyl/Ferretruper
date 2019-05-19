@@ -36,7 +36,6 @@ CREATE TABLE IF NOT EXISTS `ferretruperbd2`.`usuarios` (
   `clasificacion` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_usuario`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 3392
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -397,6 +396,7 @@ INSERT INTO `resoluciones` (`id_resolucion`, `r_descripcion`, `tipo`, `vigente`,
 INSERT INTO `informacion_facturas` (`id_informacion_facturas`, `i_descripcion`) VALUES
 (1, 'A esta factura de venta aplican las normas relativas a la letra de cambio(articulo 5 ley 1231 de 2008). Con esta el comprador declara haber recibido real y materialmente las mercancias o prestacion de servicios descritos en este titulo -valor. '),
 (2, 'pos');
+INSERT INTO `usuarios`(`id_usuario`, `tipo_usuario`, `tipo_identificacion`, `numero_identificacion`, `digito_de_verificacion`, `nombre`, `direccion`, `email`, `ciudad`, `celular`, `telefono`, `activa`, `clasificacion`) VALUES (0,'proveedor','NIT','900307086',7,'FERRETRUPER ESPECIAL','Carrera 51 #40-54','ferretrupersas@hotmail.com','Medellin','0','0',1,'3.-REGIMEN COMUN');
 
 INSERT INTO `usuarios` (`id_usuario`, `tipo_usuario`, `tipo_identificacion`, `numero_identificacion`, `digito_de_verificacion`, `nombre`, `direccion`, `email`, `ciudad`, `celular`, `telefono`, `activa`, `clasificacion`) VALUES
 (61, 'cliente', 'CC', '1017276358', NULL, 'Jose Antonio', 'Cra 26 # 89a-68', 'joseAntonio@gmail.com', 'Medellin', '3116598462', '2265874', 1, ''),
@@ -410,6 +410,8 @@ INSERT INTO `credenciales_de_acceso` (`id_credencial`, `USUARIOS_id_usuario`, `u
 (8, 63, 'juan', '1234', 0),
 (9, 64, 'fredy', '1234', 1);
 
+
+UPDATE `usuarios` SET `id_usuario` = '0' WHERE `usuarios`.`id_usuario` = 1;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
