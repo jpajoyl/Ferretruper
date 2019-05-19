@@ -15,7 +15,7 @@
 					<th>Ref Fabrica</th>
 					<th>Cod. barras</th>
 					<th>Unidades Totales</th>
-					<th>Precio venta</th>
+					<th>Precio Venta</th>
 					<th></th>
 				</tr>
 			</thead>

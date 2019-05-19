@@ -695,6 +695,7 @@ $(document).ready(function() {
                         '<div class="form-group">'+
                             '<input type="number" class="form-control" id="input-plazo" placeholder="plazo en dias (30 dias)" autocomplete="off">'+
                         '</div>';
+                        
       Swal({
         title:'Iniciar Credito',
         html: input,
