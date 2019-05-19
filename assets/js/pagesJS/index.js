@@ -612,7 +612,7 @@ $(document).ready(function() {
       cancelButtonText: "Cancelar"
     }).then((result) => {
         if (result.value) {
-           var resolucion=0;
+           var resolucion=$("input-impresion").val();
            var tipoVenta="Efectivo";
            var data={
                 'idCliente':idCliente,
@@ -695,7 +695,7 @@ $(document).ready(function() {
                         '<div class="form-group">'+
                             '<input type="number" class="form-control" id="input-plazo" placeholder="plazo en dias (30 dias)" autocomplete="off">'+
                         '</div>';
-                        
+
       Swal({
         title:'Iniciar Credito',
         html: input,
@@ -726,7 +726,7 @@ $(document).ready(function() {
                 data: dataAdministracion,
                 success:function(data){
                     if(data==1){
-                      var resolucion=1;
+                      var resolucion=$("input-impresion").val();;
                       var tipoVenta="Credito";
                       var plazo=$("#input-plazo");
                       plazo=(plazo=="")?30:parseInt(plazo);

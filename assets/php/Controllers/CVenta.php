@@ -119,17 +119,17 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 								setcookie("venta", "",time() - 3600, "/");
 								echo SUCCESS;
 							} catch (Exception $e) {
-								echo "ERROR1";
+								echo ERROR;
 							}
 						}else{
-							echo "ERROR2";
+							echo ERROR;
 							echo ($factura);
 						}
 					} catch (Exception $e) {
-						echo "ERROR3";
+						echo ERROR;
 					}
 				}else{
-					echo "ERROR4";
+					echo ERROR;
 				}
 			}
 		}else{
