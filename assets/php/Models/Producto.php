@@ -274,7 +274,7 @@
 			        'dt'        => 6,
 			        'field' => 'precio_mayor_inventario',
 			        'formatter' => function( $d, $row ) {
-			            return number_format($d);
+			            return "<center>".number_format($d)." <button class='btn btn-success btn-xs modificar-precio-producto'><i class='fa fa-money bigfonts'></button></i></center>";
 			        }
 			    ),
 			    array(
