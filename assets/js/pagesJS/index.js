@@ -613,6 +613,7 @@ $(document).ready(function() {
     }).then((result) => {
         if (result.value) {
            var resolucion=$("input-impresion").val();
+           console.log(resolucion);
            var tipoVenta="Efectivo";
            var data={
                 'idCliente':idCliente,
