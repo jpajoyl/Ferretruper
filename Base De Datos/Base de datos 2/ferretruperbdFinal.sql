@@ -17,8 +17,8 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
-
---
+CREATE DATABASE `ferretruperbd2`;
+USE ferretruperbd2;
 -- Base de datos: `ferretruperbd2`
 --
 
@@ -113,8 +113,7 @@ CREATE TABLE `facturas` (
 --
 -- Volcado de datos para la tabla `facturas`
 --
--- --------------------------------------------------------
-
+-- --------------------------
 --
 -- Estructura de tabla para la tabla `factura_compra`
 --
@@ -128,7 +127,7 @@ CREATE TABLE `factura_compra` (
 --
 -- Volcado de datos para la tabla `factura_compra`
 --
--- --------------------------------------------------------
+-- -------------------------
 
 --
 -- Estructura de tabla para la tabla `garantias`
