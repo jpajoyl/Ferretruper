@@ -458,7 +458,7 @@
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
 			}
-			$this->igualarPreciosInventario(false,$precioMayorInventario);
+			$this->igualarPreciosInventario(false,$precioMayorInventarioNuevo);
 			$this->calcularUnidades();
 			$conexion = NULL;
 			$statement = NULL;
