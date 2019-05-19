@@ -17,7 +17,6 @@ if(!isset($include)){
 	$objectSession =new SesionEmpleado();
 	$method = isset($_GET['method'])?$_GET['method']:"";
 	date_default_timezone_set("America/Bogota");
-	
 }
 include_once 'Response.php';
 if($method!="" && $objectSession->getEmpleadoActual()!=null){
@@ -120,16 +119,16 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 								setcookie("venta", "",time() - 3600, "/");
 								echo SUCCESS;
 							} catch (Exception $e) {
-								echo ERROR;
+								echo "ERROR1";
 							}
 						}else{
-							echo ERROR;
+							echo "ERROR2";
 						}
 					} catch (Exception $e) {
-						echo ERROR;
+						echo "ERROR3";
 					}
 				}else{
-					echo ERROR;
+					echo "ERROR4";
 				}
 			}
 		}else{
