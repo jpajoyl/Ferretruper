@@ -219,7 +219,7 @@ class Inventario {
 
 	public function cambiarPrecio($dato,$modo= true){   //modo = True  PrecioInventario -- modo = False ValorUtilidad
 		$conexion = Conexion::conectar();
-		$statement="UPDATE `inventario` SET `precio_inventario`=:precioInventario,`valor_utilidad`=:valorUtilidad WHERE `id_inventario` = :idInventario";
+		$statement=$conexion->prepare("UPDATE `inventario` SET `precio_inventario`=:precioInventario,`valor_utilidad`=:valorUtilidad WHERE `id_inventario` = :idInventario");
 		$statement->bindValue(":idInventario", $this->getIdInventario());
 		if($modo){
 			$nuevaUtilidad = (($dato-$this->getPrecioCompra())/($this->getPrecioCompra()))*100;
