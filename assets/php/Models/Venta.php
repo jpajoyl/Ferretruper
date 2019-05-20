@@ -498,18 +498,14 @@
 		}
 
 		public static function verCreditos($activos){
-			$tipoVenta= "Credito";
+			/*$tipoVenta= "Credito";
 			$conexion = Conexion::conectar();
 			$statement= $conexion->prepare("SELECT * FROM `ventas` JOIN `tipo_venta` ON tipo_venta.VENTAS_id_venta = ventas.id_venta JOIN `usuarios` ON tipo_venta.USUARIOS_id_cliente = usuarios.id_usuario WHERE tipo_venta.estado = :estado and tipo_venta.tipo_venta = :tipoVenta"); 
 			$statement->bindValue(":estado", $activos);
 			$statement->bindValue(":tipoVenta", $tipoVenta);
 			$statement->execute();
 			$conexion=null;
-			return $statement;
-
-
-
-			
+			return $statement;*/
 
 					// Database connection info
 			$dbDetails = array(
@@ -530,19 +526,21 @@
 			            // The `dt` parameter represents the DataTables column identifier.
 
 			$columns = array(
-				array( 'db' => '`ventas`.`id_venta`', 'dt' => 0, 'field' => 'id_venta'),
-				array( 'db' => '`ventas`.`fecha`',  'dt' => 1, 'field' => 'fecha'),
-				array( 'db' => '`ventas`.`total`',      'dt' => 2, 'field' => 'total'),
-				array( 'db' => '`facturas`.`numero_dian`',     'dt' => 3, 'field' => 'numero_dian'),
+				array( 'db' => '`ventas`.`id_venta`', 'dt' => 1, 'field' => 'id_venta'),
+				array( 'db' => '`usuarios`.`id_usuario`',  'dt' => 2, 'field' => 'id_usuario'),
+				array( 'db' => '`ventas`.`total`',      'dt' => 3, 'field' => 'total'),
+				array( 'db' => '`venta`.`fecha`',     'dt' => 4, 'field' => 'fecha'),
+				array( 'db' => '`venta`.`fecha` + `tipo_venta`.`plazo`',     'dt' => 5, 'field' => 'plazo'),
+				array( 'db' => '`tipo_venta`.`estado`',     'dt' => 6, 'field' => 'estado'),
 				array(
 					'db'        => '`ventas`.`anulada`',
-					'dt'        => 4,
+					'dt'        => 7,
 					'field' => 'anulada',
 					'formatter' => function( $d, $row ) {
 						if($d==0){
-							return "<center><button class='btn btn-danger btn-xs anular-factura'><i class='fa fa-trash-o'></i></button> </button><button class='btn btn-primary btn-xs emitir-factura'><i class='fa fa-print'></i></button></center>";
+							return "<center><button class='btn btn-danger btn-xs agregar-abono'><i class='fa fa money bigfonds'></i></button> </button><button> class='btn btn-primary btn-xs emitir-factura-credito'><i class='fa fa-print'></i></button></center>";
 						}else  if($d==1){
-							return "<center></button><button class='btn btn-warning btn-xs emitir-factura'><i class='fa fa-print'></i></button></center>";
+							return "<center></button><button class='btn btn-warning btn-xs emitir-factura-credito'><i class='fa fa-print'></i></button></center>";
 						}else{
 							return "";
 						}
@@ -552,14 +550,14 @@
 
 			);
 
-			if(!$papelera){
-				$whereStatement = '`ventas`.`anulada`=0';
+			if(!$pagado){
+				$whereStatement = "`tipo_venta`.`estado` = 0 and tipo_venta.tipo_venta = 'Credito'";
 			}else{
-				$whereStatement = '`ventas`.`anulada`=1';
+				$whereStatement = "`tipo_venta`.`estado` = 1 and tipo_venta.tipo_venta = 'Credito'";
 			}
 			            // Include SQL query processing class
 			require('../ssp.customized.class.php');
-			$joinQuery = "FROM `ventas` JOIN `facturas` ON (`ventas`.`id_venta` = `facturas`.`ventas_id_venta`)";
+			$joinQuery = "FROM `ventas` JOIN `tipo_venta` ON tipo_venta.VENTAS_id_venta = ventas.id_venta JOIN `usuarios` ON tipo_venta.USUARIOS_id_cliente = usuarios.id_usuario";
 
 			            // Output data
 			return SSP::simple( $request, $dbDetails, $table, $primaryKey, $columns, $joinQuery, $whereStatement);
@@ -575,7 +573,7 @@
 				while($resultado){
 					$id_producto = $resultado['PRODUCTOS_id_producto'];
 					$unidades = $resultado['unidades'];
-					$statement2 = $conexion->prepare("SELECT * FROM `inventario` WHERE `productos_id_producto` = :idProducto ORDER BY `inventario`.`precio_inventario` DESC");
+					$statement2 = $conexion->prepare("SELECT * FROM `inventario` WHERE `productos_id_producto` = :idProducto AND `id_inventario` <> 0 ORDER BY `inventario`.`precio_inventario` DESC");
 					$statement2->bindValue(":idProducto", $id_producto);
 					$statement2->execute();
 					$resultado2 =  $statement2->fetch(PDO::FETCH_ASSOC);
@@ -583,11 +581,12 @@
 						$id_inventario = $resultado2['id_inventario'];
 						$unidades = $resultado2['unidades'] + $unidades;
 						$statement2 = null;
-						$statement2 = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidades WHERE 1");
+						$statement2 = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidades WHERE `id_inventario`  = :idInventario AND `id_inventario` <> 0");
 						$statement2->bindValue(":unidades", $unidades);
+						$statement2->bindValue(":idInventario", $id_inventario);
 						$statement2->execute();
 						$producto=Producto::obtenerProducto($id_producto);
-
+						$unidades = 0;
 						if(!$statement2){
 							return ERROR;
 						}
