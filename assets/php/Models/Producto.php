@@ -269,9 +269,10 @@
 			    array( 'db' => 'referencia_fabrica',      'dt' => 3,'field' => 'referencia_fabrica'),
 			    array( 'db' => 'codigo_barras',     'dt' => 4,'field' => 'codigo_barras'),
 			    array( 'db' => 'unidades_totales',    'dt' => 5,'field' => 'unidades_totales'),
+			    array( 'db' => 'unidades_deuda',    'dt' => 6,'field' => 'unidades_deuda'),
 			    array(
 			        'db'        => 'precio_mayor_inventario',
-			        'dt'        => 6,
+			        'dt'        => 7,
 			        'field' => 'precio_mayor_inventario',
 			        'formatter' => function( $d, $row ) {
 			            return "<center>".number_format($d)." <button class='btn btn-success btn-xs modificar-precio-producto'><i class='fa fa-money bigfonts'></button></i></center>";
@@ -279,7 +280,7 @@
 			    ),
 			    array(
 			        'db'        => 'activa',
-			        'dt'        => 7,
+			        'dt'        => 8,
 			        'field' => 'activa',
 			        'formatter' => function( $d, $row ) {
 			            if($d==1){
@@ -291,8 +292,8 @@
 			            }
 			        }
 			    ),
-			    array( 'db' => 'descripcion',    'dt' => 8,'field' => 'descripcion'),
-			    array( 'db' => 'tiene_iva',    'dt' => 9,'field' => 'tiene_iva')
+			    array( 'db' => 'descripcion',    'dt' => 9,'field' => 'descripcion'),
+			    array( 'db' => 'tiene_iva',    'dt' => 10,'field' => 'tiene_iva')
 			);
 
 			// Include SQL query processing class

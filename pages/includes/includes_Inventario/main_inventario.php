@@ -20,6 +20,7 @@
 					<th>Ref Fabrica</th>
 					<th>Cod. barras</th>
 					<th>Unidades Totales</th>
+					<th>Unidades en deuda</th>
 					<th>Precio venta</th>
 					<th></th>
 				</tr>

@@ -54,7 +54,7 @@
 			$this->setIdVenta($idVenta);
 			$conexion = NULL;
 			$statement = NULL;
-		
+
 		}
 
 		//get & set
@@ -113,7 +113,7 @@
 				$statement->bindParam(':total',$total,PDO::PARAM_INT);
 			}
 			$this->total = $total;
-	
+
 		}
 
 		public function getDescuento(){
@@ -427,57 +427,57 @@
 
 		public static function verVentas($request,$papelera=true){
 		// Database connection info
-            $dbDetails = array(
-                'host' => 'localhost',
-                'user' => 'root',
-                'pass' => '',
-                'db'   => 'ferretruperbd2'
-            );
+			$dbDetails = array(
+				'host' => 'localhost',
+				'user' => 'root',
+				'pass' => '',
+				'db'   => 'ferretruperbd2'
+			);
 
             // DB table to use
-            $table = 'ventas';
+			$table = 'ventas';
 
             // Table's primary key
-            $primaryKey = 'id_venta';
+			$primaryKey = 'id_venta';
 
             // Array of database columns which should be read and sent back to DataTables.
             // The `db` parameter represents the column name in the database. 
             // The `dt` parameter represents the DataTables column identifier.
-            
-	        $columns = array(
-	                array( 'db' => '`ventas`.`id_venta`', 'dt' => 0, 'field' => 'id_venta'),
-	                array( 'db' => '`ventas`.`fecha`',  'dt' => 1, 'field' => 'fecha'),
-	                array( 'db' => '`ventas`.`total`',      'dt' => 2, 'field' => 'total'),
-	                array( 'db' => '`facturas`.`numero_dian`',     'dt' => 3, 'field' => 'numero_dian'),
-	                array(
-				        'db'        => '`ventas`.`anulada`',
-				        'dt'        => 4,
-				        'field' => 'anulada',
-				        'formatter' => function( $d, $row ) {
-				            if($d==0){
-				            	return "<center><button class='btn btn-danger btn-xs anular-factura'><i class='fa fa-trash-o'></i></button> </button><button class='btn btn-primary btn-xs emitir-factura'><i class='fa fa-print'></i></button></center>";
-				            }else  if($d==1){
-			            		return "<center></button><button class='btn btn-warning btn-xs emitir-factura'><i class='fa fa-print'></i></button></center>";
-			           		}else{
-				            	return "";
-				            }
-				        }
-				    )
+
+			$columns = array(
+				array( 'db' => '`ventas`.`id_venta`', 'dt' => 0, 'field' => 'id_venta'),
+				array( 'db' => '`ventas`.`fecha`',  'dt' => 1, 'field' => 'fecha'),
+				array( 'db' => '`ventas`.`total`',      'dt' => 2, 'field' => 'total'),
+				array( 'db' => '`facturas`.`numero_dian`',     'dt' => 3, 'field' => 'numero_dian'),
+				array(
+					'db'        => '`ventas`.`anulada`',
+					'dt'        => 4,
+					'field' => 'anulada',
+					'formatter' => function( $d, $row ) {
+						if($d==0){
+							return "<center><button class='btn btn-danger btn-xs anular-factura'><i class='fa fa-trash-o'></i></button> </button><button class='btn btn-primary btn-xs emitir-factura'><i class='fa fa-print'></i></button></center>";
+						}else  if($d==1){
+							return "<center></button><button class='btn btn-warning btn-xs emitir-factura'><i class='fa fa-print'></i></button></center>";
+						}else{
+							return "";
+						}
+					}
+				)
 
 
-	            );
+			);
 
-	        if(!$papelera){
-	            $whereStatement = '`ventas`.`anulada`=0';
-        	}else{
-	            $whereStatement = '`ventas`.`anulada`=1';
-        	}
+			if(!$papelera){
+				$whereStatement = '`ventas`.`anulada`=0';
+			}else{
+				$whereStatement = '`ventas`.`anulada`=1';
+			}
             // Include SQL query processing class
-            require('../ssp.customized.class.php');
-            $joinQuery = "FROM `ventas` JOIN `facturas` ON (`ventas`.`id_venta` = `facturas`.`ventas_id_venta`)";
+			require('../ssp.customized.class.php');
+			$joinQuery = "FROM `ventas` JOIN `facturas` ON (`ventas`.`id_venta` = `facturas`.`ventas_id_venta`)";
 
             // Output data
-            return SSP::simple( $request, $dbDetails, $table, $primaryKey, $columns, $joinQuery, $whereStatement);
+			return SSP::simple( $request, $dbDetails, $table, $primaryKey, $columns, $joinQuery, $whereStatement);
 		}
 
 
@@ -506,6 +506,63 @@
 			$statement->execute();
 			$conexion=null;
 			return $statement;
+
+
+
+			
+
+					// Database connection info
+			$dbDetails = array(
+				'host' => 'localhost',
+				'user' => 'root',
+				'pass' => '',
+				'db'   => 'ferretruperbd2'
+			);
+
+			            // DB table to use
+			$table = 'ventas';
+
+			            // Table's primary key
+			$primaryKey = 'id_venta';
+
+			            // Array of database columns which should be read and sent back to DataTables.
+			            // The `db` parameter represents the column name in the database. 
+			            // The `dt` parameter represents the DataTables column identifier.
+
+			$columns = array(
+				array( 'db' => '`ventas`.`id_venta`', 'dt' => 0, 'field' => 'id_venta'),
+				array( 'db' => '`ventas`.`fecha`',  'dt' => 1, 'field' => 'fecha'),
+				array( 'db' => '`ventas`.`total`',      'dt' => 2, 'field' => 'total'),
+				array( 'db' => '`facturas`.`numero_dian`',     'dt' => 3, 'field' => 'numero_dian'),
+				array(
+					'db'        => '`ventas`.`anulada`',
+					'dt'        => 4,
+					'field' => 'anulada',
+					'formatter' => function( $d, $row ) {
+						if($d==0){
+							return "<center><button class='btn btn-danger btn-xs anular-factura'><i class='fa fa-trash-o'></i></button> </button><button class='btn btn-primary btn-xs emitir-factura'><i class='fa fa-print'></i></button></center>";
+						}else  if($d==1){
+							return "<center></button><button class='btn btn-warning btn-xs emitir-factura'><i class='fa fa-print'></i></button></center>";
+						}else{
+							return "";
+						}
+					}
+				)
+
+
+			);
+
+			if(!$papelera){
+				$whereStatement = '`ventas`.`anulada`=0';
+			}else{
+				$whereStatement = '`ventas`.`anulada`=1';
+			}
+			            // Include SQL query processing class
+			require('../ssp.customized.class.php');
+			$joinQuery = "FROM `ventas` JOIN `facturas` ON (`ventas`.`id_venta` = `facturas`.`ventas_id_venta`)";
+
+			            // Output data
+			return SSP::simple( $request, $dbDetails, $table, $primaryKey, $columns, $joinQuery, $whereStatement);
 		}
 
 		public static function anularVenta($idVenta){ 
@@ -542,21 +599,21 @@
 					$resultado = $statement->fetch(PDO::FETCH_ASSOC);
 				}
 
-			$statement = null;
-			$statement = $conexion->prepare("UPDATE `ventas` SET `anulada`= 1,`fecha_anulada`=:fechaAnulada WHERE id_venta = :idVenta");
-			$fechaAnulada = date('Y-m-d');
-			$statement->bindValue(":fechaAnulada", $fechaAnulada);
-			$statement->bindValue(":idVenta", $idVenta);
-			$statement->execute();
-			if($statement){
-				$factura = Factura::obtenerFactura($idVenta,false);
-				$factura ->anularFactura();
-			}else{
-				return ERROR;
-			}
-			$statement = null;
-			$conexion = null;
-			return SUCCESS;
+				$statement = null;
+				$statement = $conexion->prepare("UPDATE `ventas` SET `anulada`= 1,`fecha_anulada`=:fechaAnulada WHERE id_venta = :idVenta");
+				$fechaAnulada = date('Y-m-d');
+				$statement->bindValue(":fechaAnulada", $fechaAnulada);
+				$statement->bindValue(":idVenta", $idVenta);
+				$statement->execute();
+				if($statement){
+					$factura = Factura::obtenerFactura($idVenta,false);
+					$factura ->anularFactura();
+				}else{
+					return ERROR;
+				}
+				$statement = null;
+				$conexion = null;
+				return SUCCESS;
 
 			}else{
 				return ERROR;
