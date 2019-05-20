@@ -451,6 +451,8 @@
 
 			$idProducto=$this->getIdProducto();
 			$conexion = Conexion::conectar();
+			$this->igualarPreciosInventario(false,$precioMayorInventarioNuevo);
+			$this->calcularUnidades();
 			$statement = $conexion->prepare("UPDATE `productos` SET `precio_mayor_inventario` = :precioMayorInventario  WHERE `productos`.`id_producto` = :idProducto");
 			$statement->bindValue(":idProducto", $idProducto);
 			$statement->bindValue(":precioMayorInventario", $precioMayorInventarioNuevo);
@@ -458,8 +460,6 @@
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
 			}
-			$this->igualarPreciosInventario(false,$precioMayorInventarioNuevo);
-			$this->calcularUnidades();
 			$conexion = NULL;
 			$statement = NULL;
 
