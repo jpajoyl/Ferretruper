@@ -408,9 +408,9 @@
 					$producto->setTieneIva($resultado['tiene_iva']);
 					$producto->setClasificacionTributaria($resultado['clasificacion_tributaria']);
 					$producto->setActiva($resultado['activa']);
+					$producto->setUnidadesDeuda($resultado['unidades_deuda']);
 					$producto->setUnidadesTotales($producto->calcularUnidades());
 					$producto->setPrecioMayorInventario($producto->obtenerPrecioMayorInventario());
-					$producto->setUnidadesDeuda($resultado['unidades_deuda']);
 
 					$conexion=null;
 					$statement=null;
