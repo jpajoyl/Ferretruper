@@ -33,6 +33,33 @@ $(document).ready(function() {
 
 	function loadData(pagados){
         window.table=$('#table-creditos').DataTable({
+          "processing": true,
+          "serverSide": true,
+          "ajax": "../assets/php/Controllers/CProducto.php?method=verCreditos&activos="+pagados,
+          "columnDefs": [ {"render": function (data, type, row) {
+            return "";
+          },
+          className: "details-control",
+          "targets": [0]} ],
+          "destroy":true,
+          "autoWidth": false,
+          "responsive":true,
+          "language": {
+            "lengthMenu": "Mostrar _MENU_ registros por pagina",
+            "zeroRecords": "No se han encontrado registros",
+            "info": "(_MAX_ productos) Pagina _PAGE_ de _PAGES_",
+            "search": "Buscar",
+            "infoEmpty": "No hay registros disponibles",
+            "infoFiltered": ""
+          }
+        });
+
+
+
+
+
+
+/*        window.table=$('#table-creditos').DataTable({
             "ajax":{
                 "method":"POST",
                 "url":"../assets/php/Controllers/CCredito.php?method=verCreditos&activos="+pagados,
@@ -100,7 +127,7 @@ $(document).ready(function() {
                 } );
             } ).draw();
 
-        agregarAbono("#table-creditos tbody",table);
+        agregarAbono("#table-creditos tbody",table);*/
         
     }
 

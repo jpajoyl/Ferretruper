@@ -15,11 +15,11 @@
 			<thead class="cf">
 				<tr>
 					<th></th>
-					<th></th>
 					<th>No venta</th>
 					<th>Cliente</th>
 					<th>Valor</th>
-					<th>Fecha ini/fin</th>
+					<th>Fecha inicio</th>
+					<th>Fecha fin</th>
 					<th>Estado</th>
 					<th></th>
 				</tr>
