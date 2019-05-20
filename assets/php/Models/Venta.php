@@ -606,11 +606,8 @@
 				$statement->bindValue(":fechaAnulada", $fechaAnulada);
 				$statement->bindValue(":idVenta", $idVenta);
 				$statement->execute();
-<<<<<<< HEAD
-				if($statement){
-=======
+
 				if($statement){ 	
->>>>>>> 587fc8e9c01f538973feffe99ee7348c37c85e9c
 					$factura = Factura::obtenerFactura($idVenta,false);
 					$factura ->anularFactura();
 				}else{
