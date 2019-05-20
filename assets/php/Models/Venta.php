@@ -530,7 +530,7 @@
 				array( 'db' => '`usuarios`.`id_usuario`',  'dt' => 2, 'field' => 'id_usuario'),
 				array( 'db' => '`ventas`.`total`',      'dt' => 3, 'field' => 'total'),
 				array( 'db' => '`venta`.`fecha`',     'dt' => 4, 'field' => 'fecha'),
-				array( 'db' => '`venta`.`fecha` + `tipo_venta`.`plazo`',     'dt' => 5, 'field' => 'plazo'),
+				array( 'db' => '`tipo_venta`.`plazo`',     'dt' => 5, 'field' => 'plazo'),
 				array( 'db' => '`tipo_venta`.`estado`',     'dt' => 6, 'field' => 'estado'),
 				array(
 					'db'        => '`ventas`.`anulada`',
