@@ -731,7 +731,7 @@ $(document).ready(function() {
                       var plazo=$("#input-plazo");
                       plazo=(plazo=="")?30:parseInt(plazo);
                       var data={
-                          'idCliente':idCliente,
+                          'idCliente':idUsuario,
                           'resolucion':resolucion,
                           'iva':iva,
                           'subtotal':subtotal,
