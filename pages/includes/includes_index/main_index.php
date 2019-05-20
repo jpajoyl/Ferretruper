@@ -82,7 +82,7 @@
 									<label class="form-check-label">
 										<input class="form-check-input" type="checkbox" name="retefuente" id="input-retefuente" value="1">
 										<input type="hidden" class="form-control mb mr" id="input-retefuente-venta"disabled>
-										<input type="hidden" class="form-control mb mr" id="input-retefuente-valor-venta"disabled>
+										<input type="hidden" class="form-control mb mr" id="input-valor-retefuente-venta"disabled>
 										Si
 									</label>
 								</td>

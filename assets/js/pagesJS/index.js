@@ -258,7 +258,7 @@ $(document).ready(function() {
       if(!(Number.isNaN(subtotalNuevo))){
         $("#subtotal-venta").html(numberWithCommas(subtotalNuevo));
         $("#input-subtotal-venta").val(subtotalNuevo);
-        $("#input-retefuente-valor-venta").val(retefuenteValor);
+        $("#input-valor-retefuente-venta").val(retefuenteValor);
       }
       return subtotalNuevo;
     }
@@ -672,7 +672,7 @@ $(document).ready(function() {
     subtotal=(subtotal=="")?0:parseInt(subtotal);
     var descuento=$("#input-descuento-venta").val();
     descuento=(descuento=="")?0:parseInt(descuento);
-    var retefuente=$("#input-retefuente-valor-venta");
+    var retefuente=$("#input-valor-retefuente-venta").val();
     retefuente=(retefuente=="")?0:parseInt(retefuente);
     if(efectivo==0){
       var input='<div class="form-group">'+
