@@ -152,7 +152,7 @@ $(document).ready(function() {
                             'success'
                             );
                         },100); 
-
+                        loadData(false);
                       }else if(data==0){
                           setTimeout(function(){
                               Swal(
