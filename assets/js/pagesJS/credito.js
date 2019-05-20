@@ -35,7 +35,7 @@ $(document).ready(function() {
         window.table=$('#table-creditos').DataTable({
           "processing": true,
           "serverSide": true,
-          "ajax": "../assets/php/Controllers/CProducto.php?method=verCreditos&activos="+pagados,
+          "ajax": "../assets/php/Controllers/CCredito.php?method=verCreditos&activos="+pagados,
           "columnDefs": [ {"render": function (data, type, row) {
             return "";
           },
