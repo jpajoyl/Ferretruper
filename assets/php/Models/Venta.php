@@ -575,7 +575,6 @@
 				while($resultado){
 					$id_producto = $resultado['PRODUCTOS_id_producto'];
 					$unidades = $resultado['unidades'];
-					$statement2 = null;
 					$statement2 = $conexion->prepare("SELECT * FROM `inventario` WHERE `productos_id_producto` = :idProducto ORDER BY `inventario`.`precio_inventario` DESC");
 					$statement2->bindValue(":idProducto", $id_producto);
 					$statement2->execute();
@@ -587,10 +586,12 @@
 						$statement2 = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidades WHERE 1");
 						$statement2->bindValue(":unidades", $unidades);
 						$statement2->execute();
+						$producto=Producto::obtenerProducto($id_producto);
 
 						if(!$statement2){
 							return ERROR;
 						}
+						$statement2 = null;
 
 					}else{
 						return ERROR;
@@ -605,7 +606,11 @@
 				$statement->bindValue(":fechaAnulada", $fechaAnulada);
 				$statement->bindValue(":idVenta", $idVenta);
 				$statement->execute();
+<<<<<<< HEAD
 				if($statement){
+=======
+				if($statement){ 	
+>>>>>>> 587fc8e9c01f538973feffe99ee7348c37c85e9c
 					$factura = Factura::obtenerFactura($idVenta,false);
 					$factura ->anularFactura();
 				}else{
@@ -637,6 +642,7 @@
 	$factura = $venta->efectuarVenta(1,64,($venta->getTotal()-$venta->getSubtotal()),$venta->getSubtotal(),0,0,"Credito",61,35);//$resolucion,$idEmpleado,$iva,$subtotal, $descuento = 0, $retefuente = 0, $tipoVenta = "Efectivo", $idCliente = 1,$plazo=Null
 	echo "<br>SubtotalTotal final : " . $venta->getSubtotal();
 	echo "<br>Total final : " .$venta->getTotal();*/
+
 
 
 	?>
