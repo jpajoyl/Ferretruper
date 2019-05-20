@@ -728,7 +728,7 @@ $(document).ready(function() {
                     if(data==1){
                       var resolucion=$("#input-resolucion").val();
                       var tipoVenta="Credito";
-                      var plazo=$("#input-plazo");
+                      var plazo=$("#input-plazo").val();
                       plazo=(plazo=="")?30:parseInt(plazo);
                       var data={
                           'idCliente':idUsuario,
