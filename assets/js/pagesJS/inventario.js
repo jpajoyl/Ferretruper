@@ -51,7 +51,56 @@ $(document).ready(function() {
                             'success'
                             );
                         },100); 
-
+                        loadData(false);
+                      }else if(data==0){
+                          setTimeout(function(){
+                              Swal(
+                                'Error!',
+                                'Ha ocurrido un error inesperado.',
+                                'error'
+                              );
+                          },100);  
+                      }
+                  }
+              });
+          }
+      });
+    });
+  }
+  function sustraerUnidadesEmergentes(tbody,table){
+    $(tbody).on("click", ".sustraer-producto", function(){
+      var tabla=table.row($(this).parents("tr")).data();
+      var input='<div class="form-group">'+
+                      '<input type="text" class="form-control" id="input-unidades-s" placeholder="Unidades para sustraer al producto" required autocomplete="off">'+
+                  '</div>';
+      swal({
+        title: 'Sustraer unidades a '+tabla[2],
+        html: input,
+        showCancelButton: true,
+        confirmButtonColor: '#FFE000',
+        cancelButtonColor: '#FF0000',
+        confirmButtonText: 'Sustraer!',
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+          if (result.value) {
+              var data={
+                  'idProducto':tabla[1],
+                  'unidades':$("#input-unidades-s").val()
+              }
+              $.ajax({
+                  url: '../assets/php/Controllers/CInventario.php?method=sustraerUnidadesEmergentes',
+                  type: 'POST',
+                  data: data,
+                  success:function(data){
+                      if(data==1){
+                        setTimeout(function(){
+                          Swal(
+                            'Satisfactorio!',
+                            'Se han sustraido unidades emergentes al producto',
+                            'success'
+                            );
+                        },100); 
+                        loadData(false);
                       }else if(data==0){
                           setTimeout(function(){
                               Swal(
@@ -93,6 +142,8 @@ $(document).ready(function() {
       modificarPrecio("#table-productos tbody",table);
       desactivarProducto("#table-productos tbody",table);
       agregarUnidadesEmergentes("#table-productos tbody",table);
+      sustraerUnidadesEmergentes("#table-productos tbody",table);
+
     }else{
       window.table=$('#table-productos').DataTable({
         "processing": true,

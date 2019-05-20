@@ -335,12 +335,11 @@ class Factura {
 		$pdf->Cell(23,5, "VR UNITARIO:",1,0,'J',false);
 		$pdf->Cell(23,5, "VR TOTAL:",1,0,'J',false);
 		$pdf->ln(10);
-		$totalBruto=0;
-		$totalFinal=0;
-		$totalDescuento=0;
-		$totalIva=0;
-		$descuento = $venta->getDescuento();
-		if ($descuento==NULL) {
+		$totalBruto=$venta->getSubtotal();
+		$totalFinal=$venta->getTotal();
+		$totalDescuento=$venta->getDescuento();
+		$totalIva=$venta->getIva();
+/*		if ($descuento==NULL) {
 			$descuento = 0;
 		}
 		$descuento = $descuento/100;
@@ -353,7 +352,6 @@ class Factura {
 			$valorTotal = $item['unidades'] * $item['precio_venta'];
 			$pdf->Cell(23,3.5, number_format($valorTotal),0,1,'J',false);
 			$tieneIva = $item['tiene_iva'];
-
 			if ($tieneIva==1) {
 				$descuentoUnitarioSinIva=(($item['precio_venta']/(1+IVA))*$descuento);
 				$descuentoTotalSinIva=$descuentoUnitarioSinIva*$item['unidades'];
@@ -373,7 +371,7 @@ class Factura {
 				$totalDescuento+=$descuentoTotal;
 
 			}
-		}
+		}*/
 		$idResolucion=$this->getResolucion();
 		$idInformacionFacturas=$this->getInformacionFactura();
 		$consulta=$conexion->prepare("SELECT r_descripcion FROM `resoluciones` WHERE id_resolucion = :idResolucion");
@@ -599,19 +597,19 @@ $pdf->MultiCell(190,4, utf8_decode($descripcionResolucion),0,"C",false);
 		$textypos+=6;
 		$pdf->setX(2);
 		$pdf->Cell(5,$textypos,utf8_decode('Cód    Artículo    Referencia    Cantidad  Vr.Unitario    Vr.Total'));
-		$totalBruto=0;
-		$totalFinal=0;
-		$totalDescuento=0;
-		$totalIva=0;
-		$descuento = $venta->getDescuento();
+		$totalBruto=$venta->getSubtotal();
+		$totalFinal=$venta->getTotal();
+		$totalDescuento=$venta->getDescuento();
+		$totalIva=$venta->getIva();
+/*		$descuento = $venta->getDescuento();
 		if ($descuento==NULL) {
 			$descuento = 0;
 		}
-		$descuento = $descuento/100;
+		$descuento = $descuento/100;*/
 		$off = $textypos+6;
 		$pdf->SetFont('Arial','',3);
 		$pdf->ln(7);
-		foreach($productos as $item){
+/*		foreach($productos as $item){
 			$pdf->setX(2);
 			$pdf->Cell(5,2,$item["id_producto"]);
 			$pdf->setX(6);
@@ -648,7 +646,7 @@ $pdf->MultiCell(190,4, utf8_decode($descripcionResolucion),0,"C",false);
 				$totalDescuento+=$descuentoTotal;
 
 			}
-		}
+		}*/
 		$pdf->ln(2);
 		$pdf->SetFont('Arial','',4);
 		$pdf->setX(4);

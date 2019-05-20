@@ -191,6 +191,16 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 		} catch (Exception $e) {
 			echo ERROR;
 		}
+	}else if(!strcmp($method,"sustraerUnidadesEmergentes")){
+		$idProducto=$_POST['idProducto'];
+		$unidades=$_POST['unidades'];
+		$producto=Producto::obtenerProducto($idProducto);
+		try {
+			$producto->quitarUnidadesEmergentes($unidades);
+			echo SUCCESS;
+		} catch (Exception $e) {
+			echo ERROR;
+		}
 	}
 }
 
