@@ -497,7 +497,7 @@
 
 		}
 
-		public static function verCreditos($activos){
+		public static function verCreditos($request,$pagado=false){
 			/*$tipoVenta= "Credito";
 			$conexion = Conexion::conectar();
 			$statement= $conexion->prepare("SELECT * FROM `ventas` JOIN `tipo_venta` ON tipo_venta.VENTAS_id_venta = ventas.id_venta JOIN `usuarios` ON tipo_venta.USUARIOS_id_cliente = usuarios.id_usuario WHERE tipo_venta.estado = :estado and tipo_venta.tipo_venta = :tipoVenta"); 
@@ -550,7 +550,7 @@
 
 			);
 
-			if(!$pagado){
+			if($pagado){
 				$whereStatement = "`tipo_venta`.`estado` = 0 and tipo_venta.tipo_venta = 'Credito'";
 			}else{
 				$whereStatement = "`tipo_venta`.`estado` = 1 and tipo_venta.tipo_venta = 'Credito'";
