@@ -612,8 +612,7 @@ $(document).ready(function() {
       cancelButtonText: "Cancelar"
     }).then((result) => {
         if (result.value) {
-           var resolucion=$("input-impresion").val();
-           console.log(resolucion);
+           var resolucion=$("#input-resolucion").val();
            var tipoVenta="Efectivo";
            var data={
                 'idCliente':idCliente,
@@ -727,7 +726,7 @@ $(document).ready(function() {
                 data: dataAdministracion,
                 success:function(data){
                     if(data==1){
-                      var resolucion=$("input-impresion").val();;
+                      var resolucion=$("#input-resolucion").val();
                       var tipoVenta="Credito";
                       var plazo=$("#input-plazo");
                       plazo=(plazo=="")?30:parseInt(plazo);

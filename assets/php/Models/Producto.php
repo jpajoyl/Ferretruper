@@ -451,6 +451,8 @@
 
 			$idProducto=$this->getIdProducto();
 			$conexion = Conexion::conectar();
+			$this->igualarPreciosInventario(false,$precioMayorInventarioNuevo);
+			$this->calcularUnidades();
 			$statement = $conexion->prepare("UPDATE `productos` SET `precio_mayor_inventario` = :precioMayorInventario  WHERE `productos`.`id_producto` = :idProducto");
 			$statement->bindValue(":idProducto", $idProducto);
 			$statement->bindValue(":precioMayorInventario", $precioMayorInventarioNuevo);
@@ -458,8 +460,6 @@
 			if(!$statement){
 				throw new Exception("Error Processing Request", 1);
 			}
-			$this->igualarPreciosInventario(false,$precioMayorInventarioNuevo);
-			$this->calcularUnidades();
 			$conexion = NULL;
 			$statement = NULL;
 
@@ -564,6 +564,53 @@
 			}else{
 				return $inventario;
 			}
+		}
+
+		public function quitarUnidadesEmergentes($unidades){
+			$conexion = Conexion::conectar();
+			$idProducto=$this->getIdProducto();
+			$inventario = Inventario::obtenerInventario($idProducto,0,true);
+			if(! $inventario){
+				return ERROR;
+			}
+			$id_usuario=$inventario->getProveedor()->getIdUsuario();
+			$idInventario= $inventario->getIdInventario();
+			$unidadesInventario= $inventario->getUnidades();
+			$idInventarioEspecial= $inventario->getIdInventario();
+			$unidadesFinales= $unidadesInventario - $unidades;
+			if($unidadesFinales >0){
+				$conexion = Conexion::conectar();
+				$statement = $conexion->prepare("UPDATE `inventario` SET `unidades`=:unidades WHERE  `productos_id_producto` = :idProducto and `usuarios_id_usuario` = :id_usuario");
+				$statement->bindValue(":id_usuario", $id_usuario);
+				$statement->bindValue(":idProducto", $idProducto);
+				$statement->bindValue(":unidades", $unidadesFinales);
+				$statement->execute();
+				$statement=null;
+				$statement = $conexion->prepare("UPDATE `productos` SET `unidades_deuda`=`unidades_deuda`- :unidadesNuevas WHERE `id_producto` = :idProducto");
+				$statement->bindValue(":unidadesNuevas", $unidades);
+				$statement->bindValue(":idProducto", $this->getIdProducto());
+				$statement->execute();
+				$statement=null;
+				$this->calcularUnidades();
+				$conexion=null;
+
+			}else if ($unidadesFinales == 0){
+				$conexion = Conexion::conectar();
+				$statement = $conexion->prepare(" DELETE FROM `inventario` WHERE `id_inventario` = :idInventario ");
+				$statement->bindValue(":idInventario", $idInventarioEspecial);
+				$statement->execute();
+				$statement=null;
+				$statement = $conexion->prepare("UPDATE `productos` SET `unidades_deuda`=`unidades_deuda`- :unidadesNuevas WHERE `id_producto` = :idProducto");
+				$statement->bindValue(":unidadesNuevas", $unidades);
+				$statement->bindValue(":idProducto", $this->getIdProducto());
+				$statement->execute();
+				$statement=null;
+				$this->calcularUnidades();
+				$conexion=null;
+			}else{
+				return ERROR;
+			}
+
 		}
 
 
