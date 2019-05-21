@@ -218,16 +218,16 @@ class Empleado extends Usuario {
                         'db'        => 'id_usuario',
                         'dt'        => 0
                     ),
-                    array( 'db' => 'numero_identificacion', 'dt' => 1, 'field' => 'numero_identificacion'),
-                    array( 'db' => 'digito_de_verificacion',  'dt' => 2, 'field' => 'digito_de_verificacion'),
-                    array( 'db' => 'nombre',      'dt' => 3, 'field' => 'nombre'),
-                    array( 'db' => 'email',     'dt' => 4, 'field' => 'email'),
-                    array( 'db' => 'Direccion',     'dt' => 5, 'field' => 'Direccion'),
-                    array( 'db' => 'ciudad',     'dt' => 6, 'field' => 'ciudad'),
-                    array( 'db' => 'telefono',     'dt' => 7, 'field' => 'telefono'),
+                    array( 'db' => 'numero_identificacion', 'dt' => 0, 'field' => 'numero_identificacion'),
+                    array( 'db' => 'nombre',      'dt' => 1, 'field' => 'nombre'),
+                    array( 'db' => 'email',     'dt' => 2, 'field' => 'email'),
+                    array( 'db' => 'Direccion',     'dt' => 3, 'field' => 'Direccion'),
+                    array( 'db' => 'ciudad',     'dt' => 4, 'field' => 'ciudad'),
+                    array( 'db' => 'telefono',     'dt' => 5, 'field' => 'telefono'),
+                    array( 'db' => 'celular',     'dt' => 6, 'field' => 'celular'),
                     array(
                         'db'        => 'id_usuario',
-                        'dt'        => 8,
+                        'dt'        => 7,
                         'field' => 'id_usuario',
                         'formatter' => function( $d, $row ) {
                             if($d>0){
@@ -237,9 +237,8 @@ class Empleado extends Usuario {
                                     return "";
                                 }
                         }
-                    ),
-                    array( 'db' => 'celular',     'dt' => 9, 'field' => 'celular'),
-                    array( 'db' => 'clasificacion',     'dt' => 10, 'field' => 'clasificacion')
+                    )
+                    
 
 
                 );

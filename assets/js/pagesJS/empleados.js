@@ -4,19 +4,6 @@ $(document).ready(function() {
     });
 
 
-    function formatData (data) {
-        return '<div class="row">'+
-                        '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">'+
-                            '<i><i class="fa fa-mobile"></i><strong>  Cel: </strong>'+data[9]+'</i>'+
-                        '</div>'+
-                    '</div>'+
-                    '<div class="row">'+
-                        '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">'+
-                            '<i><i class="fa fa-phone"></i><strong> Tel: </strong>'+data[7]+'</i>'+
-                        '</div>'+
-                    '</div>';
-    }
-
     function loadData(){
         /*
             0:id_usuario
@@ -30,48 +17,29 @@ $(document).ready(function() {
             9:celular
             10:clasificacion
         */
-        window.table=$('#table-clientes').DataTable({
+        window.table=$('#table-empleados').DataTable({
                 "processing": true,
                 "serverSide": true,
                 "ajax":"../assets/php/Controllers/CEmpleado.php?method=verEmpleado",
                 "autoWidth": false,
-                "columnDefs": [ {"render": function (data, type, row) {
-                                return "";
-                                },
-                                className: "details-control",
-                                "targets": [0]} ],
                 "destroy":true,
                 "responsive":true,
                 "language": {
                 "lengthMenu": "Mostrar _MENU_ registros por pagina",
                 "zeroRecords": "No se han encontrado registros",
-                "info": "(_MAX_ clientes) Pagina _PAGE_ de _PAGES_",
+                "info": "(empleados) Pagina _PAGE_ de _PAGES_",
                 "search": "Buscar",
                 "infoEmpty": "No hay registros disponibles",
                 "infoFiltered": ""
                 }
             });
-        getDataEdit("#table-clientes tbody",table);
-        desactivarCliente("#table-clientes tbody",table);
+        getDataEdit("#table-empleados tbody",table);
+        desactivarEmpleado("#table-empleados tbody",table);
     }
-
-     $('#table-clientes tbody').on('click', 'td.details-control', function () {
-        var tr = $(this).closest('tr');
-        var row = table.row( tr );
- 
-        if ( row.child.isShown() ) {
-            row.child.hide();
-            tr.removeClass('shown');
-        }
-        else {
-            row.child( formatData(row.data()) ).show();
-            tr.addClass('shown');
-        }
-    });
 
 
     function getDataEdit(tbody,table){
-        $(tbody).on("click", ".editar-cliente", function(){
+        $(tbody).on("click", ".editar-empleado", function(){
             /*
             0:id_usuario
             1:numero_identificacion
@@ -85,29 +53,24 @@ $(document).ready(function() {
             10:clasificacion
         */
             var data=table.row($(this).parents("tr")).data();
-            $("#id-cliente").html(data[1]);
-            if(data[2]!=null){
-                $("#digitoDeVerificacion").html("-"+data[2]);
-            }
-            $("#input-id-editar").val(data[1]);
-            $("#input-digito-de-verificacion-editar").val(data[2]);
-            $("#input-nombre-editar").val(data[3]);
-            $("#input-direccion-editar").val(data[5]);
-            $("#input-ciudad-editar").val(data[6]);
-            $("#input-email-editar").val(data[4]);
-            $("#input-telefono-editar").val(data[7]);
-            $("#input-celular-editar").val(data[9]);
-            $("#input-clasificacion-editar").val(data[10]);           
-            $("#modal-editar-cliente").modal("show");
+            $("#id-empleado").html(data[0]);
+            $("#input-id-editar").val(data[0]);
+            $("#input-nombre-editar").val(data[1]);
+            $("#input-direccion-editar").val(data[3]);
+            $("#input-ciudad-editar").val(data[2]);
+            $("#input-email-editar").val(data[2]);
+            $("#input-telefono-editar").val(data[5]);
+            $("#input-celular-editar").val(data[6]);       
+            $("#modal-editar-empleado").modal("show");
         });
     }
 
-    function desactivarCliente(tbody,table){
-        $(tbody).on("click", ".eliminar-cliente", function(){
+    function desactivarEmpleado(tbody,table){
+        $(tbody).on("click", ".eliminar-empleado", function(){
             var data=table.row($(this).parents("tr")).data();
             Swal({
               title: 'Estas seguro?',
-              text: "Se eliminara el cliente "+data[3]+"!",
+              text: "Se eliminara el empleado "+data[2]+"!",
               type: 'warning',
               showCancelButton: true,
               confirmButtonColor: '#3085d6',
@@ -117,7 +80,7 @@ $(document).ready(function() {
             }).then((result) => {
               if (result.value) {
                 $.ajax({
-                    url: '../assets/php/Controllers/CCliente.php?method=desactivarCliente',
+                    url: '../assets/php/Controllers/CEmpleado.php?method=desactivarEmpleado',
                     type: 'POST',
                     data: {"id":data[1]},
                     success:function(data){  
@@ -128,7 +91,7 @@ $(document).ready(function() {
                             setTimeout(function(){
                                 Swal(
                                   'Satisfactorio!',
-                                  'Se ha eliminado correctamente el cliente',
+                                  'Se ha eliminado correctamente el empleado',
                                   'success'
                                 );
                             },500); 
@@ -151,53 +114,56 @@ $(document).ready(function() {
         });
     }
 
-    $("#cancelar-editarCliente").click(function(){
-        $("#id-cliente").html("");
-        $("#digitoDeVerificacion").html("");
-        document.getElementById("form-editarCliente").reset();
+    $("#cancelar-editarEmpleado").click(function(){
+        $("#id-empleado").html("");
+        //$("#digitoDeVerificacion").html("");
+        document.getElementById("form-editarEmpleado").reset();
     });
         
-    $("#form-añadirCliente").submit(function(event){
+    $("#form-añadirEmpleado").submit(function(event){
         event.preventDefault();
         var data;
             data = {
-                "id" : $("#input-id-cliente").val(),
-                "tipoId" : $("#input-tipo-id").val(),
-                "digitoDeVerificacion" : $("#input-digito-de-verificacion-cliente").val(),
-                "nombre" : $("#input-nombre-cliente").val(),
-                "direccion" : $("#input-direccion-cliente").val(),
-                "ciudad" : $("#input-ciudad-cliente").val(),
-                "email" : $("#input-email-cliente").val(),
-                "telefono" : $("#input-telefono-cliente").val(),
-                "celular" : $("#input-celular-cliente").val(),
-                "clasificacion" : $("#input-clasificacion-cliente").val()
+                "id" : $("#input-id-empleado").val(),
+                //"tipoId" : $("#input-tipo-id").val(),
+                "usuario" : $("#input-usuario-empleado").val(),
+                "contraseña" : $("#input-contrasena-empleado").val(),
+
+                //"digitoDeVerificacion" : $("#input-digito-de-verificacion-empleado").val(),
+                "nombre" : $("#input-nombre-empleado").val(),
+                "direccion" : $("#input-direccion-empleado").val(),
+                "ciudad" : $("#input-ciudad-empleado").val(),
+                "email" : $("#input-email-empleado").val(),
+                "telefono" : $("#input-telefono-empleado").val(),
+                "celular" : $("#input-celular-empleado").val()//,
+                //"clasificacion" : $("#input-clasificacion-empleado").val()
             }
             $.ajax({
-                url: '../assets/php/Controllers/CCliente.php?method=registrarCliente',
+                url: '../assets/php/Controllers/CEmpleado.php?method=registrarEmpleado',
                 type: 'POST',
                 data: data,
                 success:function(data){  
                   if(data!=""){
                     if(data==1){
-                        $("#añadirCliente").modal("hide");
+                        $("#añadirEmpleado").modal("hide");
                         setTimeout(function(){
                             Swal(
                               'Satisfactorio!',
-                              'Se ha registrado correctamente el cliente',
+                              'Se ha registrado correctamente el empleado',
                               'success'
                             );
-                            document.getElementById("form-añadirCliente").reset();
+                            document.getElementById("form-añadirEmpleado").reset();
                             loadData(); 
                         },500); 
                     }else if(data==0){
-                        $("#añadirCliente").modal("hide");
+                        $("#añadirEmpleado").modal("hide");
                         setTimeout(function(){
                             Swal(
                               'Error!',
                               'Ha ocurrido un error, vuelva a intentar',
                               'error'
                             );
-                            document.getElementById("form-añadirCliente").reset();
+                            document.getElementById("form-añadirEmpleado").reset();
                             loadData();  
                         },500);
                     }else if(data==2){
@@ -215,56 +181,59 @@ $(document).ready(function() {
 
     });
 
-    $("#form-editarCliente").submit(function(event){
+    $("#form-editarEmpleado").submit(function(event){
         event.preventDefault();
         var data;
             data = {
                 "id" : $("#input-id-editar").val(),
-                "digitoDeVerificacion" : $("#input-digito-de-verificacion-editar").val(),
+                //"digitoDeVerificacion" : $("#input-digito-de-verificacion-editar").val(),
                 "nombre" : $("#input-nombre-editar").val(),
                 "direccion" : $("#input-direccion-editar").val(),
                 "ciudad" : $("#input-ciudad-editar").val(),
                 "email" : $("#input-email-editar").val(),
                 "telefono" : $("#input-telefono-editar").val(),
                 "celular" : $("#input-celular-editar").val(),
-                "clasificacion" : $("#input-clasificacion-editar").val()
+                "usuario" : $("#input-usuario-editar").val(),
+                "contrasena" : $("#input-contrasena-editar").val()
+                //,
+                //"clasificacion" : $("#input-clasificacion-editar").val()
             }
             $.ajax({
-                url: '../assets/php/Controllers/CCliente.php?method=editarCliente',
+                url: '../assets/php/Controllers/CEmpleado.php?method=editarEmpleado',
                 type: 'POST',
                 data: data,
                 success:function(data){ 
                   if(data!=""){
                     if(data==1){
-                        $("#modal-editar-cliente").modal("hide");
+                        $("#modal-editar-empleado").modal("hide");
                         setTimeout(function(){
                             Swal(
                               'Satisfactorio!',
-                              'Se ha editado correctamente el cliente',
+                              'Se ha editado correctamente el empleado',
                               'success'
                             );
-                            $("#id-cliente").html("");
+                            $("#id-empleado").html("");
                             $("#digitoDeVerificacion").html("");
-                            document.getElementById("form-editarCliente").reset();
+                            document.getElementById("form-editarempleado").reset();
                         },500); 
                     }else if(data==0){
-                        $("#modal-editar-cliente").modal("hide");
+                        $("#modal-editar-empleado").modal("hide");
                         setTimeout(function(){
                             Swal(
                               'Error!',
                               'Ha ocurrido un error, vuelva a intentar',
                               'error'
                             );
-                            $("#id-cliente").html("");
+                            $("#id-empleado").html("");
                             $("#digitoDeVerificacion").html("");
-                            document.getElementById("form-editarCliente").reset();
+                            document.getElementById("form-editarempleado").reset();
                         },500);
                     }else if(data==3){
-                        $("#modal-editar-cliente").modal("hide");
+                        $("#modal-editar-empleado").modal("hide");
                         setTimeout(function(){
                             Swal(
                               'Error!',
-                              'Opps, no se ha encontrado el cliente para editar',
+                              'Opps, no se ha encontrado el empleado para editar',
                               'error'
                             );
                         },500);
@@ -277,8 +246,8 @@ $(document).ready(function() {
 
     });
 
-    $("#cancelar-añadirCliente").click(function(){
-        document.getElementById("form-añadirCliente").reset();
+    $("#cancelar-añadirEmpleado").click(function(){
+        document.getElementById("form-añadirEmpleado").reset();
     });
 
 

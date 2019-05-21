@@ -11,7 +11,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<title>Clientes | Ferretruper</title>
+	<title>Empleados | Ferretruper</title>
 	<meta name="description" content="Free Bootstrap 4 Admin Theme | Pike Admin">
 	<meta name="author" content="Pike Web Development - https://www.pikephp.com">
 
@@ -67,7 +67,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 								<h1 class="main-title float-left">Empleados</h1>
 								<ol class="breadcrumb float-right">
 									<li class="breadcrumb-item">Pages</li>
-									<li class="breadcrumb-item active">clientes</li>
+									<li class="breadcrumb-item active">empleados</li>
 								</ol>
 								<div class="clearfix"></div>
 							</div>
@@ -85,51 +85,46 @@ include_once '../assets/php/Controllers/GetSession.php';
 											<h3><i class="fa fa-users"></i> Empleados disponibles</h3>
 										</div>
 										<div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 col-xl-2">
-											<a role="button" href="#" id="añadir-cliente" class="btn btn-success float-right" data-target="#añadirCliente" data-toggle="modal">Añadir Cliente<span class="btn-label btn-label-right"><i class="fa fa-user-circle"></i></span></a>
-											<?php include 'includes/modalAddCliente.php';?>
+											<a role="button" href="#" id="añadir-empleado" class="btn btn-success float-right" data-target="#añadirEmpleado" data-toggle="modal">Añadir Empleado<span class="btn-label btn-label-right"><i class="fa fa-user-circle"></i></span></a>
+											<?php include 'includes/modalAddEmpleado.php';?>
 										</div>
 									</div>
 								</div>							
 								<div class="card-body">
-									<table id="table-clientes" class="table table-bordered table-striped table-responsive-xl table-hover display">
+									<table id="table-empleados" class="table table-bordered table-striped table-responsive-xl table-hover display">
 										<thead class="cf">
 											<tr>
-												<th></th>
 												<th>Identificación</th>
-												<th>D. VERIF</th>
 												<th>Nombre</th>
 												<th>Email</th>
 												<th>Direccion</th>
 												<th>Ciudad</th>
 												<th>Telefono</th>
+												<th>Celular</th>
 												<th></th>
 											</tr>
 										</thead>
-										<tbody id="body-table-clientes">
+										<tbody id="body-table-empleados">
 
 										</tbody>
 									</table>
 								</div>
 								<!-- Modal -->
-								<div class="modal fade custom-modal" id="modal-editar-cliente" tabindex="-1" role="dialog" aria-labelledby="customModal" aria-hidden="true">
+								<div class="modal fade custom-modal" id="modal-editar-empleado" tabindex="-1" role="dialog" aria-labelledby="customModal" aria-hidden="true">
 									<div class="modal-dialog" role="document">
 										<div class="modal-content">
 											<div class="modal-header">
-												<h5 class="modal-title" id="titleEditarCliente">Editar Cliente: <span id="id-cliente"></span><span id="digitoDeVerificacion"></span></h5>
+												<h5 class="modal-title" id="titleEditarempleado">Editar Empleado: <span id="id-empleado"></span><span id="digitoDeVerificacion"></span></h5>
 												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 													<span aria-hidden="true">&times;</span>
 												</button>
 											</div>
 											<div class="modal-body">
-												<form autocomplete="off" action="#" id="form-editarCliente">
+												<form autocomplete="off" action="#" id="form-editarEmpleado">
 													<div class="form-row">
 														<div class="form-group col-md-6">
 															<label>Identificación <span class="text-danger">*</span></label>
 															<input type="text" class="form-control" id="input-id-editar" placeholder="Identificación" autocomplete="off" required disabled>
-														</div>
-														<div class="form-group col-md-6">
-															<label>Digito de verificación (Opcional)</label>
-															<input type="number" class="form-control" id="input-digito-de-verificacion-editar" placeholder="Dig. de verificación" autocomplete="off">
 														</div>
 													</div>
 													<div class="form-group">
@@ -160,19 +155,19 @@ include_once '../assets/php/Controllers/GetSession.php';
 															<input type="text" class="form-control" id="input-celular-editar" placeholder="Celular">
 														</div>
 													</div>
-													<div class="form-group">
-														<label>Clasificacion <span class="text-danger">*</span></label>
-														<select class="custom-select" id="input-clasificacion-editar" required>
-															<option value="">Selecciona la clasificacion</option>
-															<option value="1.-GRANDE CONTRIB">1.-GRANDE CONTRIB</option>
-															<option value="2">Two</option>
-															<option value="3.-REGIMEN COMUN ">3.-REGIMEN COMUN</option>
-															<option value="4.-REGIMEN SIMPLI">4.-REGIMEN SIMPLI</option>
-														</select>
+																										<div class="form-row">
+													<div class="form-group col-md-6">
+															<label>Usuario <span class="text-danger">*</span></label>
+															<input type="text" class="form-control" id="input-usuario-editar" placeholder="Telefono" required>
+														</div>
+														<div class="form-group col-md-6">
+															<label>Contraseña</label>
+															<input type="text" class="form-control" id="input-contrasena-editar" placeholder="Celular">
+														</div>
 													</div>			
 												</div>
 												<div class="modal-footer">
-													<button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelar-editarCliente">Cancelar</button>
+													<button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelar-editarEmpleado">Cancelar</button>
 													<button type="submit" class="btn btn-success">Editar</button>
 												</form>
 											</div>
