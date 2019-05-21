@@ -13,18 +13,20 @@
 		}else if(!strcmp($method,"registrarEmpleado")){
 			$id=$_POST['id'];
 			$tipoId="CC";
-			$digitoDeVerificacion=0;
+
 			$nombre=$_POST['nombre'];
 			$direccion=$_POST['direccion'];
+
 			$ciudad=$_POST['ciudad'];
 			$email=$_POST['email'];
 			$telefono=$_POST['telefono'];
 			$celular=$_POST['celular'];
-			$clasificacion="Empleado";
 			$usuario=$_POST['usuario'];
 			$contraseña=$_POST['contraseña'];
+			$clasificacion="Empleado";
+			$digitoDeVerificacion=0;
 
-			if(Empleado::obtenerEmpleado($id)==false){
+			if(Empleado::obtenerEmpleadoRegistro($id)==false){
 				try{
 					$empleado = new Empleado($usuario,$contraseña,0,$tipoId, $id, $nombre, $direccion, $ciudad, $telefono, $clasificacion, $digitoDeVerificacion, $email, $celular);
 					echo SUCCESS;
@@ -45,14 +47,14 @@
 			$telefono=$_POST['telefono'];
 			$celular=$_POST['celular'];
 			$clasificacion="Empleado";
-			$usuario=['usuario'];
-			$contrasena=['contrasena'];
+			$usuario=$_POST['usuario'];
+			$contrasena=$_POST['contrasena'];
 
 
 			$empleado=Empleado::obtenerEmpleado($id);
 			if($empleado!=false){
 				$id_usuario=$empleado->getIdUsuario();
-				$empleado->actualizarUsuario($id_usuario, $nombre, $direccion, $ciudad, $telefono, $clasificacion, $digitoDeVerificacion, $email, $celular);
+				$empleado->actualizarUsuario($id_usuario, $nombre, $direccion, $ciudad, $telefono, $clasificacion, $digitoDeVerificacion, $email, $celular,$usuario,$contrasena);
 				if($empleado){
 					echo SUCCESS;
 				}else{

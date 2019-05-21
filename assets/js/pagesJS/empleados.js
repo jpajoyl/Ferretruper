@@ -57,7 +57,7 @@ $(document).ready(function() {
             $("#input-id-editar").val(data[0]);
             $("#input-nombre-editar").val(data[1]);
             $("#input-direccion-editar").val(data[3]);
-            $("#input-ciudad-editar").val(data[2]);
+            $("#input-ciudad-editar").val(data[4]);
             $("#input-email-editar").val(data[2]);
             $("#input-telefono-editar").val(data[5]);
             $("#input-celular-editar").val(data[6]);       
@@ -125,18 +125,14 @@ $(document).ready(function() {
         var data;
             data = {
                 "id" : $("#input-id-empleado").val(),
-                //"tipoId" : $("#input-tipo-id").val(),
                 "usuario" : $("#input-usuario-empleado").val(),
                 "contraseña" : $("#input-contrasena-empleado").val(),
-
-                //"digitoDeVerificacion" : $("#input-digito-de-verificacion-empleado").val(),
                 "nombre" : $("#input-nombre-empleado").val(),
                 "direccion" : $("#input-direccion-empleado").val(),
                 "ciudad" : $("#input-ciudad-empleado").val(),
                 "email" : $("#input-email-empleado").val(),
                 "telefono" : $("#input-telefono-empleado").val(),
                 "celular" : $("#input-celular-empleado").val()//,
-                //"clasificacion" : $("#input-clasificacion-empleado").val()
             }
             $.ajax({
                 url: '../assets/php/Controllers/CEmpleado.php?method=registrarEmpleado',
@@ -213,7 +209,6 @@ $(document).ready(function() {
                               'success'
                             );
                             $("#id-empleado").html("");
-                            $("#digitoDeVerificacion").html("");
                             document.getElementById("form-editarempleado").reset();
                         },500); 
                     }else if(data==0){
@@ -225,7 +220,6 @@ $(document).ready(function() {
                               'error'
                             );
                             $("#id-empleado").html("");
-                            $("#digitoDeVerificacion").html("");
                             document.getElementById("form-editarempleado").reset();
                         },500);
                     }else if(data==3){

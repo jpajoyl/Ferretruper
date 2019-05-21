@@ -179,6 +179,27 @@ class Empleado extends Usuario {
         }
     }
 
+
+    public static function obtenerEmpleadoRegistro($numeroConsulta,$modo=true) {
+        try {
+
+            $conexion = Conexion::conectar();
+            $resultado = Usuario::buscarDatosUsuario($numeroConsulta,$modo);
+            $consulta2= $conexion->prepare("SELECT * FROM `usuarios` WHERE `numero_identificacion` = :idIdentifiacion");
+            $consulta2->bindValue(":idIdentifiacion", $numeroConsulta);
+            $consulta2->execute();
+            $resultado2=$consulta2->fetch(PDO::FETCH_ASSOC);
+            if($resultado2){
+                return true;
+            }else{
+                return false;
+            }
+
+        } catch (Exception $e) {
+            echo '{"error":{"text":' . $e->getMessage() . '}}';
+        }
+    }
+
     public function cambiarPassword($nuevaPassword, $viejaPassword) {
         $id_usuario=$this->getIdUsuario();
         $conexion = Conexion::conectar();

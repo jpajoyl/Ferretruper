@@ -166,7 +166,7 @@ class Usuario{
 	}
 
 
-	public function actualizarUsuario($idUsuario, $nombre, $direccion, $ciudad, $telefono, $clasificacion, $digitoDeVerificacion, $email, $celular) {
+	public function actualizarUsuario($idUsuario, $nombre, $direccion, $ciudad, $telefono, $clasificacion, $digitoDeVerificacion, $email, $celular,$usuario = "",$contrasena="") {
 		$conexion = Conexion::conectar();
 		$statement = $conexion->prepare("UPDATE `usuarios` SET `digito_de_verificacion` = :digitoDeVerificacion, `nombre` = :nombre, `direccion` = :direccion, `email` = :email, `ciudad` = :ciudad, `celular` = :celular, `telefono` = :telefono, `clasificacion` = :clasificacion WHERE `usuarios`.`id_usuario` = :idUsuario");
 
@@ -181,13 +181,36 @@ class Usuario{
 		$this->setIdUsuario($idUsuario,$statement);
 		$statement->execute();
 		$conexion=null;
+		$statement=null;
 		if($statement){
-			$statement=null;
-			return SUCCESS;
+			if(strcmp($usuario,"") and strcmp($contrasena,"")){
+				return SUCCESS;
+
+			}else{
+				if(!strcmp($usuario,"") and !strcmp($contrasena,"")){
+					$statement = $conexion->prepare("UPDATE `credenciales_de_acceso` SET `usuario`=:usuario,`password`=:contrasena WHERE `USUARIOS_id_usuario`= :idUsuario");
+					$statement->bindValue(":usuario", $usuario);
+					$statement->bindValue(":contrasena", $contrasena);
+					$statement->bindValue(":idUsuario", $idUsuario);
+				}else if(strcmp($usuario,"")){
+					$statement = $conexion->prepare("UPDATE `credenciales_de_acceso` SET `password`=:contrasena WHERE `USUARIOS_id_usuario`= :idUsuario");
+					$statement->bindValue(":contrasena", $contrasena);
+					$statement->bindValue(":idUsuario", $idUsuario);
+
+				}else if(strcmp($contrasena,"")){
+					$statement = $conexion->prepare("UPDATE `credenciales_de_acceso` SET `usuario`=:usuario WHERE `USUARIOS_id_usuario`= :idUsuario");
+					$statement->bindValue(":usuario", $usuario);
+					$statement->bindValue(":idUsuario", $idUsuario);
+
+				}
+				
+			}
+
 		}else{
 			$statement=null;
 			return ERROR;
 		}
+
 	}
 
 	public function desactivarUsuario(){
