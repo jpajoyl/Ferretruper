@@ -20,7 +20,6 @@ $(document).ready(function() {
     function emitirFactura(tbody,table){
         $(tbody).on("click", ".emitir-factura", function(){
             var data=table.row($(this).parents("tr")).data();
-            console.log(data);
             window.open("../assets/php/Controllers/CVenta.php?method=emitirFactura&id-venta="+data[0]);
         });
     }
