@@ -16,14 +16,10 @@ include_once 'Response.php';
 if($method!="" && $objectSession->getEmpleadoActual()!=null){
 	if(!strcmp($method,"verCreditos")){
 		$activos=$_GET['activos'];
-		$creditos=Venta::verCreditos($activos);
-		if($creditos->rowCount()>0){
-			while ($credito = $creditos->fetch(PDO::FETCH_ASSOC)) {
-				$array['creditos'][]=$credito;
-			}
-			echo json_encode($array);
+		if($activos==0){
+			echo json_encode(Venta::verCreditos($_GET,false));
 		}else{
-			echo NOT_FOUND;
+			echo json_encode(Venta::verCreditos($_GET,true));
 		}
 	}else if(!strcmp($method,"verAbonosCredito")){
 		$idTipoVenta=$_POST['idTipoVenta'];
@@ -35,6 +31,16 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 			echo json_encode($array);
 		}else{
 			echo NOT_FOUND;
+		}
+	}else if(!strcmp($method,"añadirAbono")){
+		$idVenta=$_POST['idVenta'];
+		$valorAbono=$_POST['valorAbono'];
+		$fechaActual=date("d/m/Y");
+		try {	
+			$abono = new Abono($valorAbono, $fechaActual, $idVenta);
+			echo SUCCESS;
+		} catch (Exception $e) {
+			echo $e->getMessage();
 		}
 	}
 }

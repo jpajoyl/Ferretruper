@@ -36,18 +36,19 @@ $(document).ready(function() {
           "processing": true,
           "serverSide": true,
           "ajax": "../assets/php/Controllers/CCredito.php?method=verCreditos&activos="+pagados,
-          "columnDefs": [ {"render": function (data, type, row) {
-            return "";
-          },
-          className: "details-control",
-          "targets": [0]} ],
           "destroy":true,
           "autoWidth": false,
+          "columnDefs": [ { className: "table-proveedores-nit-proveedor", "targets": [ 1 ] },
+                        {"render": function (data, type, row) {
+                        return "";
+                    },
+                    className: "details-control",
+                    "targets": [0]} ],
           "responsive":true,
           "language": {
             "lengthMenu": "Mostrar _MENU_ registros por pagina",
             "zeroRecords": "No se han encontrado registros",
-            "info": "(_MAX_ productos) Pagina _PAGE_ de _PAGES_",
+            "info": "(Creditos) Pagina _PAGE_ de _PAGES_",
             "search": "Buscar",
             "infoEmpty": "No hay registros disponibles",
             "infoFiltered": ""
@@ -55,79 +56,8 @@ $(document).ready(function() {
         });
 
 
+        agregarAbono("#table-creditos tbody",table);
 
-
-
-
-/*        window.table=$('#table-creditos').DataTable({
-            "ajax":{
-                "method":"POST",
-                "url":"../assets/php/Controllers/CCredito.php?method=verCreditos&activos="+pagados,
-                "dataSrc": function(data){
-                    if(data == 3){
-                        return [];
-                    }else {
-                        return data.creditos;
-                    }
-                }
-            },
-            "autoWidth": false,
-            "columns":[
-            {
-                        "searchable": false,
-                        "orderable": false,
-                        "targets": 0,
-                        "data":           null
-            },
-            {
-                "className":      'details-control',
-                "orderable":      false,
-                "data":           null,
-                "defaultContent": ''
-            },
-            {"data":"VENTAS_id_venta"},
-            {"data":"numero_identificacion"},
-            {"data":function (data, type, row){
-                return numberWithCommas(data.total);
-            }},
-            {"data":function (data, type, row){
-                return data.fecha+" / "+fechaToString(data.fecha,data.plazo);
-            }},//FECHA
-            {"data":function (data, type, row){
-                if(data.estado==0){
-                    return "Activo";
-                }else{
-                    return "Pagado";
-                }
-            }},
-            {"data":function (data, type, row){
-                if(data.estado==0){
-                    return "<center><button class='btn btn-primary btn-xs abonar-credito' title='Agregar abono'><i class='fa fa-money'></i></button></button></center>";
-                }else{
-                    return "";
-                }
-            }}
-            ],
-            "order": [[ 1, 'asc' ]],
-            "destroy":true,
-            "responsive":true,
-            "language": {
-                "lengthMenu": "Mostrar _MENU_ registros por pagina",
-                "zeroRecords": "No se han encontrado registros",
-                "info": "(_MAX_ proveedores) Pagina _PAGE_ de _PAGES_",
-                "search": "Buscar",
-                "infoEmpty": "No hay registros disponibles",
-                "infoFiltered": ""
-            }
-        });
-
-        table.on( 'order.dt search.dt', function () {
-                table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                    cell.innerHTML = i+1;
-                } );
-            } ).draw();
-
-        agregarAbono("#table-creditos tbody",table);*/
         
     }
 
@@ -146,63 +76,155 @@ $(document).ready(function() {
             tr.removeClass('shown');
         }
         else {
-            var data=row.data();
-             var contenidoCliente='<table id="table-cliente-credito" class="table table-responsive-xl table-bordered">'+
-            '<thead>'+
-                '<tr>'+
-                    '<th scope="col">Identificacion</th>'+
-                    '<th scope="col">Nombre</th>'+
-                    '<th scope="col">Direccion</th>'+
-                    '<th scope="col">Telefono/Celular</th>'+
-                '</tr>'+
-            '</thead>'+
-            '<tbody>'+
-                '<tr>'+
-                    '<td class="id-cliente">'+data.numero_identificacion+'</td>'+
-                    '<td class="nombre-cliente">'+data.nombre+'</td>'+
-                    '<td class="direccion-cliente">'+data.direccion+' '+data.ciudad+'</td>'+
-                    '<td class="telefonos-cliente">'+data.telefono+' / '+data.celular+'</td>'+
-                '</tr>'+
-            '</tbody></table>';
+            var dataTable=table.row($(this).parents("tr")).data();
             $.ajax({
-                url: '../assets/php/Controllers/CCredito.php?method=verAbonosCredito',
+                url: '../assets/php/Controllers/CCliente.php?method=obtenerCliente',
                 type: 'POST',
-                data: {"idTipoVenta":data.id_tipo_venta},
+                data: {"numero_identificacion":dataTable[2]},
                 success:function(data){
                     if(data!=""){
                         if(data!=3){
-                            var contenido='<table id="table-abonos-credito" class="table table-responsive-xl table-bordered">'+
+                            var data=$.parseJSON(data);
+                            var contenidoCliente='<table id="table-cliente-credito" class="table table-responsive-xl table-bordered">'+
                             '<thead>'+
                                 '<tr>'+
-                                    '<th scope="col">No</th>'+
-                                    '<th scope="col">Valor pagado</th>'+
-                                    '<th scope="col">Fecha abono</th>'+
-                                    '<th scope="col"></th>'
+                                    '<th scope="col">Identificacion</th>'+
+                                    '<th scope="col">Nombre</th>'+
+                                    '<th scope="col">Direccion</th>'+
+                                    '<th scope="col">Telefono/Celular</th>'+
                                 '</tr>'+
                             '</thead>'+
-                            '<tbody>';
-                            var contador=1;
-                            $.map($.parseJSON(data).abonos, function(dataAbonos) {
-                                contenido+='<tr>'+
-                                        '<td class="id-abono">'+contador+'<input type="hidden" id="input-id-abono" value='+dataAbonos.id_abono+'></td>'+
-                                        '<td class="valor-abono">'+numberWithCommas(dataAbonos.valor)+'</td>'+
-                                        '<td class="fecha-abono">'+fechaToString(dataAbonos.fecha,0)+'</td>'+
-                                        '<td class="editar-abono"><center><button class="btn btn-warning btn-xs editar-abono" title="Editar valor abono"><i class="fa fa-pencil"></i></button></button></center></td>'+
-                                        '</tr>';
-                                        contador++;
+                            '<tbody>'+
+                                '<tr>'+
+                                    '<td class="id-cliente">'+dataTable[2]+'</td>'+
+                                    '<td class="nombre-cliente">'+data.nombre+'</td>'+
+                                    '<td class="direccion-cliente">'+data.direccion+'</td>'+
+                                    '<td class="telefonos-cliente">'+data.telefono+'/'+data.celular+'</td>'+
+                                '</tr>'+
+                            '</tbody></table>';
+                            $.ajax({
+                                url: '../assets/php/Controllers/CCredito.php?method=verAbonosCredito',
+                                type: 'POST',
+                                data: {"idTipoVenta":dataTable[1]},
+                                success:function(data){
+                                    if(data!=""){
+                                        if(data!=3){
+                                            var contenido='<table id="table-abonos-credito" class="table table-responsive-xl table-bordered">'+
+                                            '<thead>'+
+                                                '<tr>'+
+                                                    '<th scope="col">No</th>'+
+                                                    '<th scope="col">Valor pagado</th>'+
+                                                    '<th scope="col">Fecha abono</th>'+
+                                                    '<th scope="col"></th>'
+                                                '</tr>'+
+                                            '</thead>'+
+                                            '<tbody>';
+                                            var contador=1;
+                                            var pagado=0;
+                                            $.map($.parseJSON(data).abonos, function(dataAbonos) {
+                                                contenido+='<tr>'+
+                                                        '<td class="id-abono">'+contador+'<input type="hidden" id="input-id-abono" value='+dataAbonos.id_abono+'></td>'+
+                                                        '<td class="valor-abono">'+numberWithCommas(dataAbonos.valor)+'</td>'+
+                                                        '<td class="fecha-abono">'+fechaToString(dataAbonos.fecha,0)+'</td>'+
+                                                        '<td class="editar-abono"><center><button class="btn btn-warning btn-xs editar-abono" title="Editar valor abono"><i class="fa fa-pencil"></i></button></button></center></td>'+
+                                                        '</tr>';
+                                                        contador++;
+                                                pagado=pagado+dataAbonos.valor;
+                                            });
+                                            var totalAPagar=parseInt(dataTable[3].replace(",",""));
+                                            contenido+='<tr><td class="table-primary"><center><strong>Saldo restante:</strong></center></td><td class="table-primary"><strong>'+numberWithCommas(totalAPagar-pagado)+'</strong></td><td colspan="2"></td></tr></tbody></table>';
+                                            
+                                            row.child(contenidoCliente+contenido).show();
+                                        }else{
+                                            var contenido='<div class="alert alert-danger" role="alert">No hay abonos registrados</div>';
+                                            row.child(contenidoCliente+contenido).show();
+                                        }
+                                        
+                                    }  
+                                }
+                            }).always(function(){
+                                tr.addClass('shown');
                             });
-                            contenido+='</tbody></table>';
-                            row.child(contenidoCliente+contenido).show();
                         }else{
-                            var contenido='<div class="alert alert-danger" role="alert">Este producto no tiene ningun proveedor aun</div>';
-                            row.child(contenidoCliente+contenido).show();
+                            swal("Error","A ocurrido un error, recarga la pagina por favor","error");
                         }
-                        
-                    }  
+                    }
                 }
-            }).always(function(){
-                tr.addClass('shown');
-            });
+            });      
         }
+    });
+
+    $(document).on("click", ".emitir-factura-credito", function(){
+        var idVenta=$(this).attr("id-venta");
+        window.open("../assets/php/Controllers/CVenta.php?method=emitirFactura&id-venta="+idVenta);
+    });
+
+    $(document).on("click", ".agregar-abono", function(){
+        var idVenta=$(this).attr("id-venta");
+        var input="";
+        input=input+'<div class="form-group">'+
+                            '<input type="text" class="form-control" id="input-usuario" placeholder="Usuario" required autocomplete="off">'+
+                        '</div>'+
+                        '<div class="form-group">'+
+                            '<input type="password" class="form-control" id="input-password" placeholder="Contraseña" required autocomplete="off">'+
+                        '</div>'+
+                        '<div class="form-group">'+
+                            '<input type="number" class="form-control" id="input-abono" placeholder="Valor abono" required autocomplete="off">'+
+                        '</div>';
+        swal({
+            title: 'Agregar abono',
+            html: input,
+            type: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#22C13C',
+            cancelButtonColor: '#9A9A9A',
+            confirmButtonText: 'Agregar!',
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.value) {
+                var data={
+                    'usuario':$("#input-usuario").val(),
+                    'password':$("#input-password").val()
+                }
+                $.ajax({
+                    url: '../assets/php/Controllers/CAdministracion.php?method=comprobarAdministrador',
+                    type: 'POST',
+                    data: data,
+                    success:function(data){
+                        if(data==1){
+                            var valorAbono=$("#input-abono").val();
+                            data={
+                                "idVenta":idVenta,
+                                "valorAbono":valorAbono
+                            }
+                            $.ajax({
+                                url: '../assets/php/Controllers/CCredito.php?method=añadirAbono',
+                                type: 'POST',
+                                data: data,
+                                success:function(data){
+                                    console.log(data);
+                                    if(data!=""){
+                                        if(data==1){
+                                            alert("SUCESS");
+                                        }else if(data==0){
+                                            alert("Error");
+                                        }
+                                    }
+                                }
+                            });
+                        }else if(data==0 || data==3){
+                            setTimeout(function(){
+                                Swal(
+                                    'Error!',
+                                    'El usuario y/o contraseña son incorrectos',
+                                    'error'
+                                );
+                            },100);  
+                        }
+                    }
+                });
+            }
+        });
+
     });
 });

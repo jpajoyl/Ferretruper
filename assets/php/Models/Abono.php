@@ -79,10 +79,10 @@
 	    }
 
 	    public function setTipoVenta($id_Venta, $statement=NULL) {  //Mando el id de venta
-	    	if($statement!=NULL){
-	    		$statement->bindParam(':id_Venta',$id_Venta,PDO::PARAM_STR,45);
+			$tipoVenta=TipoVenta::obtenerTipoVenta($id_Venta);
+			if($statement!=NULL){
+	    		$statement->bindParam(':id_Venta',$tipoVenta->getIdTipoVenta(),PDO::PARAM_STR,45);
 	    	}
-	    	$tipoVenta=TipoVenta::obtenerTipoVenta($id_Venta);
 	    }
 
 

@@ -79,6 +79,19 @@
 			}else{
 				echo NOT_FOUND;
 			}
+		}else if(!strcmp($method,"obtenerCliente")){
+			$id=$_POST['numero_identificacion'];
+			$cliente=Cliente::obtenerCliente($id);
+			if($cliente!=false){
+				$response['response'] = SUCCESS;
+				$response['nombre'] = $cliente->getNombre();
+				$response['direccion'] = $cliente->getDireccion();
+				$response['telefono'] = $cliente->getTelefono();
+				$response['celular'] = $cliente->getCelular();
+				echo json_encode($response);
+			}else{
+				echo NOT_FOUND;
+			}
 		}
 
 	}

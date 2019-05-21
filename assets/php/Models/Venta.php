@@ -526,31 +526,63 @@
 			            // The `dt` parameter represents the DataTables column identifier.
 
 			$columns = array(
-				array( 'db' => '`ventas`.`id_venta`', 'dt' => 1, 'field' => 'id_venta'),
-				array( 'db' => '`usuarios`.`id_usuario`',  'dt' => 2, 'field' => 'id_usuario'),
-				array( 'db' => '`ventas`.`total`',      'dt' => 3, 'field' => 'total'),
-				array( 'db' => '`venta`.`fecha`',     'dt' => 4, 'field' => 'fecha'),
-				array( 'db' => '`tipo_venta`.`plazo`',     'dt' => 5, 'field' => 'plazo'),
-				array( 'db' => '`tipo_venta`.`estado`',     'dt' => 6, 'field' => 'estado'),
+				array( 'db' => '`ventas`.`id_venta`', 'dt' => 0, 'field' => 'id_venta'),
+				array( 'db' => 'id_tipo_venta', 'dt' => 1, 'field' => 'id_tipo_venta'),
+				array( 'db' => '`usuarios`.`numero_identificacion`',  'dt' => 2, 'field' => 'numero_identificacion'),
+				array( 'db' => '`ventas`.`total`',
+					   'dt' => 3,
+					   'field' => 'total',
+					   'formatter' => function( $d, $row ) {
+							return number_format($d);
+						}
+					),
+				array( 'db' => '`ventas`.`fecha`',     'dt' => 4, 'field' => 'fecha'),
+				array( 'db' => '`tipo_venta`.`plazo`',
+					   'dt' => 5,
+					   'field' => 'plazo',
+					   'formatter' => function( $d, $row ) {
+						$fecha = $row[3];
+						$nuevafecha = strtotime ( '+'.$d.' day' , strtotime ( $fecha ) ) ;
+						$nuevafecha = date ( 'Y-m-j' , $nuevafecha );
+						$dias = array('Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado');
+    					$dia = $dias[date('w', strtotime($nuevafecha))];
+						$num = date("j", strtotime($nuevafecha));
+						$anno = date("Y", strtotime($nuevafecha));
+						$mes = array('enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre');
+						$mes = $mes[(date('m', strtotime($nuevafecha))*1)-1];
+						return '<strong>'.$dia.', '.$num.' de '.$mes.' del '.$anno.'</strong>';
+						}
+					),
+				array( 'db' => '`tipo_venta`.`estado`',
+					   'dt' => 6, 'field' => 'estado',
+					   'formatter' => function( $d, $row ) {
+							if($d==0){
+								return "Activo";
+							}else  if($d==1){
+								return "Pagado";
+							}else{
+								return "";
+							}
+						}
+					),
 				array(
 					'db'        => '`ventas`.`anulada`',
 					'dt'        => 7,
 					'field' => 'anulada',
 					'formatter' => function( $d, $row ) {
 						if($d==0){
-							return "<center><button class='btn btn-danger btn-xs agregar-abono'><i class='fa fa money bigfonds'></i></button> </button><button> class='btn btn-primary btn-xs emitir-factura-credito'><i class='fa fa-print'></i></button></center>";
+							return "<center><button class='btn btn-warning btn-xs agregar-abono' id-venta='".$row[0]."'><i class='fa fa-money'></i></button> </button><button class='btn btn-primary btn-xs emitir-factura-credito' id-venta='".$row[0]."'><i class='fa fa-print'></i></button></center>";
 						}else  if($d==1){
-							return "<center></button><button class='btn btn-warning btn-xs emitir-factura-credito'><i class='fa fa-print'></i></button></center>";
+							return "<center></button><button class='btn btn-warning btn-xs emitir-factura-credito' id-venta='".$row[0]."'><i class='fa fa-print'></i></button></center>";
 						}else{
 							return "";
 						}
 					}
 				)
 
-
 			);
 
-			if($pagado){
+			if(!$pagado){
 				$whereStatement = "`tipo_venta`.`estado` = 0 and tipo_venta.tipo_venta = 'Credito'";
 			}else{
 				$whereStatement = "`tipo_venta`.`estado` = 1 and tipo_venta.tipo_venta = 'Credito'";
