@@ -44,6 +44,11 @@
                     <li class="submenu">
                         <a <?php if(!strcmp(basename($_SERVER['PHP_SELF']),"informacionFacturas.php")){?> class="active" <?php } ?> href="informacionFacturas.php"><i class="fa fa-exclamation-triangle bigfonts"></i><span> Informacion Facturas </span> </a>
                     </li>
+
+
+                    <li class="submenu">
+                        <a <?php if(!strcmp(basename($_SERVER['PHP_SELF']),"empleados.php")){?> class="active" <?php } ?> href="empleados.php"><i class="fa fa-fw fa-user-plus"></i><span> Empleados </span> </a>
+                    </li>
 					
             </ul>
             <div class="clearfix"></div>

@@ -104,6 +104,66 @@ class Cliente extends Usuario {
 
     }
 
+
+    public static function verEmpleados($request){
+             $dbDetails = array(
+                'host' => 'localhost',
+                'user' => 'root',
+                'pass' => '',
+                'db'   => 'ferretruperbd2'
+            );
+
+            // DB table to use
+            $table = 'usuarios';
+
+            // Table's primary key
+            $primaryKey = 'id_usuario';
+
+            // Array of database columns which should be read and sent back to DataTables.
+            // The `db` parameter represents the column name in the database. 
+            // The `dt` parameter represents the DataTables column identifier.
+            
+            $columns = array(
+                    array(
+                        'db'        => 'id_usuario',
+                        'dt'        => 0
+                    ),
+                    array( 'db' => 'numero_identificacion', 'dt' => 1, 'field' => 'numero_identificacion'),
+                    array( 'db' => 'digito_de_verificacion',  'dt' => 2, 'field' => 'digito_de_verificacion'),
+                    array( 'db' => 'nombre',      'dt' => 3, 'field' => 'nombre'),
+                    array( 'db' => 'email',     'dt' => 4, 'field' => 'email'),
+                    array( 'db' => 'Direccion',     'dt' => 5, 'field' => 'Direccion'),
+                    array( 'db' => 'ciudad',     'dt' => 6, 'field' => 'ciudad'),
+                    array( 'db' => 'telefono',     'dt' => 7, 'field' => 'telefono'),
+                    array(
+                        'db'        => 'id_usuario',
+                        'dt'        => 8,
+                        'field' => 'id_usuario',
+                        'formatter' => function( $d, $row ) {
+                            if($d>0){
+                                return "<center><button class='btn btn-primary btn-xs editar-empleado'><i class='fa fa-pencil'></i></button>
+                                </button><button class='btn btn-danger btn-xs eliminar-empleado'><i class='fa fa-trash-o'></i></button></center>";
+                                }else{
+                                    return "";
+                                }
+                        }
+                    ),
+                    array( 'db' => 'celular',     'dt' => 9, 'field' => 'celular'),
+                    array( 'db' => 'clasificacion',     'dt' => 10, 'field' => 'clasificacion')
+
+
+                );
+            $whereStatement = 'tipo_usuario= "empleado" AND activa="1"';
+            
+            // Include SQL query processing class
+            require('../ssp.customized.class.php');
+            $joinQuery = NULL;
+
+            // Output data
+            return SSP::simple( $request, $dbDetails, $table, $primaryKey, $columns, $joinQuery, $whereStatement);
+
+    }
+
         
     public static function obtenerCliente($numeroConsulta,$modo=true) {
         $resultado = Usuario::buscarDatosUsuario($numeroConsulta,$modo);
