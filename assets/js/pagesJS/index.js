@@ -629,12 +629,23 @@ $(document).ready(function() {
                data: data,
                success:function(data){
                    if(data!=""){
-                     if(data==1){
-                       $("#value-cambio").html((efectivo-totalVenta));
-                       $("#modal-cambio").modal("show");
-                       loadData();
-                       getVenta();
-                     }else if(data==0){
+                    if(data!=3 && data!=0){
+                      try {
+                        data=$.parseJSON(data);
+                        if(data.response==1){
+                          $("#value-cambio").html((efectivo-totalVenta));
+                          $("#modal-cambio").modal("show");
+                          loadData();
+                          getVenta();
+                          window.open("../assets/php/Controllers/CVenta.php?method=emitirFactura&id-venta="+data.idVenta);
+                        }
+                      }
+                      catch(error) {
+                        console.error(error);
+                        console.log(data);
+                      }
+                      
+                    }else if(data==0){
                        Swal(
                          'Error!',
                          'Ha ocurrido un error, revisa y vuelve a intentar!',
@@ -646,8 +657,6 @@ $(document).ready(function() {
                          'El cliente no se encuentra registrado!',
                          'error'
                        );
-                     }else{
-                       console.log(data);
                      }
                    }
                }

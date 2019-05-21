@@ -115,9 +115,11 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 						$factura=$venta->efectuarVenta($resolucion,$empleado->getIdUsuario(),$iva,$subtotal,$descuento,$retefuente,$tipoVenta,$cliente->getIdUsuario(),$plazo);
 						if($factura instanceof Factura){
 							try {
+								$response['idVenta']=$venta->getIdVenta();
+								$response['response']=SUCCESS;
 								unset($_COOKIE["venta"]);
 								setcookie("venta", "",time() - 3600, "/");
-								echo SUCCESS;
+								echo json_encode($response);
 							} catch (Exception $e) {
 								echo ERROR;
 							}
