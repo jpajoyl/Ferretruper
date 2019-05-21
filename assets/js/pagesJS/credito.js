@@ -116,7 +116,7 @@ $(document).ready(function() {
                                                         '<td class="id-abono">'+contador+'<input type="hidden" id="input-id-abono" value='+dataAbonos.id_abono+'></td>'+
                                                         '<td class="valor-abono">'+numberWithCommas(dataAbonos.valor)+'</td>'+
                                                         '<td class="fecha-abono">'+fechaToString(dataAbonos.fecha,0)+'</td>'+
-                                                        '<td class="editar-abono"><center><button class="btn btn-danger btn-xs eliminar-abono" title="Eliminar abono" id-abono="'+dataAbonos.id_abono+'"><i class="fa fa-trash-o"></i></button></button></center></td>'+
+                                                        '<td class="editar-abono"><center><button class="btn btn-danger btn-xs eliminar-abono" title="Eliminar abono" id-abono="'+dataAbonos.id_abono+'" id-venta="'+$.trim(dataTable[0])+'"><i class="fa fa-trash-o"></i></button></button></center></td>'+
                                                         '</tr>';
                                                         contador++;
                                                 pagado=pagado+dataAbonos.valor;
@@ -225,6 +225,7 @@ $(document).ready(function() {
 
     $(document).on("click", ".eliminar-abono", function(){
         var idAbono=$(this).attr("id-abono");
+        var idVenta=$(this).attr("id-venta");
         $.ajax({
             url: '../assets/php/Controllers/CCredito.php?method=eliminarAbono',
             type: 'POST',
@@ -234,6 +235,7 @@ $(document).ready(function() {
                     if(data==1){
                         var elemento=".span-id-venta[id-venta="+idVenta+"]";
                         cargarAbonos(elemento,false);
+                    }else{
                         swal("Error","No se ha podido agregar el abono, revise e intentelo nuevamente","error");
                     }
                 }

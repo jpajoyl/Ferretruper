@@ -93,6 +93,7 @@
 	    	$conexion = Conexion::conectar();
 			$statement = $conexion->prepare("DELETE FROM `abonos` WHERE `id_abono` = :id_abono");
 			$statement->bindValue(":id_abono", $id_abono);
+			$statement->execute();
 			if($statement){
 				return SUCCESS;
 			}
