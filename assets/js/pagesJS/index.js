@@ -755,14 +755,25 @@ $(document).ready(function() {
                           data: data,
                           success:function(data){
                               if(data!=""){
-                                if(data==1){
-                                  Swal(
-                                    'Completado!',
-                                    'Se ha registrado satisfactoriamente la venta a credito,!',
-                                    'success'
-                                  );
-                                  loadData();
-                                  getVenta();
+                                if(data!=3 && data!=0){
+                                  try {
+                                    data=$.parseJSON(data);
+                                    if(data.response==1){
+                                      Swal(
+                                        'Completado!',
+                                        'Se ha registrado satisfactoriamente la venta a credito,!',
+                                        'success'
+                                      );
+                                      loadData();
+                                      getVenta();
+                                      window.open("../assets/php/Controllers/CVenta.php?method=emitirFactura&id-venta="+data.idVenta);
+                                    }
+                                  }
+                                  catch(error) {
+                                    console.error(error);
+                                    console.log(data);
+                                  }
+                                  
                                 }else if(data==0){
                                   Swal(
                                     'Error!',

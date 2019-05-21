@@ -447,7 +447,13 @@
 			$columns = array(
 				array( 'db' => '`ventas`.`id_venta`', 'dt' => 0, 'field' => 'id_venta'),
 				array( 'db' => '`ventas`.`fecha`',  'dt' => 1, 'field' => 'fecha'),
-				array( 'db' => '`ventas`.`total`',      'dt' => 2, 'field' => 'total'),
+				array( 'db' => '`ventas`.`total`',
+				       'dt' => 2,
+				       'field' => 'total',
+				       'formatter' => function( $d, $row ) {
+					       	return number_format($d);
+				       }
+				   ),
 				array( 'db' => '`facturas`.`numero_dian`',     'dt' => 3, 'field' => 'numero_dian'),
 				array(
 					'db'        => '`ventas`.`anulada`',
