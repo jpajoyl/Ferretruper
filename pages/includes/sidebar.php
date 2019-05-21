@@ -46,9 +46,6 @@
                     </li>
 					
             </ul>
-            <button type="button" onclick="print()">
-               Print PDF
-            </button>
             <div class="clearfix"></div>
 
 			</div>

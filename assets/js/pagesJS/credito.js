@@ -38,8 +38,7 @@ $(document).ready(function() {
           "ajax": "../assets/php/Controllers/CCredito.php?method=verCreditos&activos="+pagados,
           "destroy":true,
           "autoWidth": false,
-          "columnDefs": [ { className: "table-proveedores-nit-proveedor", "targets": [ 1 ] },
-                        {"render": function (data, type, row) {
+          "columnDefs": [ {"render": function (data, type, row) {
                         return "";
                     },
                     className: "details-control",
@@ -55,28 +54,19 @@ $(document).ready(function() {
           }
         });
 
-
-        agregarAbono("#table-creditos tbody",table);
-
         
     }
 
-    function agregarAbono(tbody,table){
-        $(tbody).on("click", ".abonar-credito", function(){
-      
-        });
-    }
-
-    $('#table-creditos tbody').on('click', 'td.details-control', function () {
-        var tr = $(this).closest('tr');
+    function cargarAbonos(elemento,detailsControl){
+        var tr = $(elemento).closest('tr');
         var row = table.row( tr );
 
-        if ( row.child.isShown() ) {
+        if ( row.child.isShown() && detailsControl) {
             row.child.hide();
             tr.removeClass('shown');
         }
         else {
-            var dataTable=table.row($(this).parents("tr")).data();
+            var dataTable=table.row($(elemento).parents("tr")).data();
             $.ajax({
                 url: '../assets/php/Controllers/CCliente.php?method=obtenerCliente',
                 type: 'POST',
@@ -126,7 +116,7 @@ $(document).ready(function() {
                                                         '<td class="id-abono">'+contador+'<input type="hidden" id="input-id-abono" value='+dataAbonos.id_abono+'></td>'+
                                                         '<td class="valor-abono">'+numberWithCommas(dataAbonos.valor)+'</td>'+
                                                         '<td class="fecha-abono">'+fechaToString(dataAbonos.fecha,0)+'</td>'+
-                                                        '<td class="editar-abono"><center><button class="btn btn-warning btn-xs editar-abono" title="Editar valor abono"><i class="fa fa-pencil"></i></button></button></center></td>'+
+                                                        '<td class="editar-abono"><center><button class="btn btn-danger btn-xs eliminar-abono" title="Eliminar abono" id-abono="'+dataAbonos.id_abono+'"><i class="fa fa-trash-o"></i></button></button></center></td>'+
                                                         '</tr>';
                                                         contador++;
                                                 pagado=pagado+dataAbonos.valor;
@@ -152,6 +142,10 @@ $(document).ready(function() {
                 }
             });      
         }
+    }
+
+    $('#table-creditos tbody').on('click', 'td.details-control', function () {
+        cargarAbonos(this,true);
     });
 
     $(document).on("click", ".emitir-factura-credito", function(){
@@ -205,9 +199,10 @@ $(document).ready(function() {
                                     console.log(data);
                                     if(data!=""){
                                         if(data==1){
-                                            alert("SUCESS");
+                                            var elemento=".span-id-venta[id-venta="+idVenta+"]";
+                                            cargarAbonos(elemento,false);
                                         }else if(data==0){
-                                            alert("Error");
+                                            swal("Error","No se ha podido agregar el abono, revise e intentelo nuevamente","error");
                                         }
                                     }
                                 }
@@ -226,5 +221,23 @@ $(document).ready(function() {
             }
         });
 
+    });
+
+    $(document).on("click", ".eliminar-abono", function(){
+        var idAbono=$(this).attr("id-abono");
+        $.ajax({
+            url: '../assets/php/Controllers/CCredito.php?method=eliminarAbono',
+            type: 'POST',
+            data: {"idAbono":idAbono},
+            success:function(data){
+                if(data!=""){
+                    if(data==1){
+                        var elemento=".span-id-venta[id-venta="+idVenta+"]";
+                        cargarAbonos(elemento,false);
+                        swal("Error","No se ha podido agregar el abono, revise e intentelo nuevamente","error");
+                    }
+                }
+            }
+        });
     });
 });

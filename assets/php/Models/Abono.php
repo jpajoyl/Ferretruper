@@ -18,7 +18,7 @@
 
 		public function __construct0($valor, $fecha, $id_Venta){  //Id_venta es el id de la VENTAAAAAAAAAAAAAAAAAAAAAAA
 			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("INSERT INTO `abonos`(`id_abono`, `valor`, `fecha`, `TIPO_VENTA_id_tipo_venta`) VALUES (null,:valor,:fecha,:id_Venta)");
+			$statement = $conexion->prepare("INSERT INTO `abonos`(`id_abono`, `valor`, `fecha`, `TIPO_VENTA_id_tipo_venta`) VALUES (null,:valor,:fecha,:id_tipo_venta)");
 			$this->setValor($valor,$statement);
 			$this->setFecha($fecha,$statement);
 			$this->setTipoVenta($id_Venta,$statement);
@@ -80,8 +80,10 @@
 
 	    public function setTipoVenta($id_Venta, $statement=NULL) {  //Mando el id de venta
 			$tipoVenta=TipoVenta::obtenerTipoVenta($id_Venta);
+			$this->tipoVenta=$tipoVenta;
 			if($statement!=NULL){
-	    		$statement->bindParam(':id_Venta',$tipoVenta->getIdTipoVenta(),PDO::PARAM_STR,45);
+				$idTipoVenta=$tipoVenta->getIdTipoVenta();
+	    		$statement->bindParam(':id_tipo_venta',$idTipoVenta,PDO::PARAM_INT);
 	    	}
 	    }
 

@@ -35,13 +35,27 @@ if($method!="" && $objectSession->getEmpleadoActual()!=null){
 	}else if(!strcmp($method,"añadirAbono")){
 		$idVenta=$_POST['idVenta'];
 		$valorAbono=$_POST['valorAbono'];
-		$fechaActual=date("d/m/Y");
-		try {	
+		$fechaActual=date("Y-m-d");
+		try {
 			$abono = new Abono($valorAbono, $fechaActual, $idVenta);
 			echo SUCCESS;
 		} catch (Exception $e) {
-			echo $e->getMessage();
+			echo ERROR;
 		}
+	}else if(!strcmp($method,"eliminarAbono")){
+		$idAbono=$_POST['idAbono'];
+		$abono=Abono::obtenerAbono($idAbono);
+		if($abono instanceof Abono){
+			try {
+				$eliminarAbono = $abono->elminarAbono();
+				echo $eliminarAbono;
+			} catch (Exception $e) {
+				echo ERROR;
+			}
+		}else{
+			echo NOT_FOUND;
+		}
+		
 	}
 }
 

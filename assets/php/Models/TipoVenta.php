@@ -285,8 +285,7 @@ class TipoVenta{
         $idTipoVenta = $this->getIdTipoVenta();
         $statement = Abono::obtenerAbonos($idTipoVenta);
         $total = 0;
-        $resultado = $statement->fetch(PDO::FETCH_ASSOC);
-        while ($resultado){
+        while ($resultado = $statement->fetch(PDO::FETCH_ASSOC)){
             $total += $resultado['valor'];
         }
         return $total;
@@ -295,7 +294,7 @@ class TipoVenta{
     public function getSaldoFaltante(){
         $venta = Venta::obtenerVenta($this->getVenta());
         $pagado = $this->getTotalAbonado();
-        return $venta->getTotal() - $pagado;
+        return ($venta->getTotal()-$pagado);
     }
 
 

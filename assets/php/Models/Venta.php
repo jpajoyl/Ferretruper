@@ -527,7 +527,7 @@
 
 			$columns = array(
 				array( 'db' => '`ventas`.`id_venta`', 'dt' => 0, 'field' => 'id_venta'),
-				array( 'db' => 'id_tipo_venta', 'dt' => 1, 'field' => 'id_tipo_venta'),
+				array( 'db' => 'id_tipo_venta','dt' => 1, 'field' => 'id_tipo_venta'),
 				array( 'db' => '`usuarios`.`numero_identificacion`',  'dt' => 2, 'field' => 'numero_identificacion'),
 				array( 'db' => '`ventas`.`total`',
 					   'dt' => 3,
@@ -541,7 +541,7 @@
 					   'dt' => 5,
 					   'field' => 'plazo',
 					   'formatter' => function( $d, $row ) {
-						$fecha = $row[3];
+						$fecha = $row[4];
 						$nuevafecha = strtotime ( '+'.$d.' day' , strtotime ( $fecha ) ) ;
 						$nuevafecha = date ( 'Y-m-j' , $nuevafecha );
 						$dias = array('Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado');
@@ -571,9 +571,9 @@
 					'field' => 'anulada',
 					'formatter' => function( $d, $row ) {
 						if($d==0){
-							return "<center><button class='btn btn-warning btn-xs agregar-abono' id-venta='".$row[0]."'><i class='fa fa-money'></i></button> </button><button class='btn btn-primary btn-xs emitir-factura-credito' id-venta='".$row[0]."'><i class='fa fa-print'></i></button></center>";
+							return "<span class='span-id-venta' id-venta='".$row[0]."'></span><center><button class='btn btn-warning btn-xs agregar-abono' id-venta='".$row[0]."' title='agregar abono'><i class='fa fa-money'></i></button> </button><button class='btn btn-primary btn-xs emitir-factura-credito' id-venta='".$row[0]."' title='ver factura'><i class='fa fa-print'></i></button></center>";
 						}else  if($d==1){
-							return "<center></button><button class='btn btn-warning btn-xs emitir-factura-credito' id-venta='".$row[0]."'><i class='fa fa-print'></i></button></center>";
+							return "<center><button class='btn btn-danger btn-xs emitir-factura-credito' id-venta='".$row[0]."' title='ver factura anulada'><i class='fa fa-print'></i></button></center>";
 						}else{
 							return "";
 						}
