@@ -412,46 +412,45 @@ class Factura {
 
 			// $pdf->MultiCell(110,4,"NIT: 900 307 086 - 7"."\n"."Carrera 51 # 40-74"."\n"."TEL:(4) 2327201"."\n".utf8_decode("Medellín - Colombia")."\n"."ferretrupersas@hotmail.com",0,"C",false);
 /*			$pdf->ln(20);
-					
-$pdf->setY(219);*/
-$pdf->setY(96.5);
-$pdf->setX(120);
-$pdf->SetFont('Arial','B',10);
-$pdf->Cell(50,5, "Total Bruto: ",1,0,'J',false);
-$pdf->SetFont('Arial','',10);
-$pdf->Cell(30,5,number_format($totalBruto,2),1,1,'R',false);
-// $pdf->Cell(110,7,"",0,0,'J',false);
-$pdf->SetFont('Arial','B',10);
-$pdf->setX(120);
-$pdf->Cell(50,5, "Iva: ",1,0,'J',false);
-$pdf->SetFont('Arial','',10);
-$pdf->Cell(30,5,number_format($totalIva,2),1,1,'R',false);
-												// $pdf->Cell(110,7,"",0,0,'J',false);
-$pdf->SetFont('Arial','B',10);
-$retefuente=$venta->getRetefuente();
-if ($retefuente==NULL) {
-	$retefuente=0;
-}
-$pdf->setX(120);
-$pdf->Cell(50,5, "Retefuente ".$retefuente."% : ",1,0,'J',false);
-$pdf->SetFont('Arial','',10);
-$totalRetefuente = $totalBruto*($retefuente/100);
-$pdf->Cell(30,5,number_format($totalRetefuente,2),1,1,'R',false);
-// $pdf->Cell(110,7,"",0,0,'J',false);
-$pdf->SetFont('Arial','B',10);
-$pdf->setX(120);
-$pdf->Cell(50,5, "Total: ",1,0,'J',false);
-$pdf->SetFont('Arial','',10);
-$pdf->Cell(30,5,number_format($totalFinal-$totalRetefuente,2),1,1,'R',false);
-$pdf->ln(3);
-$pdf->SetFont('Arial','',10);
-$pdf->MultiCell(190,4,utf8_decode($infoFactura) ,0,"C",false);
-$pdf->SetFont('Arial','',7);
-$pdf->MultiCell(190,4, utf8_decode($descripcionResolucion),0,"C",false);
-}else{
-	$pdf->Rect(10, 80, 190, 130);
-	$pdf->SetFont('Arial','B',10);
-	$pdf->setY(212);
+							
+		$pdf->setY(219);*/
+			$pdf->setY(96.5);
+			$pdf->setX(120);
+			$pdf->SetFont('Arial','B',10);
+			$pdf->Cell(50,5, "Total Bruto: ",1,0,'J',false);
+			$pdf->SetFont('Arial','',10);
+			$pdf->Cell(30,5,number_format($totalBruto,2),1,1,'R',false);
+			// $pdf->Cell(110,7,"",0,0,'J',false);
+			$pdf->SetFont('Arial','B',10);
+			$pdf->setX(120);
+			$pdf->Cell(50,5, "Iva: ",1,0,'J',false);
+			$pdf->SetFont('Arial','',10);
+			$pdf->Cell(30,5,number_format($totalIva,2),1,1,'R',false);
+															// $pdf->Cell(110,7,"",0,0,'J',false);
+			$pdf->SetFont('Arial','B',10);
+			$retefuente=$venta->getRetefuente();
+			/*if ($retefuente==NULL) {
+				$retefuente=0;
+			}*/
+			$pdf->setX(120);
+			$pdf->Cell(50,5, "Retefuente: ",1,0,'J',false);
+			$pdf->SetFont('Arial','',10);
+			$pdf->Cell(30,5,number_format($retefuente,2),1,1,'R',false);
+			// $pdf->Cell(110,7,"",0,0,'J',false);
+			$pdf->SetFont('Arial','B',10);
+			$pdf->setX(120);
+			$pdf->Cell(50,5, "Total: ",1,0,'J',false);
+			$pdf->SetFont('Arial','',10);
+			$pdf->Cell(30,5,number_format($totalFinal,2),1,1,'R',false);
+			$pdf->ln(3);
+			$pdf->SetFont('Arial','',10);
+			$pdf->MultiCell(190,4,utf8_decode($infoFactura) ,0,"C",false);
+			$pdf->SetFont('Arial','',7);
+			$pdf->MultiCell(190,4, utf8_decode($descripcionResolucion),0,"C",false);
+		}else{
+			$pdf->Rect(10, 80, 190, 130);
+			$pdf->SetFont('Arial','B',10);
+			$pdf->setY(212);
 			$pdf->Cell(60,7, "Condiciones de pago: ",0,0,'J',false);//HHHHHHHHHHHHHHHHHHHHHHHH
 			$pdf->SetFont('Arial','',10);
 			$pdf->Cell(50,7, $tipoVenta->getTipoVenta(),0,0,'J',false);
@@ -492,20 +491,20 @@ $pdf->MultiCell(190,4, utf8_decode($descripcionResolucion),0,"C",false);
 			// $pdf->Cell(110,7,"",0,0,'J',false);
 			$pdf->SetFont('Arial','B',10);
 			$retefuente=$venta->getRetefuente();
-			if ($retefuente==NULL) {
+/*			if ($retefuente==NULL) {
 				$retefuente=0;
-			}
+			}*/
 			$pdf->setX(120);
-			$pdf->Cell(50,7, "Retefuente ".$retefuente."% : ",1,0,'J',false);
+			$pdf->Cell(50,7, "Retefuente: ",1,0,'J',false);
 			$pdf->SetFont('Arial','',10);
-			$totalRetefuente = $totalBruto*($retefuente/100);
-			$pdf->Cell(30,7,number_format($totalRetefuente,2),1,1,'R',false);
+			//$totalRetefuente = $totalBruto*($retefuente/100);
+			$pdf->Cell(30,7,number_format($retefuente,2),1,1,'R',false);
 			// $pdf->Cell(110,7,"",0,0,'J',false);
 			$pdf->SetFont('Arial','B',10);
 			$pdf->setX(120);
 			$pdf->Cell(50,7, "Total: ",1,0,'J',false);
 			$pdf->SetFont('Arial','',10);
-			$pdf->Cell(30,7,number_format($totalFinal-$totalRetefuente,2),1,1,'R',false);
+			$pdf->Cell(30,7,number_format($totalFinal,2),1,1,'R',false);
 			$pdf->ln(3);
 			$pdf->SetFont('Arial','',12);
 			$pdf->MultiCell(190,6,utf8_decode($infoFactura) ,0,"C",false);
