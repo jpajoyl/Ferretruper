@@ -23,6 +23,12 @@ $(document).ready(function() {
             window.open("../assets/php/Controllers/CVenta.php?method=emitirFactura&id-venta="+data[0]);
         });
     }
+    function emitirFacturaAnulada(tbody,table){
+        $(tbody).on("click", ".emitir-factura-anulada", function(){
+            var data=table.row($(this).parents("tr")).data();
+            window.open("../assets/php/Controllers/CVenta.php?method=emitirFactura&id-venta="+data[0]);
+        });
+    }
     function anularVenta(tbody,table){
         $(tbody).on("click", ".anular-factura", function(){
             var data=table.row($(this).parents("tr")).data();
@@ -92,7 +98,7 @@ $(document).ready(function() {
             anularVenta("#table-ventas tbody",table);
             emitirFactura("#table-ventas tbody",table);
         }else{
-            window.table=$('#table-ventas').DataTable({
+            window.tableAnuladas=$('#table-ventas').DataTable({
                 "processing": true,
                 "serverSide": true,
                 "ajax": "../assets/php/Controllers/CVenta.php?method=verVentasAnuladas",
@@ -108,7 +114,7 @@ $(document).ready(function() {
                     "infoFiltered": ""
                 }
             });
-            emitirFactura("#table-ventas tbody",table);
+            emitirFacturaAnulada("#table-ventas tbody",tableAnuladas);
         }
         
     }

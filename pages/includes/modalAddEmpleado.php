@@ -14,16 +14,24 @@
 							<label>Identificación<span class="text-danger">*</span></label>
 							<input type="text" class="form-control" id="input-id-empleado" placeholder="Identificacion" autocomplete="off" required>
 						</div>
-					</div>
-					<div class="form-row">
 						<div class="form-group col-md-6">
 							<label>Nombre<span class="text-danger">*</span></label>
 							<input type="text" class="form-control" id="input-nombre-empleado" placeholder="Nombre" required autocomplete="off">
 						</div>
-						<div class="form-group col-md-6">
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-8">
+							<label>Dirección <span class="text-danger">*</span></label>
+							<input type="text" class="form-control" id="input-direccion-empleado" placeholder="Dirección" required>
+						</div>
+						<div class="form-group col-md-4">
 							<label>Ciudad <span class="text-danger">*</span></label>
 							<input type="text" class="form-control" id="input-ciudad-empleado" placeholder="Ciudad" required>
 						</div>
+					</div>
+					<div class="form-group">
+						<label>Correo electronico (Opcional)</label>
+						<input type="email" class="form-control" id="input-email-empleado" placeholder="Email" autocomplete="off">
 					</div>
 					<div class="form-row">
 						<div class="form-group col-md-6">
@@ -34,17 +42,6 @@
 							<label>Contraseña<span class="text-danger">*</span></label>
 							<input type="text" class="form-control" id="input-contrasena-empleado" placeholder="Contraseña" required autocomplete="off" pattern="[A-Za-z0-9]+">
 						</div>
-					</div>
-					<div class="form-row">
-						<div class="form-group col-md-12">
-							<label>Dirección <span class="text-danger">*</span></label>
-							<input type="text" class="form-control" id="input-direccion-empleado" placeholder="Dirección" required>
-						</div>
-
-					</div>
-					<div class="form-group">
-						<label>Correo electronico (Opcional)</label>
-						<input type="email" class="form-control" id="input-email-empleado" placeholder="Email" autocomplete="off">
 					</div>
 					<div class="form-row">
 						<div class="form-group col-md-6">

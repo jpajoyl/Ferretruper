@@ -126,10 +126,10 @@ include_once '../assets/php/Controllers/GetSession.php';
 															<label>Identificación <span class="text-danger">*</span></label>
 															<input type="text" class="form-control" id="input-id-editar" placeholder="Identificación" autocomplete="off" required disabled>
 														</div>
-													</div>
-													<div class="form-group">
-														<label>Nombre<span class="text-danger">*</span></label>
-														<input type="text" class="form-control" id="input-nombre-editar" placeholder="Nombre" required autocomplete="off">
+														<div class="form-group col-md-6">
+															<label>Nombre<span class="text-danger">*</span></label>
+															<input type="text" class="form-control" id="input-nombre-editar" placeholder="Nombre" required autocomplete="off">
+														</div>
 													</div>
 													<div class="form-row">
 														<div class="form-group col-md-8">
@@ -143,7 +143,7 @@ include_once '../assets/php/Controllers/GetSession.php';
 													</div>
 													<div class="form-group">
 														<label>Correo electronico</label>
-														<input type="email" class="form-control" id="input-email-editar" placeholder="Email" autocomplete="off">
+														<input type="email" class="form-control" id="input-email-editar" placeholder="Correo electronico" autocomplete="off">
 													</div>
 													<div class="form-row">
 														<div class="form-group col-md-6">
@@ -158,11 +158,11 @@ include_once '../assets/php/Controllers/GetSession.php';
 													<div class="form-row">
 													<div class="form-group col-md-6">
 															<label>Usuario</span></label>
-															<input type="text" class="form-control" id="input-usuario-editar" placeholder="Telefono"  pattern="[A-Za-z0-9]+">
+															<input type="text" class="form-control" id="input-usuario-editar" placeholder="Usuario"  pattern="[A-Za-z0-9]+">
 														</div>
 														<div class="form-group col-md-6">
 															<label>Contraseña</label>
-															<input type="text" class="form-control" id="input-contrasena-editar" placeholder="Celular" pattern="[A-Za-z0-9]+">
+															<input type="text" class="form-control" id="input-contrasena-editar" placeholder="Contraseña" pattern="[A-Za-z0-9]+">
 														</div>
 													</div>			
 												</div>
