@@ -148,21 +148,21 @@ include_once '../assets/php/Controllers/GetSession.php';
 													<div class="form-row">
 														<div class="form-group col-md-6">
 															<label>Telefono <span class="text-danger">*</span></label>
-															<input type="text" class="form-control" id="input-telefono-editar" placeholder="Telefono" required>
+															<input type="text" class="form-control" id="input-telefono-editar" placeholder="Telefono" pattern="[0-9]+" required>
 														</div>
 														<div class="form-group col-md-6">
 															<label>Celular</label>
-															<input type="text" class="form-control" id="input-celular-editar" placeholder="Celular">
+															<input type="text" class="form-control" id="input-celular-editar" placeholder="Celular" pattern="[0-9]+">
 														</div>
 													</div>
-																										<div class="form-row">
+													<div class="form-row">
 													<div class="form-group col-md-6">
-															<label>Usuario <span class="text-danger">*</span></label>
-															<input type="text" class="form-control" id="input-usuario-editar" placeholder="Telefono" required>
+															<label>Usuario</span></label>
+															<input type="text" class="form-control" id="input-usuario-editar" placeholder="Telefono"  pattern="[A-Za-z0-9]+">
 														</div>
 														<div class="form-group col-md-6">
 															<label>Contraseña</label>
-															<input type="text" class="form-control" id="input-contrasena-editar" placeholder="Celular">
+															<input type="text" class="form-control" id="input-contrasena-editar" placeholder="Celular" pattern="[A-Za-z0-9]+">
 														</div>
 													</div>			
 												</div>

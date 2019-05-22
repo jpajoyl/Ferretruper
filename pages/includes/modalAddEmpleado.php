@@ -28,11 +28,11 @@
 					<div class="form-row">
 						<div class="form-group col-md-6">
 							<label>Usuario<span class="text-danger">*</span></label>
-							<input type="text" class="form-control" id="input-nombre-empleado" placeholder="Usuario" required autocomplete="off">
+							<input type="text" class="form-control" id="input-usuario-empleado" placeholder="Usuario" required autocomplete="off" pattern="[A-Za-z0-9]+">
 						</div>
 						<div class="form-group col-md-6">
 							<label>Contraseña<span class="text-danger">*</span></label>
-							<input type="text" class="form-control" id="input-contrasena-empleado" placeholder="Contraseña" required autocomplete="off">
+							<input type="text" class="form-control" id="input-contrasena-empleado" placeholder="Contraseña" required autocomplete="off" pattern="[A-Za-z0-9]+">
 						</div>
 					</div>
 					<div class="form-row">
@@ -49,11 +49,11 @@
 					<div class="form-row">
 						<div class="form-group col-md-6">
 							<label>Telefono <span class="text-danger">*</span></label>
-							<input type="text" class="form-control" id="input-telefono-empleado" placeholder="Telefono" required>
+							<input type="text" class="form-control" id="input-telefono-empleado" placeholder="Telefono" pattern="[0-9]+" required>
 						</div>
 						<div class="form-group col-md-6">
 							<label>Celular</label>
-							<input type="text" class="form-control" id="input-celular-empleado" placeholder="Celular">
+							<input type="text" class="form-control" id="input-celular-empleado"  pattern="[0-9]+" placeholder="Celular">
 						</div>
 					</div>		
 				</div>
