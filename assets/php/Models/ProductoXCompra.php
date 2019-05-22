@@ -130,6 +130,7 @@
 				$statement=null;
 				return $productoxcompra;
 			}else{
+				$conexion = null;
 				return false;
 			}
 		}
@@ -154,6 +155,7 @@
 				$statement=null;
 				return $productoxcompra;
 			}else{
+				$conexion = null;
 				return false;
 			}
 		}
@@ -164,11 +166,12 @@
 			$statement->bindValue(":idProductoxcompra", $this->getIdProductoxCompra());
 			$statement->execute();
 			if($statement){
+				$conexion = null;
 				return SUCCESS;
 			}else{
+				$conexion = null;
 				return ERROR;
 			}
-			$conexion=null;
 
 		}
 

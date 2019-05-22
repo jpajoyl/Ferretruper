@@ -246,9 +246,12 @@ class Inventario {
 		$statement->bindValue(":idInventario", $idInventario);
 		$statement->execute();
 		if($statement){
+			$conexion=null;
+	    	$statement=null;
 			return true;
-		}else 
-		{
+		}else {
+			$conexion=null;
+	    	$statement=null;
 			return false;
 		}
 	}

@@ -127,9 +127,11 @@
 					$statement=null;
 					return $proveedor;
 				}else{
+					$conexion = null;
 					return false;
 				}
 			}else{
+				$conexion = null;
 				return false;
 			}
 		}
@@ -141,8 +143,10 @@
 			$statement->bindValue(":nit","%$valor%",PDO::PARAM_STR);
 			$statement->execute();
 			if($statement->rowCount()>0){
+				$conexion = null;
 				return $statement;
 			}else{
+				$conexion = null;
 				return false;
 			}
 		}

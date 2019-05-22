@@ -184,6 +184,7 @@ class Usuario{
 		$statement=null;
 		if($statement){
 			if(strcmp($usuario,"") and strcmp($contrasena,"")){
+				$conexion = null;
 				return SUCCESS;
 
 			}else{
@@ -205,9 +206,10 @@ class Usuario{
 				}
 				
 			}
-
+			$conexion = null;
 		}else{
 			$statement=null;
+			$conexion = null;
 			return ERROR;
 		}
 
@@ -216,11 +218,10 @@ class Usuario{
 	public function desactivarUsuario(){
 		$idUsuario = $this->getIdUsuario();
 		$conexion = Conexion::conectar();
-		$statement = $conexion->prepare("UPDATE `usuarios` SET `activa` = '0' WHERE `usuarios`.`id_usuario` = :idUsuario");
+		$statement = $conexion->prepare("UPDATE `usuarios` SET `activa` = 0 WHERE `usuarios`.`id_usuario` = :idUsuario");
 		$statement->bindParam(':idUsuario',$idUsuario,PDO::PARAM_INT);
-		$statement->execute();
 		$resultado=ERROR;
-		if($statement){
+		if($statement->execute()){
 			$resultado=SUCCESS;
 			$this->setActiva(0);
 		}
@@ -245,8 +246,25 @@ class Usuario{
 		return $resultado;
 	}
 
+	public function activarUsuario(){
+		$idUsuario = $this->getIdUsuario();
+		$conexion = Conexion::conectar();
+		$statement = $conexion->prepare("UPDATE `usuarios` SET `activa` = 1 WHERE `usuarios`.`id_usuario` = :idUsuario");
+		$statement->bindParam(':idUsuario',$idUsuario,PDO::PARAM_INT);
+		$resultado=ERROR;
+		if($statement->execute()){
+			$resultado=SUCCESS;
+			$this->setActiva(0);
+		}
+		$conexion = null;
+		$statement = null;
+		return $resultado;
+	}
+
 
 }
+
+
 
 
 

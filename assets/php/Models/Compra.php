@@ -175,6 +175,8 @@
 				$statement=null;
 				return $compra;
 			}else{
+				$conexion=null;
+	    		$statement=null;
 				return false;
 			}
 

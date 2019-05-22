@@ -137,18 +137,6 @@
 		    $this->venta = Venta::obtenerVenta($id_venta);
 		  
 		}
-
-		public function efectuarGarantia(){
-			$conexion = Conexion::conectar();
-			$statement = $conexion->prepare("SELECT * FROM productos INNER JOIN `productoxventa` ON productoxventa.productos_id_producto = productos.id_producto WHERE productoxventa.Ventas_id_compra = :idVenta");
-			$statement->bindParam(':idVenta',$id_venta,PDO::PARAM_STR,45);
-			$statmente->execute();
-			$resultado = $statement->fetch(PDO::FETCH_ASSOC);
-			if($resultado){
-				
-			}
-		}
-
 	}
 
 

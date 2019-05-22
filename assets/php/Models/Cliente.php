@@ -185,9 +185,13 @@ class Cliente extends Usuario {
                 $statement=null;
                 return $cliente;
             }else{
+                $conexion=null;
+                $statement=null;
                 return false;
             }
         }else{
+            $conexion=null;
+            $statement=null;
             return false;
         }
     }

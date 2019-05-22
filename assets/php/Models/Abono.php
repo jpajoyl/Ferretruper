@@ -95,11 +95,16 @@
 			$statement->bindValue(":id_abono", $id_abono);
 			$statement->execute();
 			if($statement){
+				$conexion = null;
+				$statement=null;
 				return SUCCESS;
 			}
 			else{
+				$conexion = null;
+	    		$statement=null;
 				return ERROR;
 			}
+
 
 	    }
 
@@ -109,8 +114,8 @@
 			$statement = $conexion->prepare("UPDATE `abonos` SET `valor`=:valor  WHERE `id_abono` = :id_abono");
 			$statement->bindValue(":id_abono", $id_abono);
 			$this->setValor($valor,$statement);
-
 			$statement->execute();
+
 			
 	    }
 	    public static function obtenerAbono($idAbono)
@@ -130,6 +135,8 @@
 	    		$statement=null;
 	    		return $abono;
 	    	}else{
+	    		$conexion=null;
+	    		$statement=null;
 	    		return ERROR;
 	    	}
 	    }

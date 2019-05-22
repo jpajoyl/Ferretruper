@@ -25,8 +25,8 @@
 			$contraseña=$_POST['contraseña'];
 			$clasificacion="Empleado";
 			$digitoDeVerificacion=0;
-
-			if(Empleado::obtenerEmpleadoRegistro($id)==false){
+			$empleadoRegistro=Empleado::obtenerEmpleadoRegistro($id);
+			if($empleadoRegistro==false){
 				try{
 					$empleado = new Empleado($usuario,$contraseña,0,$tipoId, $id, $nombre, $direccion, $ciudad, $telefono, $clasificacion, $digitoDeVerificacion, $email, $celular);
 					echo SUCCESS;
@@ -34,6 +34,7 @@
 					echo ERROR;
 				}
 			}else{
+				$empleadoRegistro->activarUsuario();
 				echo ALREADY_EXIST;
 			}
 			
@@ -68,8 +69,8 @@
 			$id=$_POST['id'];
 			$empleado=Empleado::obtenerEmpleado($id);
 			if($empleado!=false){
-				$empleado->desactivarUsuario();
-				if($empleado){
+				$resultado = $empleado->desactivarUsuario();
+				if($resultado == SUCCESS){
 					echo SUCCESS;
 				}else{
 					echo ERROR;

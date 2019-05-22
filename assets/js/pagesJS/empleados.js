@@ -70,7 +70,7 @@ $(document).ready(function() {
             var data=table.row($(this).parents("tr")).data();
             Swal({
               title: 'Estas seguro?',
-              text: "Se eliminara el empleado "+data[2]+"!",
+              text: "Se eliminara el empleado "+data[1]+"!",
               type: 'warning',
               showCancelButton: true,
               confirmButtonColor: '#3085d6',
@@ -82,7 +82,7 @@ $(document).ready(function() {
                 $.ajax({
                     url: '../assets/php/Controllers/CEmpleado.php?method=desactivarEmpleado',
                     type: 'POST',
-                    data: {"id":data[1]},
+                    data: {"id":data[0]},
                     success:function(data){  
                         console.log(data);
                       if(data!=""){
@@ -166,7 +166,7 @@ $(document).ready(function() {
                         setTimeout(function(){
                             Swal(
                               'Error!',
-                              'Al parecer este numero de identificacion ya esta registrado',
+                              'Al parecer este numero de identificacion ya esta registrado, se volverá a activar el empleado',
                               'error'
                             );
                         },500);

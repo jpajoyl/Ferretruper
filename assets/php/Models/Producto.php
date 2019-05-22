@@ -340,8 +340,12 @@
 			$statement->bindValue(":unidadesTotales", $unidadesTotales);
 			$statement->execute();
 			if($statement){
+				$conexion=null;
+	    		$statement=null;
 				return SUCCESS;
 			}else{
+				$conexion=null;
+	    		$statement=null;
 				return ERROR;
 			}
 
@@ -417,10 +421,13 @@
 					$statement=null;
 					return $producto;
 				}else{
+					$conexion=null;
 					return $resultado;
 				}
 				
 			}else{
+				$conexion=null;
+	    		$statement=null;
 				return false;
 			}
 
@@ -489,8 +496,10 @@
 			$statement->bindValue(1, "%$nombre%", PDO::PARAM_STR);
 			$statement->execute();
 			if($statement->rowCount()>0){
+				$conexion=null;
 				return $statement;
 			}else{
+				$conexion=null;
 				return false;
 			}
 			
@@ -556,6 +565,7 @@
 			$statement->execute();
 			$statement=null;
 			$this->calcularUnidades();
+			$conexion = null;
 		}
 
 		public static function verificarEspecial($idProducto){
@@ -609,6 +619,7 @@
 				$this->calcularUnidades();
 				$conexion=null;
 			}else{
+				$conexion = null;
 				return ERROR;
 			}
 

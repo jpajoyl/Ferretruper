@@ -200,6 +200,7 @@
 				$statement=null;
 				return $venta;
 			}else{
+				$conexion = null;
 				return false;
 			}
 
@@ -293,6 +294,7 @@
 					$statement->bindValue(":idInventario", $idInventario);
 					$statement->execute();
 					if(!$statement){
+						$conexion = null;
 						return ERROR;
 					}
 
@@ -316,6 +318,7 @@
 				$conexion = null;
 				return SUCCESS;
 			}else{
+				$conexion = null;
 				return ERROR;
 			}
 
@@ -335,8 +338,10 @@
 			$statement->execute();
 
 			if(!$statement){
+				$conexion = null;
 				return ERROR;
 			}else{
+				$conexion = null;
 				return SUCCESS;
 			}
 
@@ -394,12 +399,15 @@
 						return $factura;
 
 					}else{
+						$conexion = null;
 						return ERROR;
 					}
 				}else{
+					$conexion = null;
 					return ERROR;
 				}
 			}else{
+				$conexion = null;
 				return Error;
 			}
 
@@ -626,11 +634,13 @@
 						$producto=Producto::obtenerProducto($id_producto);
 						$unidades = 0;
 						if(!$statement2){
+							$conexion = null;
 							return ERROR;
 						}
 						$statement2 = null;
 
 					}else{
+						$conexion = null;
 						return ERROR;
 					}
 
@@ -648,6 +658,7 @@
 					$factura = Factura::obtenerFactura($idVenta,false);
 					$factura ->anularFactura();
 				}else{
+					$conexion = null;
 					return ERROR;
 				}
 				$statement = null;
@@ -655,6 +666,7 @@
 				return SUCCESS;
 
 			}else{
+				$conexion = null;
 				return ERROR;
 			}
 

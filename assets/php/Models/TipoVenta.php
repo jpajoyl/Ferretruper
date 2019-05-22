@@ -213,8 +213,10 @@ class TipoVenta{
 			$id_tipoVenta= $this->getIdTipoVenta();
 			$statement->bindValue(":id_tipoVenta", $id_tipoVenta);
 			$statement->execute();
+            $conexion = null;
 			return $statement;
     	}
+        $conexion = null;
     	return ERROR;
 
 
@@ -269,12 +271,15 @@ class TipoVenta{
             $statement->bindValue(":idTipoVenta", $idTipoVenta);
             $statement->execute();
             if($statement){
+                $conexion = null;
                 return SUCCESS;
             }else{
+                $conexion = null;
                 return ERROR;
             }
             
         }else{
+            $conexion = null;
             return ERROR;
         }
 
@@ -288,6 +293,7 @@ class TipoVenta{
         while ($resultado = $statement->fetch(PDO::FETCH_ASSOC)){
             $total += $resultado['valor'];
         }
+        $conexion = null;
         return $total;
     }
 

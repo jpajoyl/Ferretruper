@@ -151,7 +151,6 @@ class Empleado extends Usuario {
 
     public static function obtenerEmpleado($numeroConsulta,$modo=true) {
         try {
-
             $conexion = Conexion::conectar();
             $resultado = Usuario::buscarDatosUsuario($numeroConsulta,$modo);
             $consulta2= $conexion->prepare("SELECT * FROM `credenciales_de_acceso` WHERE USUARIOS_id_usuario=:id_usuario");
@@ -159,7 +158,6 @@ class Empleado extends Usuario {
             $resultado2=$consulta2->fetch(PDO::FETCH_ASSOC);
             $empleado = new Empleado();
             if($resultado){
-                $empleado = new Empleado();
                 $empleado->setIdUsuario($resultado['id_usuario']);
                 $empleado->setNombre($resultado['nombre']);
                 $empleado->setNumeroDeIdentificacion($resultado['numero_identificacion']);
@@ -185,13 +183,19 @@ class Empleado extends Usuario {
 
             $conexion = Conexion::conectar();
             $resultado = Usuario::buscarDatosUsuario($numeroConsulta,$modo);
-            $consulta2= $conexion->prepare("SELECT * FROM `usuarios` WHERE `numero_identificacion` = :idIdentifiacion");
-            $consulta2->bindValue(":idIdentifiacion", $numeroConsulta);
-            $consulta2->execute();
-            $resultado2=$consulta2->fetch(PDO::FETCH_ASSOC);
-            if($resultado2){
-                return true;
+            $consulta= $conexion->prepare("SELECT * FROM `usuarios` WHERE `numero_identificacion` = :idIdentifiacion");
+            $consulta->bindValue(":idIdentifiacion", $numeroConsulta);
+            $consulta->execute();
+            $resultado=$consulta->fetch(PDO::FETCH_ASSOC);
+            if($resultado){
+                $empleado = new Empleado();
+                $empleado->setIdUsuario($resultado['id_usuario']);
+                $empleado->setNombre($resultado['nombre']);
+                $empleado->setNumeroDeIdentificacion($resultado['numero_identificacion']);
+                $conexion=null;
+                return $empleado;
             }else{
+                $conexion=null;
                 return false;
             }
 
@@ -210,8 +214,12 @@ class Empleado extends Usuario {
         $statement->execute();
         if($statement){
             if($statement->rowCount() > 0 ){
+                $conexion=null;
+                $statement=null;
                 return SUCCESS;
             }
+            $conexion=null;
+            $statement=null;
             return ERROR;
         }
     }
